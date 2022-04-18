@@ -1,15 +1,15 @@
-Adegenet_Files/ZAIN_rebinned_allpop_clean_gen_converted
-locus1
-locus2
-locus3
-locus4
-locus5
-locus6
-locus7
-locus8
-locus9
-locus10
-locus11
+"1133 ZAIN individuals, cleaned for missing data and clones, and following rebinning analysis, used in this analysis: pops 1 - 10 are from botanic gardens and 11 - 35 are wild sampled"
+Zam05
+Zam17
+Zam34
+Zam39
+Zam55
+Zam60
+Zam62
+Zfg02
+Zfg25
+Zfg31
+Zfg38
 POP
 pop1 ,	202222	179179	198207	166166	000000	203203	189195	207213	184184	217217	202205
 pop1 ,	206206	179179	198198	180182	215215	203201	187187	207211	186186	217220	202205

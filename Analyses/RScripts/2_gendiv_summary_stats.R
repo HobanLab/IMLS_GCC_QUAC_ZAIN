@@ -109,12 +109,12 @@ pop_type_list <- c("Garden", "Wild")
 ###loops to generate summary statistics for populations 
 ##outer loop is by species
 #inner loop is by wild or botanic garden
-for(sp in 1:length(species_list)){
+for(sp in 1:length(sp_genind_list)){
   ##write loop to calculate all summary stats 
   for(pop_type in 1:length(pop_type_list)){
   
     #load genepop files as genind objects 
-    sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genepop_list[[sp]]), ncode = 3)
+    sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
     
     #load data frames 
     sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
@@ -150,8 +150,8 @@ for(sp in 1:length(species_list)){
     colnames(sp_allpop_gendiv_sumstat_df) <- c("Ind","MLG", "NAll", "All_Rich", "Hexp")
     
     #write out data frame
-    write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/", species_list[[sp]], 
-                                                  "_", pop_type_list[[pop_type]], "_gendiv_sumstats.csv"))
+    write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/", pop_type_list[[pop_type]], "_", gsub("\\..*","",sp_genind_list[[sp]]), 
+                                                  "_gendiv_sumstats.csv"))
   
   }
 }
