@@ -19,13 +19,7 @@ library(Demerelate)
 #   Load Data Files     #
 #########################
 #set working directory to load in data files 
-setwd("G:/Shared drives/Emily_Schumacher/GCC_QUAC_ZAIN/Data_Files")
-
-##convert QUAC all pop arlequin file into genepop file if needed
-#arp2gen("C:\\Users\\eschumacher\\Documents\\GitHub\\QUAC_insitu_exsitu\\QUAC_data_files\\QUAC_adegenet_files\\QUAC_allpop.arp")
-
-#list species 
-species_list <- c("QUAC", "ZAIN")
+setwd("../../Data_Files")
 
 #now read in genepop file as a genind for adegenet 
 sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen$")
@@ -34,15 +28,15 @@ sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen$")
 sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
 
 #load in relatedness function 
-source("../Analyses/RScripts/relatedness_analyses.R")
+#source("../Analyses/RScripts/relatedness_analyses.R")
 
 ############################################################
 #    Remove Clones and Individuals with Missing Data       #
 ############################################################
-setwd("G:/Shared drives/Emily_Schumacher/GCC_QUAC_ZAIN/Data_Files")
+setwd("../../Data_Files")
 
 ##loop over both QUAC and ZAIN to generate results  
-for(sp in 1:length(species_list)){
+for(sp in 1:length(sp_genind)){
   
   #load in genepop files as a genind object 
   sp_temp_genind <- read.genepop(paste0("Adegenet_Files/",sp_genind[[sp]]), ncode = 3)
@@ -86,10 +80,10 @@ for(sp in 1:length(species_list)){
   
   ##write out files cleaned for missing data and clones 
   #write out genalex
-  #genind2genalex(sp_genind_nomd, file = paste0("Data_Frames/", species_list[[sp]], "_clean_genalex.csv"), 
-  #            overwrite = TRUE)
+  genind2genalex(sp_genind_nomd, file = paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_genalex.csv"), 
+              overwrite = TRUE)
   #write out data frame
-  #write.csv(sp_clean_df, paste0("Data_Frames/", species_list[[sp]], "_clean_df.csv"), row.names = FALSE)
+  write.csv(sp_clean_df, paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_df.csv"), row.names = FALSE)
 
 
 }
