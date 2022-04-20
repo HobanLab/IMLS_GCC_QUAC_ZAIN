@@ -2,7 +2,7 @@
 #---#DETERMINE WHAT ALLELES FALL IN WHAT CATEGORIES---#
 #######################
 
-get.allele.cat<-function(UK_genpop, region_makeup, N_REGIONS, n_ind_p_pop, n_drop=2,glob_only=F){
+get.allele.cat <- function(UK_genpop, region_makeup, N_REGIONS, n_ind_p_pop, n_drop=2,glob_only=F){
 
 	n_pops<-length(n_ind_p_pop)
 	#--Set up categories for GLOBAL ALLELES
