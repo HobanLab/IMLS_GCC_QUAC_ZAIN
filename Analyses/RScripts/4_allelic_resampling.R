@@ -57,46 +57,54 @@ for(sp in 1:length(species_list)){
 ########################################
 #     Reporting Resampling Results     #
 ########################################
-#create a list to store frequency summary results
-all_mean_list <- list()
+setwd("../Analyses/Results/Garden_Wild_Comparison")
 
-#create a data frame with mean  
-all_mean_list[[1]] <- as.data.frame(apply(summ_results_tree_ndrop0[,,1:num_reps],c(1,2),mean,na.rm=T)*100)[-1,]
-all_mean_list[[2]] <- as.data.frame(apply(summ_results_tree_ndrop2[,,1:num_reps],c(1,2),mean,na.rm=T)*100)[-1,]
+resampling_list <- list.files(pattern = "resampling_df")
+name_list <- c("QUAC_wK_ndrop0", "QUAC_wK_ndrop2", "QUAC_woK_ndrop0", "QUAC_woK_ndrop2",
+               "ZAIN_og_ndrop0", "ZAIN_og_ndrop2", "ZAIN_rebinned_ndrop0", "ZAIN_rebinned_ndrop2")
 
-##loop to plot resampling results including and removing very rare alleles  
-for(ndrop in 1:length(all_mean_list)){
+for(sp in 1:length(resampling_list)){
   
-  #write PDF with name
-  pdf(paste0("../QUAC_analyses/Results/Wild_Garden_Comparison/QUAC_all_resampling_ndrop", n_drop[[ndrop]],".pdf"))
-  #add points
-  plot(all_mean_list[[ndrop]][,1], col = "red", pch = 20, xlab = "Number of Individuals", 
-       ylab = "Percent Diversity Capture", xlim = c(0,171), ylim = c(0,100), cex = 1.2,
-       main = "Percent Diversity Capture (All Alleles Included)")
-  points(all_mean_list[[ndrop]][,2], col = "firebrick", pch = 20, cex = 1.2)
-  points(all_mean_list[[ndrop]][,3], col = "darkorange3", pch = 20, cex = 1.2)
-  points(all_mean_list[[ndrop]][,4], col = "coral", pch = 20, cex = 1.2)
-  points(all_mean_list[[ndrop]][,5], col = "deeppink4", pch = 20, cex = 1.2)
+  #load in data files 
+  sp_resampling <- read.csv(resampling_list[[sp]])
   
-  dev.off()
+  #export plots for each 
+  sp_resampling_plot <- resampling_plot(sp_resampling, name_list[[sp]])
+  
 }
 
 ##Create data frame of min sample size to sample 95% of diversity
 #create a data frame to store results 
-min_samp_95 <- matrix(nrow = length(n_drop), ncol = length(list_allele_cat))
+all_sp_min_samp_95 <- matrix(nrow = length(n_drop), ncol = length(list_allele_cat))
 
-##loop to calculate min sample size
-for(ndrop in 1:length(n_drop)){ 
-  for(col in 1:length(list_allele_cat)){
+#######minimum sample size loop   
+resampling_list <- list.files(pattern = "resampling_df")
+name_list <- c("QUAC_wK_ndrop0", "QUAC_wK_ndrop2", "QUAC_woK_ndrop0", "QUAC_woK_ndrop2",
+               "ZAIN_og_ndrop0", "ZAIN_og_ndrop2", "ZAIN_rebinned_ndrop0", "ZAIN_rebinned_ndrop2")
+
+#create data frame 
+sp_min_sample_95 <- matrix(nrow = length(name_list), ncol = length(list_allele_cat))
+
+for(sp in 1:length(resampling_list)){
+  
+  sp_resampling_df <- read.csv(resampling_list[[sp]])
+  
+  #clean up data frame 
+  sp_resampling_df <- sp_resampling_df[-1,c(2:10)]
+  
+  for(all_cat in 1:length(list_allele_cat)){
     
-    min_samp_95[ndrop,col] <- which(all_mean_list[[ndrop]][,col] >= 95)[1]
+    #line to store in a data frame 
+    sp_min_sample_95[sp,all_cat] <- which(sp_resampling_df[,all_cat] >= 95)[1]
     
   }
+  
 }
+
+
 ##name rows and columns of the matrix 
-rownames(min_samp_95) <- c("N Ind for 95% (All Alleles)", 
-                           "N Ind for 95% (Rare Alleles Dropped)")
-colnames(min_samp_95) <- list_allele_cat
+rownames(sp_min_sample_95) <- name_list
+colnames(sp_min_sample_95) <- list_allele_cat
 
 ##write out data frame 
-write.csv(min_samp_95, "../QUAC_analyses/Results/Wild_Garden_Comparison/QUAC_min_samp_95.csv")
+write.csv(sp_min_sample_95, "sp_min_samp_95.csv")
