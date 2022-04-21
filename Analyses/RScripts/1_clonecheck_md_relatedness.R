@@ -91,8 +91,6 @@ for(sp in 1:length(sp_genind)){
 #################################
 #      Relatedness Analysis     #
 #################################
-setwd("G:/Shared drives/Emily_Schumacher/IMLS_QUAC_ZAIN/Data_Files")
-
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
@@ -100,43 +98,48 @@ sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 sp_clean_genepop_list <- list.files(path = "Adegenet_Files", pattern = "allpop_clean.gen")
 
 #list of data frames
-sp_clean_temp_df <- list()
+#sp_clean_temp_df <- list()
 
 #list of the genind objects
-sp_clean_temp_gen <- list()
+#sp_clean_temp_gen <- list()
 
 #create a list of the relatedness tests 
-relatedness_analyses_list <- c("loiselle", "wang", "ritland")
+#relatedness_analyses_list <- c("loiselle", "wang", "ritland")
+
+#create scenario list 
+species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
 #save summary df 
-halfsib_df <- as.data.frame(matrix(nrow = length(species_list), ncol = length(relatedness_analyses_list)*2))
+halfsib_df <- as.data.frame(matrix(nrow = length(species_list), ncol = 2))
 
-##loop over species data frames 
+#load in data frame 
+QUAC_relate_wk_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+
+#loop over species data frames 
 for(sp in 1:length(species_list)){
-##loop over type of relatedness analysis 
-  for(relate in 1:length(relatedness_analyses_list)){
-  #load in clean data frames to perform relatedness analysis on 
-  sp_clean_temp_df[[sp]] <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
+  
+  #load in garden data frame 
+  sp_clean_temp_df <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
   
   #load in genepop files into genind 
-  sp_clean_temp_gen[[sp]] <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[sp]]), ncode = 3)
+  sp_clean_temp_gen <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[sp]]), ncode = 3)
   #name individuals in genind 
-  rownames(sp_clean_temp_gen[[sp]]@tab) <- sp_clean_temp_df[[sp]][,1]
+  rownames(sp_clean_temp_gen@tab) <- sp_clean_temp_df[,1]
   #name pops 
-  levels(sp_clean_temp_gen[[sp]]@pop) <- unique(sp_clean_temp_df[[sp]][,2])
+  levels(sp_clean_temp_gen@pop) <- unique(sp_clean_temp_df[,2])
   
-  ##Run relate red code 
+  ##Run relateness reduction code 
   #Garden
-  sp_garden_clean_temp_df <- sp_clean_temp_df[[sp]][,-2]
+  sp_garden_clean_temp_df <- sp_clean_temp_df[,-2]
   
   #limit data frame by garden only 
   sp_garden_only_temp_df <- sp_garden_clean_temp_df[sp_garden_clean_temp_df[,2] == "Garden",]
   
+  #limit genind object by garden 
+  sp_garden_temp_genind <- sp_clean_temp_gen[rownames(sp_clean_temp_gen@tab) %in% sp_garden_only_temp_df[,1],]
+  
   #run relatedness analysis 
-  sp_garden_rel_df <- Demerelate(sp_garden_clean_temp_df, object = T, value = relatedness_analyses_list[[relate]])
-
-  #use function to limit individuals  
-  sp_garden_halfsib_list <- half_sibling_reduction(sp_garden_rel_df)
+  sp_garden_halfsib_list <- halfsib_relatedness_reduction_loiselle(sp_garden_only_temp_df)
   
   #reduce data frame by list of half-siblings 
   sp_garden_relate_red_df <- sp_garden_clean_temp_df[!sp_garden_clean_temp_df[,1] %in% sp_garden_halfsib_list,]
@@ -145,41 +148,50 @@ for(sp in 1:length(species_list)){
   sp_garden_relate_red_df <- sp_garden_relate_red_df[sp_garden_relate_red_df[,2] == "Garden",]
   
   #save in df 
-  halfsib_df[sp, relate] <- paste0(signif(((length(sp_garden_only_temp_df[,1])-length(sp_garden_relate_red_df[,1]))/
+  halfsib_df[sp,1] <- paste0(signif(((length(sp_garden_only_temp_df[,1])-length(sp_garden_relate_red_df[,1]))/
                                             length(sp_garden_only_temp_df[,1])),3)*100, "% (", 
                                    length(sp_garden_relate_red_df[,1]),")")
   
-  #write out 
-  write.csv(sp_garden_relate_red_df, paste0("Data_Frames/Relate_Red/",  species_list[[sp]], 
-                                           "_Garden_relate_red_", relatedness_analyses_list[[relate]], "_df.csv"),
-                                        row.names = FALSE)
+  #export data frame 
+  write.csv(sp_garden_relate_red_df, paste0("Data_Frames/Relate_Red/", species_list[[sp]], 
+                                            "_garden_relate_red_df.csv"), row.names = FALSE)
+  
+  #limit genind file  
+  sp_relate_red_genind <- sp_garden_temp_genind[!rownames(sp_garden_temp_genind@tab) %in% sp_garden_halfsib_list,]
+  
+  #export genalex data frame 
+  genind2genalex(sp_relate_red_genind, file = paste0("Data_Frames/Relate_Red/", species_list[[sp]], "_garden_relate_red_genalex.csv"), 
+                 overwrite = TRUE)
   
   ##Wild relatedness analysis 
-  sp_wild_clean_temp_df <- sp_clean_temp_df[[sp]][sp_clean_temp_df[[sp]][,3] == "Wild",][,-3]
-
-  #now run relatedness analysis 
-  sp_wild_rel_df <- Demerelate(sp_wild_clean_temp_df, object = T, value = relatedness_analyses_list[[relate]])
+  sp_wild_clean_temp_df <- sp_clean_temp_df[sp_clean_temp_df[,3] == "Wild",][,-3]
   
+  #limit genind object by wild individuals 
+  sp_wild_genind <- sp_clean_temp_gen[rownames(sp_clean_temp_gen@tab) %in% sp_wild_clean_temp_df[,1]]
+
   #limit by analysis halfsibs 
-  sp_wild_halfsib_list <- half_sibling_reduction(sp_wild_rel_df)
+  sp_wild_halfsib_list <- halfsib_relatedness_reduction_loiselle(sp_wild_clean_temp_df)
   
   #reduce data frame by list of half-siblings 
   sp_wild_relate_red_df <- sp_wild_clean_temp_df[!sp_wild_clean_temp_df[,1] %in% sp_wild_halfsib_list,]
   
   #number of ind removed 
-  halfsib_df[sp, relate+3] <-paste0(signif(((length(sp_wild_clean_temp_df[,1])-length(sp_wild_relate_red_df[,1]))/
+  halfsib_df[sp, 2] <-paste0(signif(((length(sp_wild_clean_temp_df[,1])-length(sp_wild_relate_red_df[,1]))/
                                               length(sp_wild_clean_temp_df[,1])),3)*100, "% (", 
                                               length(sp_wild_relate_red_df[,1]), ")")
-    
-  #write csv of the reduced data frame 
-  write.csv(sp_wild_relate_red_df, paste0("Data_Frames/Relate_Red/", species_list[[sp]], 
-                                        "_Wild_relate_red_", relatedness_analyses_list[[relate]], "_df.csv"),
-                row.names = FALSE)
+  #export data files 
+  write.csv(sp_wild_relate_red_df, paste0("Data_Frames/Relate_Red/", species_list[[sp]], "_wild_relate_red_df.csv"))
 
-  }
+  #limit genind object by half-siblings
+  sp_wild_relate_red_genind <- sp_wild_genind[!rownames(sp_wild_genind@tab) %in% sp_wild_halfsib_list,]
+  
+  #export genalex data frame 
+  genind2genalex(sp_wild_relate_red_genind, file = paste0("Data_Frames/Relate_Red/", species_list[[sp]], "_wild_relate_red_genalex.csv"), 
+                 overwrite = TRUE)
+  
 }
 
 #write out summary table 
 rownames(halfsib_df) <- species_list
-colnames(halfsib_df) <- rep(relatedness_analyses_list, 2)
+colnames(halfsib_df) <- c("Garden", "Wild")
 write.csv(halfsib_df, "../Analyses/Results/Sum_Stats/halfsib_df.csv")
