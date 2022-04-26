@@ -194,4 +194,4 @@ for(sp in 1:length(species_list)){
 #write out summary table 
 rownames(halfsib_df) <- species_list
 colnames(halfsib_df) <- c("Garden", "Wild")
-write.csv(halfsib_df, "../Analyses/Results/Sum_Stats/halfsib_df.csv")
+write.csv(halfsib_df, "../Analyses/Results/Sum_Stats/halfsib_sum_df.csv")

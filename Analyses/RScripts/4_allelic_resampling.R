@@ -32,10 +32,16 @@ species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
 #load in function to calculate allele frequency categories
 source("../Analyses/RScripts/Fa_sample_funcs.R")
+source("../Analyses/RScripts/resampling.R")
 
 ###################################
 #     Allelic Resampling Code     #
 ###################################
+#create a list to store arrays 
+sp_resampling_list <- list()
+all_mean_list <- list()
+ndrop_list <- c(0,2)
+
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(species_list)){
     
@@ -50,8 +56,54 @@ for(sp in 1:length(species_list)){
   levels(sp_genind_temp@pop) <- unique(sp_df_temp[,3])
   
   #run resampling code on all species 
-  sp_resampling <- resampling(sp_genind_temp, species_list[[sp]])
+  for(n in 1:length(ndrop_list)){
+   
+  #set rep number
+  num_reps <- 1000
   
+  colMax <- function(data) sapply(data, max, na.rm = TRUE)
+  
+  #create documents for allelic categorization code 
+  sp_wild_genind <- seppop(sp_genind_temp)[[2]]
+  n_total_indivs <- length(sp_wild_genind@tab[,1])
+  n_ind_p_pop <- table(sp_wild_genind@pop)
+  allele_freqs <- colSums(sp_wild_genind@tab)/(n_total_indivs*2)
+  #list out allele categories
+  list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+  #calculate allele category
+  allele_cat <- get.allele.cat(sp_wild_genind, region_makeup=NULL, 2, n_ind_p_pop,n_drop = ndrop_list[[n]], glob_only=T)
+  
+  #create summary results for allelic capture 
+  summ_results_tree <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_sp_allele_cat), num_reps)) 
+  
+  #create a summary table 
+  sum_results_df <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_sp_allele_cat), num_reps)) 
+  
+  #Repeat the resampling many times
+  for (nrep in 1:num_reps) {
+    
+    #create empty matrix to store sampling code 
+    alleles_samp <- matrix(nrow=nrow(sp_wild_genind@tab)-1,ncol=length(list_sp_allele_cat))
+    
+    #This loop will sample trees from t = 2 to the total number of trees
+    for (t in 2:(nrow(sp_wild_genind@tab)-1)){
+      
+      #create a sample of trees of length t, by using 'sample()' which randomly samples rows
+      alleles_samp <- colSums(sp_wild_genind@tab[sample(1:nrow(sp_wild_genind@tab), t),],na.rm=T)
+      
+      #Then simply compare that sample to your wild population with allele_cat
+      for (cat in 1:length(allele_cat)) summ_results_tree[t,cat,nrep] <- sum(alleles_samp[allele_cat[[cat]]]>0, na.rm=T)
+      
+      #Divide by the number of alleles
+      sum_results_df[,,nrep] <- t(t(summ_results_tree[,,nrep])/summ_results_tree[length(summ_results_tree[,1,1]),,nrep])
+
+       }
+    #mean across reps using apply
+    all_mean <- apply(summ_results_tree[,,1:num_reps],c(1,2),mean,na.rm=T)*100
+    
+    write.csv(all_mean, paste0(species_list[[sp]], "_resampling_df", ndrop_list[[n]], ".csv"))
+    }
+  }
 }
 
 ########################################
@@ -87,7 +139,7 @@ sp_min_sample_95 <- matrix(nrow = length(name_list), ncol = length(list_allele_c
 
 for(sp in 1:length(resampling_list)){
   
-  sp_resampling_df <- read.csv(resampling_list[[sp]])
+  sp_resampling_df <- read.csv(paste0("../Analyses/Results/Garden_Wild_Comparison/", resampling_list[[sp]]))
   
   #clean up data frame 
   sp_resampling_df <- sp_resampling_df[-1,c(2:10)]
