@@ -1,19 +1,19 @@
-Adegenet_Files/Garden_Wild/QUAC_garden_wild_woK_clean_gen_converted
-locus1
-locus2
-locus3
-locus4
-locus5
-locus6
-locus7
-locus8
-locus9
-locus10
-locus11
-locus12
-locus13
-locus14
-locus15
+"QUAC genepop file with 449 individuals and without kessler mountain population, separated into wild and garden populations only"
+0C11 
+1G13
+G07 
+1F02 
+FIR031 
+GOT009 
+POR016
+FIR013
+FIR043 
+GOTO40
+PIE039 
+FIR53 
+FIR048 
+PIE125
+QpZAG9
 POP
 pop1 ,	210212	171175	206206	165165	148148	225239	118118	135139	116116	232232	165165	137140	206210	139145	256262
 pop1 ,	210202	175185	206206	165165	148160	225229	118118	139139	116112	232232	165165	134134	206206	151151	262246
