@@ -27,7 +27,7 @@ sp_garden_allwildpop_genind_list <- list.files(path = "Adegenet_Files/Garden_Wil
 sp_garden_allwildpop_df_list <- list.files(path = "Data_Frames/Garden_Wild", pattern = "allwildpop")
 sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
-PCA_type <- c("wild_only","garden_wild","garden_allwildpop")
+
 
 ###############
 #     PCA     #
@@ -164,6 +164,50 @@ for(sp in 1:length(sp_allgarden_allwildpop_genind_list)){
   
 }
 
+##run PCA on just Quercus acerifolia individuals 
+#read in genepop files as a genind object
+QUAC_wK_gen <- read.genepop("Adegenet_Files/QUAC_allpop_clean.gen", ncode = 3)
+
+QUAC_wk_wild_gen <- repool(seppop(QUAC_wK_gen)[18:22])
+
+#read in data frame 
+QUAC_wk_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+
+QUAC_wk_wild_df <- QUAC_wk_df[QUAC_wk_df$Garden_Wild == "Wild",]
+
+#name rows in the genind object 
+rownames(QUAC_wk_wild_gen@tab) <- QUAC_wk_wild_df[,1]
+#name pops
+levels(QUAC_wk_wild_gen@pop) <- unique(QUAC_wk_wild_df[,2])
+
+#create tab object for genind 
+QUAC_wk_wild_tab <- tab(QUAC_wk_wild_gen, freq=TRUE, NA.method="mean")
+
+#run PCA
+QUAC_wk_wild_PCA <- dudi.pca(QUAC_wk_wild_tab, scale = FALSE, nf = 2, scannf = FALSE)
+
+#create PCA data frame 
+QUAC_wk_wild_PCA_df <- as.data.frame(cbind(as.numeric(QUAC_wk_wild_PCA$li$Axis1), 
+                                      as.numeric(QUAC_wk_wild_PCA$li$Axis2), 
+                                      QUAC_wk_wild_df[,2]))
+colnames(QUAC_wk_wild_PCA_df) <- c("Axis1","Axis2","Pop")
+
+#calculate % variation explained by axis 
+QUAC_wild_pc1 <- signif(((QUAC_wk_wild_PCA$eig[1])/sum(QUAC_wk_wild_PCA$eig))*100, 3)
+QUAC_wild_pc2 <- signif(((QUAC_wk_wild_PCA$eig[2])/sum(QUAC_wk_wild_PCA$eig))*100, 3)
+
+#plot PCA
+pdf("../Analyses/Results/Clustering/QUAC_allwildpop_PCA.pdf", width = 10, height = 8)
+
+ ggplot(QUAC_wk_wild_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
+        stat_ellipse() +
+        xlab(paste0("PC1 (", QUAC_wild_pc1, "%)")) +
+        ylab(paste0("PC2 (", QUAC_wild_pc2, "%)")) + 
+        theme_bw() +  
+        scale_color_manual(values=hcl.colors(n = length(unique(QUAC_wk_wild_PCA_df$Pop)), palette = "viridis"))
+  
+
+dev.off()
 
 
 
