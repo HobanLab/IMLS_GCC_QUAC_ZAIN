@@ -67,7 +67,6 @@ for(sp in 1:length(species_list)){
   sp_wild_genind <- seppop(sp_genind_temp)[[2]]
   n_total_indivs <- length(sp_wild_genind@tab[,1])
   n_ind_p_pop <- table(sp_wild_genind@pop)
-  allele_freqs <- colSums(sp_wild_genind@tab)/(n_total_indivs*2)
   #list out allele categories
   list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
   #calculate allele category
@@ -99,9 +98,9 @@ for(sp in 1:length(species_list)){
 
        }
     #mean across reps using apply
-    all_mean <- apply(summ_results_tree[,,1:num_reps],c(1,2),mean,na.rm=T)*100
+    all_mean <- apply(sum_results_df[,,1:num_reps],c(1,2),mean,na.rm=T)*100
     
-    write.csv(all_mean, paste0(species_list[[sp]], "_resampling_df", ndrop_list[[n]], ".csv"))
+    write.csv(all_mean, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_resampling_df", ndrop_list[[n]], ".csv"))
     }
   }
 }
@@ -127,7 +126,7 @@ for(sp in 1:length(resampling_list)){
 
 ##Create data frame of min sample size to sample 95% of diversity
 #create a data frame to store results 
-all_sp_min_samp_95 <- matrix(nrow = length(n_drop), ncol = length(list_allele_cat))
+all_sp_min_samp_95 <- matrix(nrow = length(ndrop_list), ncol = length(list_allele_cat))
 
 #######minimum sample size loop   
 resampling_list <- list.files(pattern = "resampling_df")
@@ -139,7 +138,7 @@ sp_min_sample_95 <- matrix(nrow = length(name_list), ncol = length(list_allele_c
 
 for(sp in 1:length(resampling_list)){
   
-  sp_resampling_df <- read.csv(paste0("../Analyses/Results/Garden_Wild_Comparison/", resampling_list[[sp]]))
+  sp_resampling_df <- read.csv(resampling_list[[sp]])
   
   #clean up data frame 
   sp_resampling_df <- sp_resampling_df[-1,c(2:10)]
