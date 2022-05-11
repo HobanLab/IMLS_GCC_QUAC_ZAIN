@@ -1,4 +1,4 @@
-#define OUTFILE C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\ZAIN\ZAIN_og_allpop_STR\50-50\Results\50-50_run_45
+#define OUTFILE C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\ZAIN\ZAIN_og_allpop_STR\50-50\Results\50-50_run_175
 #define INFILE C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\ZAIN\ZAIN_og_allpop_STR\project_data
 #define NUMINDS 1135
 #define NUMLOCI 11
@@ -16,7 +16,7 @@
 #define EXTRACOLS 0
 #define MISSING -9
 #define PLOIDY 2
-#define MAXPOPS 9
+#define MAXPOPS 35
 #define BURNIN 50000
 #define NUMREPS 50000
 

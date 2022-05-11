@@ -25,7 +25,7 @@ library(tidyr)
 setwd("../../Data_Files")
 
 #genind objects 
-sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "_clean.gen")
+sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
@@ -61,20 +61,23 @@ hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list
 for(sp in 1:length(species_list)){
 
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
   
   #load data frames 
   sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
   
   #organize genind object
   rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
-  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,3])
+  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
     
   #combining into a df 
-  allrich_df <- gather(as.data.frame(allelic.richness(sp_genind_temp)$Ar))
+  allrich_df <- gather(allelic.richness(repool(seppop(sp_genind_temp)[18:21]))$Ar)
   
   #run t-test 
   allrich_pvalue <- as.numeric(kruskal.test(allrich_df[,2]~allrich_df[,1])[3])
+  
+  ##loop to create data frame 
+  
   
   #name data frame
   allrich_garden_wild_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
