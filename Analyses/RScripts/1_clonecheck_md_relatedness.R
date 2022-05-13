@@ -1,10 +1,10 @@
-##This script details the analyses run on Quercus acerifolia (referred to as 
-#QUAC for brevity here) genotype files to prepare them for genetic diversity and 
-#structure analyses. When files are referred to as "clean" that means individuals 
+##This script details the analyses run on Quercus acerifolia and Zamia integrifolia 
+#(referred to as QUAC and ZAIN in this script for brevity) genotype files 
+#to prepare them for genetic diversity and structure analyses. 
+#When files are referred to as "clean" that means individuals 
 #that are clones and individuals with too much missing data have been removed. 
 #When files and objects are titled "red" that means they have been reduced
-#for relatedness (25% or more related individuals are reduced to one individual
-#per phenotype)
+#for half-siblings (12.5% relatedness coefficient)
 
 #########################
 #        Libraries      #
@@ -27,21 +27,24 @@ sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen$")
 #load relatedness data frame for relatedness analysis 
 sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
 
+#create scenario list 
+scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
 #load in relatedness function 
-#source("../Analyses/RScripts/relatedness_analyses.R")
+source("../Analyses/RScripts/relatedness_analyses.R")
 
 ############################################################
 #    Remove Clones and Individuals with Missing Data       #
 ############################################################
-setwd("../../Data_Files")
 
-##loop over both QUAC and ZAIN to generate results  
+##loop to remove clones and individuals with missing data for genetic analyses
+#loops over all scenarios for both species - QUAC and ZAIN 
 for(sp in 1:length(sp_genind)){
   
-  #load in genepop files as a genind object 
+  #load in genepop file as a genind object 
   sp_temp_genind <- read.genepop(paste0("Adegenet_Files/",sp_genind[[sp]]), ncode = 3)
   
-  #load in data frames 
+  #load in genetic data frame  
   sp_temp_df <- read.csv(paste0("Data_Frames/",sp_df[[sp]]))
   
   #name rows in the genind object 
@@ -54,7 +57,7 @@ for(sp in 1:length(sp_genind)){
   levels(sp_temp_genind@pop) <- pop_names
   
   ##run clone check 
-  #convert to a genclone object 
+  #convert genind object to a genclone object 
   sp_temp_genclone <- as.genclone(sp_temp_genind)
   
   #identify multi-locus genotypes (non-clones)
@@ -91,20 +94,12 @@ for(sp in 1:length(sp_genind)){
 #################################
 #      Relatedness Analysis     #
 #################################
+##code to reduce data frames by half-sibling relatedness 
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
 #list clean genepop files 
 sp_clean_genepop_list <- list.files(path = "Adegenet_Files", pattern = "allpop_clean.gen")
-
-#list of data frames
-#sp_clean_temp_df <- list()
-
-#list of the genind objects
-#sp_clean_temp_gen <- list()
-
-#create a list of the relatedness tests 
-#relatedness_analyses_list <- c("loiselle", "wang", "ritland")
 
 #create scenario list 
 species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
