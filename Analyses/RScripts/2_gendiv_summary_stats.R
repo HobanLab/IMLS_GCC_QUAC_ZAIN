@@ -27,8 +27,7 @@ library(diveRsity)
 ##set working directory to load in data files
 setwd("../../Data_Files")
 
-
-##write in if files need to be converted 
+##comment in if files need to be converted 
 #sp_arp_list <- list.files(path = "Adegenet_Files", pattern = "_allpop.arp$")
 
 #for(sp in 1:length(sp_arp_list)){
@@ -43,6 +42,9 @@ sp_genind_list <- list.files(path = "Adegenet_Files/", pattern = "_clean.gen")
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames/", pattern = "_clean_df.csv")
+
+#create scenario list 
+scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
 ############################################################
 #  Null Alleles, HWE Deviation, Linkage Disequilibrium     #
@@ -61,8 +63,7 @@ for(sp in 1:length(sp_genind_list)){
   rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
   levels(sp_genind_temp) <- unique(sp_df_temp[,2])
   
-  ###run prelim assessments 
-  ##null alleles 
+  ##run prelim genetic diversity assessments  
   #calculate % of null alleles/locus
   sp_null_all <- null.all(sp_genind_temp)
   
@@ -70,33 +71,31 @@ for(sp in 1:length(sp_genind_list)){
   sp_null_all_df <- signif(data.frame(sp_null_all$null.allele.freq$summary2),3)
   
   #write out data frame
-  write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", gsub("\\..*","",sp_genind_list[[sp]]), "_null_all_df.csv"))
+  write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]] , "_null_all_df.csv"))
   
-  ##HWE deviations
   #run HWE deviations by pop 
   sp_HWE_pop <- seppop(sp_genind_temp) %>% lapply(hw.test, B = 1000)
   
   #create df by pop 
   sp_HWE_pop_df <- sapply(sp_HWE_pop, "[", i = TRUE, j = 3)
   
-  #name columns
+  #name columns with populations
   colnames(sp_HWE_pop_df) <- unique(sp_df_temp[,2])
   
   #round to the 3rd digit
   sp_HWE_allpop_df <- signif(sp_HWE_pop_df, 3)
   
   #write out 
-  write.csv(sp_HWE_allpop_df, paste0("../Analyses/Results/Sum_Stats/", gsub("\\..*","",sp_genind_list[[sp]]), "_HWE_dev_pop.csv"))
+  write.csv(sp_HWE_allpop_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_HWE_dev_pop.csv"))
   
-  ##LD
   #calculate linkage disequilibrium 
   sp_ld <- pair.ia(sp_genind_temp, sample = 1000)
   
-  #convert to df
+  #convert to a data frame
   sp_ld_df <- data.frame(round(sp_ld,digits = 2))
   
   #write out 
-  write.csv(sp_ld_df, paste0("../Analyses/Results/Sum_Stats/", gsub("\\..*","",sp_genind_list[[sp]]), "_LD.csv"))
+  write.csv(sp_ld_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_LD.csv"))
   
 }
 

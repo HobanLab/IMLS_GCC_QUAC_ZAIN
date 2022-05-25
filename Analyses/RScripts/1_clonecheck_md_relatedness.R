@@ -136,3 +136,4 @@ for(sp in 1:length(scenario_list)){
 
 #write out summary table 
 halfsib_df <- cbind(halfsib_garden_df, halfsib_wild_df)
+write.csv(halfsib_df, "../Analyses/Results/Garden_Wild_Comparison/halfsib_df.csv")
