@@ -33,7 +33,11 @@ scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 #############################
 #     Fst Calculations      #
 #############################
+#data frame for the relationship 
+sp_IBD_df <- matrix(nrow = length(scenario_list), ncol = 2)
 
+#loop to calculate the relationship between pairwise Fst and distance between
+#wild populations 
 for(sp in 1:length(scenario_list)){
   
   #read in genepop file as a genind object
@@ -45,46 +49,93 @@ for(sp in 1:length(scenario_list)){
   #name rows as individuals
   rownames(sp_genind@tab) <- sp_df[,1]
   
+  #create population data frames
+  sp_pop_names <- unique(sp_df[,2])
+  
   #name populations 
-  levels(sp_genind@pop) <- sp_df[,2]
+  levels(sp_genind@pop) <- sp_pop_names
   
   #limit data frame object to wild individuals  
   sp_wild_df <- sp_df[sp_df[,3] == "Wild",]
   
+  #wild population name list 
+  sp_wild_pop_names <- unique(sp_wild_df[,2])
+  
   #limit genind object to wild individuals
-  sp_wild_genind <- sp_genind[sp_wild_df[,1] %in% rownames(sp_genind@tab),]
+  sp_wild_genind <- sp_genind[rownames(sp_genind@tab) %in% sp_wild_df[,1],]
 
   #run hierfstat on 
-#  sp_hierfstat <- genind2hierfstat(sp_wild_genind)
-}
-
-#convert to hierfstat format object 
-QUAC_hierfstat <- genind2hierfstat(QUAC_wild_gen)
-
-#run pairwise fst code 
-QUAC_fst_df <- pairwise.neifst(QUAC_hierfstat)
-
-#calculate geographic distances between mean locations
-QUAC_dist <- matrix(nrow = length(QUAC_wildpop_names), ncol = length(QUAC_wildpop_names))
-
-for(first in 1:length(QUAC_wildpop_names)){
-  for(second in 1:length(QUAC_wildpop_names)){
-    QUAC_dist[first,second] <-  distm(QUAC_coords[first,], QUAC_coords[second,], fun = distGeo)/1000
+  sp_hierfstat <- genind2hierfstat(sp_wild_genind)
+  
+  #run pairwise Fst code 
+  sp_pwfst_df <- pairwise.neifst(sp_hierfstat)
+  
+  ##Geographic analyses for each population
+  #calculate mean longitude and latitude for each population
+  sp_mean_lon <- matrix()
+  sp_mean_lat <- matrix()
+  
+    #loops for mean lat/lon
+    for(pop in sp_wild_pop_names){
+    
+      sp_mean_lon[pop] <- mean(sp_wild_df[sp_wild_df[,2] == pop,][,4])  
+    
+    }
+  
+    #loop to calculate the mean lat by population 
+    for(pop in sp_wild_pop_names){
+    
+      sp_mean_lat[pop] <- mean(sp_wild_df[sp_wild_df[,2] == pop,][,5])  
+    
+    }
+  
+  #now combine into dataframes 
+  sp_coord_df <- cbind(sp_mean_lon, sp_mean_lat)[-1,]
+  
+  #create geographic distance matrix 
+  sp_dist_df <- matrix(nrow = length(sp_wild_pop_names), ncol = length(sp_wild_pop_names))
+  
+  for(r1 in 1:length(sp_wild_pop_names)){
+   for(r2 in 1:length(sp_wild_pop_names)){
+      
+      sp_dist_df[r1,r2] <-  distm(sp_coord_df[r1,], sp_coord_df[r2,], fun = distGeo)/1000
+      
+    }
+    
   }
+  #replace NAs with 0s in the PW Fst data frame 
+  sp_pwfst_df[is.na(sp_pwfst_df)] <- 0
+  
+  #linear regression between fst and distance
+  reg <- lm(sp_pwfst_df[lower.tri(sp_pwfst_df)] ~ sp_dist_df[lower.tri(sp_dist_df)])
+  
+  #saving summary statistics - R2 and p-value
+  sp_IBD_df[sp,1] <- as.numeric(summary(reg)[9])
+  sp_IBD_df[sp,2] <- summary(reg)$coefficients[2,4]
+  
+  rp_IBD <- vector('expression',2)
+  rp_IBD[1] <- substitute(expression(italic(R)^2 == MYVALUE), 
+                          list(MYVALUE = format(sp_IBD_df[sp,1],dig=3)))[2]
+  rp_IBD[2] = substitute(expression(italic(p) == MYOTHERVALUE), 
+                         list(MYOTHERVALUE = format(sp_IBD_df[sp,2], digits = 2)))[2]
+  
+  #write out data frame 
+  pdf(paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], ".pdf"), width = 10, height = 8)
+  
+  plot(sp_pwfst_df~sp_dist_df, pch = 16, xlim = c(0, max(sp_dist_df)), ylim = c(0,max(sp_pwfst_df)),
+       xlab = "Distance (km)", ylab = "PW Fst")
+  abline(reg)
+  
+  legend('topleft', legend = rp_IBD, bty = 'n')
+  
+  dev.off
+  
 }
-
-#replacce NAs with zeroes 
-QUAC_dist[is.na(QUAC_dist)] <- 0
-QUAC_fst_df[is.na(QUAC_fst_df)] <- 0
-
-#create a linear regression
-QUAC_fst_dist <- lm(QUAC_fst_df[lower.tri(QUAC_fst_df)]~QUAC_dist[lower.tri(QUAC_dist)])
-
-#visualize the isolation by distance relationship with p-value
-pdf("../QUAC_analyses/Results/Clustering/QUAC_Dist_Fst.pdf")
-plot(QUAC_fst_df[lower.tri(QUAC_fst_df)]~QUAC_dist[lower.tri(QUAC_dist)], pch = 17, ylim = c(0,0.13), 
-     xlim = c(0,200),
-     xlab = c("Distance (km)"), ylab = c("Fst"))
-abline(QUAC_fst_dist)
-legend('bottomleft', legend = c("R2 = -0.12","p-value = 0.865"), bty = 'n')
 dev.off()
+dev.off()
+dev.off()
+dev.off()
+
+rownames(sp_IBD_df) <- scenario_list
+colnames(sp_IBD_df) <- c("R2", "p-value")
+write.csv(sp_IBD_df,"../Analyses/Results/Sum_Stats/sp_IBD_df.csv")
