@@ -46,7 +46,9 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 #}
 
 #list of scenarios 
-species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+species_list <- c("QUAC_wK", "QUAC_wk_ESTSSR", "QUAC_wk_gSSR",
+                  "QUAC_woK", "QUAC_woK_ESTSSR", "QUAC_woK_gSSR",
+                  "ZAIN_og", "ZAIN_rebinned")
 
 #################################################
 #     Comparing wild and garden populations     #
@@ -75,10 +77,7 @@ for(sp in 1:length(species_list)){
   
   #run t-test 
   allrich_pvalue <- as.numeric(kruskal.test(allrich_df[,2]~allrich_df[,1])[3])
-  
-  ##loop to create data frame 
-  
-  
+ 
   #name data frame
   allrich_garden_wild_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
   allrich_garden_wild_df[3,sp] <- allrich_pvalue
