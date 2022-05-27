@@ -25,7 +25,7 @@ library(tidyr)
 setwd("../../Data_Files")
 
 #genind objects 
-sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
+sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild/", pattern = "_clean.gen")
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
@@ -50,6 +50,9 @@ species_list <- c("QUAC_wK", "QUAC_wk_ESTSSR", "QUAC_wk_gSSR",
                   "QUAC_woK", "QUAC_woK_ESTSSR", "QUAC_woK_gSSR",
                   "ZAIN_og", "ZAIN_rebinned")
 
+#list out the scenarios 
+scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
 #################################################
 #     Comparing wild and garden populations     #
 #################################################
@@ -59,31 +62,31 @@ allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_l
 #comparing wild and garden individuals 
 hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
 
+#sum stats df for garden wild comp 
+allrich_hexp_df <- matrix(nrow = 6, ncol = length(species_list))
+
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(species_list)){
 
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
   
   #load data frames 
   sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
   
   #organize genind object
   rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
-  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
+  levels(sp_genind_temp@pop) <- c("Garden", "Wild")
     
   #combining into a df 
-  allrich_df <- gather(allelic.richness(repool(seppop(sp_genind_temp)[18:21]))$Ar)
+  allrich_df <- gather(allelic.richness(sp_genind_temp)$Ar)
   
   #run t-test 
   allrich_pvalue <- as.numeric(kruskal.test(allrich_df[,2]~allrich_df[,1])[3])
  
   #name data frame
-  allrich_garden_wild_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
-  allrich_garden_wild_df[3,sp] <- allrich_pvalue
-
-  rownames(allrich_garden_wild_df) <- c("Garden", "Wild", "p-value")
-  colnames(allrich_garden_wild_df) <- species_list
+  allrich_hexp_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
+  allrich_hexp_df[3,sp] <- allrich_pvalue
   
   #run hexp code
   hexp_df <- cbind(as.numeric(summary(seppop(sp_genind_temp)[[1]])$Hexp), as.numeric(summary(seppop(sp_genind_temp)[[2]])$Hexp))
@@ -97,19 +100,20 @@ for(sp in 1:length(species_list)){
   hexp_pvalue <- as.numeric(kruskal.test(hexp_temp_df[,2]~hexp_temp_df[,1])[3])
   
   #save in df 
-  hexp_garden_wild_df[1:2,sp] <- as.numeric(colMeans(hexp_df))
-  hexp_garden_wild_df[3,sp] <- hexp_pvalue
-  
-  rownames(hexp_garden_wild_df) <- c("Garden", "Wild", "p-value")
-  colnames(hexp_garden_wild_df) <- species_list
+  allrich_hexp_df[(1:2)+3,sp] <- as.numeric(colMeans(hexp_df))
+  allrich_hexp_df[6,sp] <- hexp_pvalue
  
-  #bind into one document 
-  QUAC_ZAIN_garden_wild_df <- signif(cbind(allrich_garden_wild_df, hexp_garden_wild_df), 3)
-   
-  #write out df 
-  write.csv(QUAC_ZAIN_garden_wild_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_garden_wild_df.csv")
+  #name colnames and rownames 
+  colnames(allrich_hexp_df) <- species_list
+  rownames(allrich_hexp_df) <- c("allrich_garden", "allrich_wild", "allrich_pvalue",
+                                 "hexp_garden", "hexp_wild", "hexp_pvalue")
   
 }
+
+
+#write out df 
+write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_garden_wild_df.csv")
+
 
 #################################
 #     Allelic capture code      #
@@ -139,7 +143,7 @@ sp_allele_cap <-matrix(nrow = (length(dup_reps)), ncol = length(list_allele_cat)
 ##run loop to generate allelic capture table 
 #the outer loop is calculating how many copies of each allele in each category exists
 #the inner loop is calculating the percent capture of each allele in each frequency category 
-for(sp in 1:length(species_list)){  #loop over every scenario
+for(sp in 1:length(scenarios_list)){  #loop over every scenario
   for(ndrop in c(0,2)){     #loop to include very rare or not 
     
     #ndrop or not   
