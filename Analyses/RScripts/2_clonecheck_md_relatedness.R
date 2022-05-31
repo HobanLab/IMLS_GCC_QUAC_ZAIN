@@ -4,7 +4,7 @@
 #When files are referred to as "clean" that means individuals 
 #that are clones and individuals with too much missing data have been removed. 
 #When files and objects are titled "red" that means they have been reduced
-#for half-siblings (12.5% relatedness coefficient)
+#for half-siblings (12.5% Loiselle relatedness coefficients)
 
 #########################
 #        Libraries      #
@@ -22,10 +22,10 @@ library(Demerelate)
 setwd("../../Data_Files")
 
 #now read in genepop file as a genind for adegenet 
-sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen$")
+sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen")
 
 #load relatedness data frame for relatedness analysis 
-sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
+sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv")
 
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
