@@ -1,0 +1,5 @@
+"","Porter","Magazine","Pryor","Sugar_Loaf"
+"Porter",NA,0.0793,0.1078,0.0732
+"Magazine",0.0793,NA,0.1123,0.0714
+"Pryor",0.1078,0.1123,NA,0.1172
+"Sugar_Loaf",0.0732,0.0714,0.1172,NA

@@ -73,16 +73,16 @@ for(sp in 1:length(species_list)){
   allele_cat <- get.allele.cat(sp_wild_genind, region_makeup=NULL, 2, n_ind_p_pop,n_drop = ndrop_list[[n]], glob_only=T)
   
   #create summary results for allelic capture 
-  summ_results_tree <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_sp_allele_cat), num_reps)) 
+  summ_results_tree <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
   
   #create a summary table 
-  sum_results_df <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_sp_allele_cat), num_reps)) 
+  sum_results_df <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
   
   #Repeat the resampling many times
   for (nrep in 1:num_reps) {
     
     #create empty matrix to store sampling code 
-    alleles_samp <- matrix(nrow=nrow(sp_wild_genind@tab)-1,ncol=length(list_sp_allele_cat))
+    alleles_samp <- matrix(nrow=nrow(sp_wild_genind@tab)-1,ncol=length(list_allele_cat))
     
     #This loop will sample trees from t = 2 to the total number of trees
     for (t in 2:(nrow(sp_wild_genind@tab)-1)){

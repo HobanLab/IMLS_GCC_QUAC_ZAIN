@@ -70,6 +70,9 @@ for(sp in 1:length(scenario_list)){
   #run pairwise Fst code 
   sp_pwfst_df <- pairwise.neifst(sp_hierfstat)
   
+  #write out pairwise fst df 
+  write.csv(sp_pwfst_df,paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_pwfst_df.csv"))
+  
   ##Geographic analyses for each population
   #calculate mean longitude and latitude for each population
   sp_mean_lon <- matrix()
@@ -97,7 +100,7 @@ for(sp in 1:length(scenario_list)){
   
   for(r1 in 1:length(sp_wild_pop_names)){
    for(r2 in 1:length(sp_wild_pop_names)){
-      
+    
       sp_dist_df[r1,r2] <-  distm(sp_coord_df[r1,], sp_coord_df[r2,], fun = distGeo)/1000
       
     }
