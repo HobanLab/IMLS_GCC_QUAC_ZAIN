@@ -21,3 +21,8 @@ This repo is divided into 2 main files - Analyses and Data_Files.
 <ul><li>allpop data files include all wild and garden populations separately, while files in the "Garden_Wild" folders with "garden_wild" in the title are where populations are separated into just their population type - garden or wild - and data files with "garden_allwildpop" is in the title indicates that all wild populations are named but all garden individuals are lumped into one population. </li></ul>
 <ul><li>A file marked with "df" in the title is in the format as described above, whereas "genalex" data files are in the genalex file format. </li></ul>
 
+<b>Organization of Data_Files folder:</b> 
+<ul><li>Adegenet_Files</ul></li>
+<ul><li><li>Garden_Wild</ul></li></li>
+
+
