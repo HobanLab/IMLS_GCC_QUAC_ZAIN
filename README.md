@@ -22,7 +22,9 @@ This repo is divided into 2 main files - Analyses and Data_Files.
 <ul><li>A file marked with "df" in the title is in the format as described above, whereas "genalex" data files are in the genalex file format. </li></ul>
 
 <b>Organization of Data_Files folder:</b> 
-<ul><li>Adegenet_Files</ul></li>
-<ul><li><li>Garden_Wild</ul></li></li>
-
-
+<ul><li>Adegenet_Files</li></ul>
+<ul><ul><li>Garden_Wild</li></ul></ul>
+<ul><li>Data_Frames</li></ul>
+<ul><ul><li>Garden_Wild</li></ul></ul>
+<ul><li>Geneclass_Files</li></ul>
+<ul><li>Structure_Files</li></ul>
