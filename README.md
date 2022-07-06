@@ -55,6 +55,10 @@ Organization of Data_Files folder:
 
 <ul><li>Results</li></ul>
 <ul><ul><li>Clustering</li></ul></ul>
+<ul><ul><ul><li>PCA</li></ul></ul></ul>
+<ul><ul><ul><li>Structure</li></ul></ul></ul>
+<ul><ul><ul><ul><li>QUAC</li></ul></ul></ul></ul>
+<ul><ul><ul><ul><li>ZAIN</li></ul></ul></ul></ul>
 <ul><ul><li>Garden_Wild_Comparisons</li></ul></ul>
 <ul><ul><li>Scoring_Comparison</li></ul></ul>
 <ul><ul><li>Sum_Stats</li></ul></ul>
