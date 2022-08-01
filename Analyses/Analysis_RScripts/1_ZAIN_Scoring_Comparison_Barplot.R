@@ -16,8 +16,13 @@ setwd("../../Data_Files")
 #convert arp2gen - comment in if needed
 #arp2gen("ZAIN_adegenet_files/ZAIN_garden_wild_rebinned.arp")
 
-#load in data frame with 2 pops - scored by us vs. scored by the Griffith lab
+#load in genepop file as genind object with 2 pops - scored by us vs. scored 
+#by the Griffith lab
 ZAIN_og_genind <- read.genepop("Adegenet_Files/Garden_Wild/ZAIN_og_garden_wild.gen", ncode = 3)
+
+#load in data frame with 2 pops - scored by Hoban lab (garden) and scored by 
+#Griffith lab 
+ZAIN_og_df <- read.csv("Data_Frames/ZAIN_og_allpop_df.csv")
 
 #convert to genpop
 ZAIN_og_genpop <- genind2genpop(ZAIN_og_genind)
@@ -37,8 +42,7 @@ loci <- unique(gsub("\\..*","",loci)[4:25])
 ###############################
 #     Scoring Comparison      #
 ###############################
-
-##loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
+#loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
 setwd("../Analyses/Results/Scoring_Comparison")
 pdf("ZAIN_scoring_comparison_barplots.pdf",width=20,height=9)
 

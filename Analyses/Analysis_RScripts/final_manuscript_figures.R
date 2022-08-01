@@ -205,28 +205,51 @@ ggplot(allrich_df, aes(x = Pop, y = All_Rich, fill = Pop_Type)) +
   
 
 #This function is run to output the resampling graphs for 
-resampling_df <- resampling[-1,c(2:6)]
+QUAC_resampling_df <- read.csv("../Analyses/Results/Garden_Wild_Comparison/QUAC_woK_resampling_df0.csv")
+ZAIN_resampling_df <- read.csv("../Analyses/Results/Garden_Wild_Comparison/ZAIN_rebinned_resampling_df0.csv")    
+
+#write PDF with name
+pdf("../Analyses/Results/Garden_Wild_Comparison/QUAC_resample_plot_woK_ndrop0.pdf", width = 10, height = 8)
     
-    #write PDF with name
-    pdf(paste0(sp,"_resample_plot.pdf"))
     #add points
-    plot(resampling_df[,1], col = "red", pch = 20, xlab = "Number of Individuals", 
-         ylab = "Percent Diversity Capture", xlim = c(0,length(rownames(resampling))), ylim = c(0,100), cex = 1.2,
+    plot(QUAC_resampling_df[,2], col = "red", pch = 20, xlab = "Number of Individuals", 
+         ylab = "Percent Diversity Capture", xlim = c(0,length(rownames(QUAC_resampling_df))), ylim = c(0,100), cex = 1.2,
          main = "Percent Diversity Capture (All Alleles Included)")
-    points(resampling_df[,2], col = "firebrick", pch = 20, cex = 1.2)
-    points(resampling_df[,3], col = "darkorange3", pch = 20, cex = 1.2)
-    points(resampling_df[,4], col = "coral", pch = 20, cex = 1.2)
-    points(resampling_df[,5], col = "deeppink4", pch = 20, cex = 1.2)
+    points(QUAC_resampling_df[,4], col = "darkorange3", pch = 20, cex = 1.2)
+    points(QUAC_resampling_df[,5], col = "coral", pch = 20, cex = 1.2)
+    points(QUAC_resampling_df[,6], col = "deeppink4", pch = 20, cex = 1.2)
     
-    legend('bottomright', legend = c("Global", "Very Common", "Common", "Uncommon","Rare"),
-           col = c("red", "firebrick", "darkorange3", "coral", "deeppink4"), pch = "_")
+    #add line for 95% capture
+    abline(h = 95, col = "darkslategray4", lty=2, lwd = 3)
+    
+    #add legend 
+    legend('bottomright', legend = c("Global", "Common", "Low Frequency","Rare", "95% diversity capture"),
+           lwd = 2, cex = 1.2, 
+           col = c("red", "darkorange3", "coral", "deeppink4", "darkslategray4"), 
+           lty = 1)
 
     
 dev.off()
     
+pdf("../Analyses/Results/Garden_Wild_Comparison/ZAIN_resample_plot_rebinned_ndrop0.pdf", width = 10, height = 8)
+#add points
+plot(ZAIN_resampling_df[,2], col = "red", pch = 20, xlab = "Number of Individuals", 
+     ylab = "Percent Diversity Capture", xlim = c(0,length(rownames(ZAIN_resampling_df))), ylim = c(0,100), cex = 1.2,
+     main = "Percent Diversity Capture (All Alleles Included)")
+points(ZAIN_resampling_df[,4], col = "darkorange3", pch = 20, cex = 1.2)
+points(ZAIN_resampling_df[,5], col = "coral", pch = 20, cex = 1.2)
+points(ZAIN_resampling_df[,6], col = "deeppink4", pch = 20, cex = 1.2)
 
-  
+#add line for 95% capture
+abline(h = 95, col = "darkslategray4", lty=2, lwd = 3)
 
+#legend 
+legend('bottomright', legend = c("Global", "Common", "Low Frequency","Rare", "95% diversity capture"),
+       lwd = 2, cex = 1.2, 
+       col = c("red", "darkorange3", "coral", "deeppink4", "darkslategray4"), 
+       lty = 1)
+
+dev.off()
 
 #write session info out
 sessionInfo()
