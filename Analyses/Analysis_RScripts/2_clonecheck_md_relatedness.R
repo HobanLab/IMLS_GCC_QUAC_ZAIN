@@ -30,11 +30,8 @@ sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv")
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
-#pop type list 
-pop_type <- c("Garden", "Wild")
-
 #load in relatedness function 
-source("../Analyses/RScripts/relatedness_analyses.R")
+source("../Analyses/Functions/relatedness_analyses.R")
 
 ############################################################
 #    Remove Clones and Individuals with Missing Data       #
@@ -99,8 +96,7 @@ for(sp in 1:length(sp_genind)){
 #################################
 ##code to reduce data frames by half-sibling relatedness 
 #create a data frame to store results of half sib 
-halfsib_garden_df <- matrix(nrow = length(scenario_list), ncol = length(pop_type))
-halfsib_wild_df <- matrix(nrow = length(scenario_list), ncol = length(pop_type))
+sib_df <- matrix(nrow = length(scenario_list), ncol = 4)
 
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
@@ -114,26 +110,34 @@ for(sp in 1:length(scenario_list)){
   #load in garden data frame 
   sp_clean_temp_df <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
   
-  #load in genepop files into genind 
+  #convert genepop files to genind objects 
   sp_clean_temp_gen <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[sp]]), ncode = 3)
   #name individuals in genind 
   rownames(sp_clean_temp_gen@tab) <- sp_clean_temp_df[,1]
   #name pops 
   levels(sp_clean_temp_gen@pop) <- unique(sp_clean_temp_df[,2])
   
-  ##Run relateness reduction code 
+  ###Run relatedness reduction code 
+  ##Half-sibs
   #Garden
-  halfsib_garden_df[sp,] <- halfsib_loiselle_sum_garden_df(sp_clean_temp_df)
-  rownames(halfsib_garden_df) <- scenario_list
-  colnames(halfsib_garden_df) <- c("Per_Halfsibs", "Tot_Ind")
+  sib_df[sp,1] <- halfsib_loiselle_sum_garden(sp_clean_temp_df)
   
   #Wild
-  halfsib_wild_df[sp,] <- halfsib_loiselle_sum_wild_df(sp_clean_temp_df)
-  rownames(halfsib_wild_df) <- scenario_list
-  colnames(halfsib_wild_df) <- c("Per_Halfsibs", "Tot_Ind")
+  sib_df[sp,2] <- halfsib_loiselle_sum_wild(sp_clean_temp_df)
+  
+  ##Full sibs 
+  #Garden
+  sib_df[sp,3] <- fullsib_loiselle_sum_garden(sp_clean_temp_df)
+  
+  #Wild
+  sib_df[sp,4] <- fullsib_loiselle_sum_wild(sp_clean_temp_df)
   
 }
 
-#write out summary table 
-halfsib_df <- cbind(halfsib_garden_df, halfsib_wild_df)
-write.csv(halfsib_df, "../Analyses/Results/Garden_Wild_Comparison/halfsib_df.csv")
+#organize data frame
+rownames(sib_df) <- scenario_list
+colnames(sib_df) <- c("Garden_HalfSibs", "Wild_Halfsibs", "Garden_FullSibs", "Wild_FullSibs")
+#multiply by 100 and round
+sib_df <- signif(sib_df*100,3)
+#write out df
+write.csv(sib_df, "../Analyses/Results/Garden_Wild_Comparison/sib_df.csv")
