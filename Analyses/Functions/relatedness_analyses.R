@@ -35,9 +35,9 @@ halfsib_loiselle_sum_garden <- function(x){
     halfsib_list <- unique(halfsibs_clean_back)
   
     #calculate percent of half-sibs 
-    halfsib_sum <- length(halfsib_list)/length(x[x[,3] == "Garden",][,1])
+    halfsib_garden_sum <- length(halfsib_list)/length(x[x[,3] == "Garden",][,1])
     #name columns
-    return(halfsib_sum)
+    return(halfsib_garden_sum)
 }
 
 #function to output the % of halfsibs in wild populations 
@@ -70,22 +70,23 @@ halfsib_loiselle_sum_wild <- function(x){
         #create list of half-sibs 
         halfsib_list <- unique(halfsibs_clean_back)
         
-        #create data frame by pop with the total individual numbers and the # of half-sibs 
-        relate_pop_df[pop,1] <- length(x[x[,2] == pop_names[[pop]],][,1])
+        #create a list with all of the numbers of related individuals 
+        relate_pop_df[pop,1] <- length(halfsib_list)
         
     }
     
     #calculate percent of half sibs  
-    halfsib_wild_relate_sum <- colSums(relate_pop_df)
+    halfsib_wild_relate_sum <- sum(relate_pop_df)
     #save output 
-    halfsib_allwild_sum_df <- halfsib_wild_relate_sum[2]/halfsib_wild_relate_sum[1]
+    halfsib_wild_sum <- halfsib_wild_relate_sum/length(relate_wild_df[,1])
     #name columns 
-    return(halfsib_allwild_sum_df)
+    return(halfsib_wild_sum)
 }
 
 ##full-sibs 
 #function to output the % of full sibs in all garden pops 
 fullsib_loiselle_sum_garden <- function(x){
+  
   
   #run relatedness analysis on individuals with only pop type - garden or wild 
   relatedness_df <- Demerelate(x[,-2], object = T, value = "loiselle", NA.rm	= TRUE)
@@ -118,7 +119,7 @@ fullsib_loiselle_sum_wild <- function(x){
   relatedness_df <- Demerelate(relate_wild_df[,-3], object = T, value = "loiselle", NA.rm	= TRUE)
   
   #create a population name list for each data frame 
-  pop_names <- unique(x[x[,3] == "Wild",][,2])
+  pop_names <- unique(relate_wild_df[,2])
   
   #create a matrix for relatedness 
   relate_pop_df <- matrix(nrow = length(pop_names), ncol = 1)
@@ -139,15 +140,15 @@ fullsib_loiselle_sum_wild <- function(x){
     fullsib_list <- unique(fullsibs_clean_back)
     
     #create data frame by pop with the total individual numbers and the # of full sibs 
-    relate_pop_df[pop,1] <- length(x[x[,2] == pop_names[[pop]],][,1])
+    relate_pop_df[pop,1] <- length(fullsib_list)
     
   }
   
   #calculate percent of full sibs  
-  fullsib_wild_relate_sum <- colSums(relate_pop_df)
+  fullsib_wild_relate_sum <- sum(relate_pop_df)
   #save output 
-  fullsib_wild_sum <- fullsib_wild_relate_sum[2]/fullsib_wild_relate_sum[1]
-  #name columns 
+  fullsib_wild_sum <- fullsib_wild_relate_sum/length(relate_wild_df[,1])
+  #return percent of full siblings 
   return(fullsib_wild_sum)
 }
 
