@@ -32,7 +32,7 @@ sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild/", pattern = "_c
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
 
 #load in function to calculate allele frequency categories
-source("../Analyses/RScripts/Fa_sample_funcs.R")
+source("../Analyses/Functions/Fa_sample_funcs.R")
 
 #create functions to run code 
 colMax <- function(data) sapply(data, max, na.rm = TRUE)
@@ -103,7 +103,6 @@ for(sp in 1:length(species_list)){
                                  "hexp_garden", "hexp_wild", "hexp_pvalue")
 }
 
-
 #write out df 
 write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_garden_wild_df.csv")
 
@@ -113,6 +112,9 @@ write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN
 #################################
 #list out allele categories
 list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+
+#remove gSSR and ESTSSR genind objects 
+sp_genind_list <- sp_genind_list[c(1,4,7:8)]
 
 ##create table for % alleles captured by frequency and how many duplicates were present  
 #create list with duplicates 
@@ -197,78 +199,12 @@ for(sp in 1:length(scenarios_list)){  #loop over every scenario
   colnames(sp_allele_cap) <- list_allele_cat
   
   ##write out data frames
-  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
-  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
-  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
   
-  #write out duplicate code graph 
-  #pdf(paste0("QUAC_wild_cap_dup_barplot",n_drop_file, '.pdf'), width = 8, height = 8)
-  #barplot(t(QUAC_wild_cap_df[,c(1, 3, 5)])*100, las = 2, beside = TRUE,
-  #        col = c("red", "coral", "deeppink4"), legend.text = c("Global Alleles", "Common Alleles", "Rare Alleles"))
-  #dev.off()
   }
 }
-
-#####################
-#     Plotting      #
-#####################
-#create mean data frames - allrich 
-QUAC_allrich_mean_df <- as.data.frame(rbind(mean(QUAC_allrich[[1]][,1]), mean(QUAC_allrich[[2]][,1])))
-QUAC_allrich_mean_df$pop_type <- NA
-QUAC_allrich_mean_df$pop_type <- c("Garden", "Wild")
-
-#calculate standard errors
-allrich_garden_se <- sd(QUAC_allrich[[1]][,1])/sqrt(length(QUAC_allrich[[1]][,1]))
-allrich_wild_se <- sd(QUAC_allrich[[2]][,1])/sqrt(length(QUAC_allrich[[2]][,1]))
-
-#create mean data frame - hexp
-QUAC_hexp_mean_df <- as.data.frame(rbind(mean(QUAC_hexp[[1]][,1]), mean(QUAC_hexp[[2]][,1])))
-QUAC_hexp_mean_df$pop_type <- NA
-QUAC_hexp_mean_df$pop_type <- c("Garden", "Wild")
-
-#calculate standard errors
-hexp_garden_se <- sd(QUAC_hexp[[1]][,1])/sqrt(length(QUAC_hexp[[1]][,1]))
-hexp_wild_se <- sd(QUAC_hexp[[2]][,1])/sqrt(length(QUAC_hexp[[2]][,1]))
-
-
-#allrich comparison boxplot
-pdf("allrich_garden_wild_barplot.pdf", width = 8, height = 10)
-barplot(QUAC_allrich_mean_df[,1], beside = TRUE, 
-        ylim = c(0,15), col = c("darkgreen", "darkseagreen1"),
-        names = c("Garden", "Wild"), 
-        main = "Allelic Richness Compared Between Garden and Wild Populations", 
-        xlab = "Population Type", ylab = "Allelic Richness")
-arrows(x0 = 0.7, y0 = QUAC_allrich_mean_df[1,1] - allrich_garden_se, 
-       x1 = 0.7, y1 = QUAC_allrich_mean_df[1,1] + allrich_garden_se,
-       code=3, angle=90, length=0.1)
-
-arrows(x0 = 1.9, y0 = QUAC_allrich_mean_df[2,1] - allrich_wild_se, 
-       x1 = 1.9, y1 = QUAC_allrich_mean_df[2,1] + allrich_wild_se,
-       code=3, angle=90, length=0.1)
-
-abline(h = 0)
-dev.off()
-
-#hexp barplot
-
-#hexp comparison boxplot
-pdf("hexp_garden_wild_barplot.pdf", width = 8, height = 10)
-barplot(QUAC_hexp_mean_df[,1], beside = TRUE, 
-        ylim = c(0,1), col = c("darkgreen", "darkseagreen1"),
-        names = c("Garden", "Wild"), 
-        main = "Expected Heterozygosity Compared Between Garden and Wild Populations", 
-        xlab = "Population Type", ylab = "Expected Heterozygosity")
-arrows(x0 = 0.7, y0 = QUAC_hexp_mean_df[1,1] - hexp_garden_se, 
-       x1 = 0.7, y1 = QUAC_hexp_mean_df[1,1] + hexp_garden_se,
-       code=3, angle=90, length=0.1)
-
-arrows(x0 = 1.9, y0 = QUAC_hexp_mean_df[2,1] - hexp_wild_se, 
-       x1 = 1.9, y1 = QUAC_hexp_mean_df[2,1] + hexp_wild_se,
-       code=3, angle=90, length=0.1)
-
-abline(h = 0)
-dev.off()
-
 
 #write session info out
 sessionInfo()
