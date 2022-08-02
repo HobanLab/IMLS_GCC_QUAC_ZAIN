@@ -24,19 +24,9 @@ library(diveRsity)
 #########################
 #   Load Data Files     #
 #########################
-##set working directory to load in data files
+#set working directory to load in data files
 setwd("../../Data_Files")
 
-##comment in if files need to be converted 
-#sp_arp_list <- list.files(path = "Adegenet_Files", pattern = "_allpop.arp$")
-
-#for(sp in 1:length(sp_arp_list)){
-
-# arp2gen(paste0("Adegenet_Files/", sp_arp_list[[sp]]))
-
-#}
-
-#list data files 
 #genind objects 
 sp_genind_list <- list.files(path = "Adegenet_Files/", pattern = "_clean.gen")
 
@@ -49,7 +39,6 @@ scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 ############################################################
 #  Null Alleles, HWE Deviation, Linkage Disequilibrium     #
 ############################################################
-
 #loop to assess scores for null alleles, HWE deviations, and linkage disequilibrium
 for(sp in 1:length(sp_genind_list)){
   
@@ -105,7 +94,7 @@ for(sp in 1:length(sp_genind_list)){
 #create a list of pop types 
 pop_type_list <- c("Garden", "Wild")
 
-###loops to generate summary statistics for populations 
+###loops to generate genetic summary statistics for populations 
 ##outer loop is by species
 #inner loop is by wild or botanic garden
 for(sp in 1:length(sp_genind_list)){
@@ -121,6 +110,12 @@ for(sp in 1:length(sp_genind_list)){
     #organize genind 
     rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
     levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
+    
+    #add loop to remove pops < 20 individuals for ZAIN 
+    if(sp == 3|sp == 4){
+      
+    #limit by populations that are too small, wild 
+    sp_genind_temp <- repool(seppop(sp_genind_temp)[c(1:19, 23:26,28:32,34:35)])
     
     #limit by pop_type 
     sp_poptype_df_temp <- sp_df_temp[sp_df_temp[,3] == paste0(pop_type_list[[pop_type]]),]
@@ -145,12 +140,13 @@ for(sp in 1:length(sp_genind_list)){
     sp_allpop_gendiv_sumstat_df <- signif(cbind(sp_ind, sp_nall, sp_allrich_mean, sp_hexp_mean),3)
     
     #name rows 
-    rownames(sp_allpop_gendiv_sumstat_df) <- unique(sp_poptype_df_temp$Pop)
+    rownames(sp_allpop_gendiv_sumstat_df) <- levels(sp_poptype_genind_temp@pop)
     colnames(sp_allpop_gendiv_sumstat_df) <- c("Ind","MLG", "NAll", "All_Rich", "Hexp")
     
     #write out data frame
     write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/", pop_type_list[[pop_type]], "_", gsub("\\..*","",sp_genind_list[[sp]]), 
                                                   "_gendiv_sumstats.csv"))
   
+    }
   }
 }
