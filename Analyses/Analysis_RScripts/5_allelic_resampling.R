@@ -1,6 +1,5 @@
-###This script details calculating how many wild samples it would take to 
+###This script calculates how many wild samples it would take to 
 ##Capture different levels of diversity in wild samples. 
-#
 
 #####################
 #     Libraries     #
@@ -20,6 +19,8 @@ setwd("../../Data_Files")
 
 #genind objects 
 sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "_clean.gen")
+#clean to not include gSSRs or ESTs genind objects
+sp_genind_list <- sp_genind_list[c(1,4,7:8)]
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
@@ -60,7 +61,7 @@ for(sp in 1:length(species_list)){
    
   #set rep number
   num_reps <- 1000
-  
+  #include function for take the maximum value of a column
   colMax <- function(data) sapply(data, max, na.rm = TRUE)
   
   #create documents for allelic categorization code 
@@ -152,10 +153,11 @@ for(sp in 1:length(resampling_list)){
   
 }
 
-
-##name rows and columns of the matrix 
+#name rows and columns of the matrix 
 rownames(sp_min_sample_95) <- name_list
 colnames(sp_min_sample_95) <- list_allele_cat
 
-##write out data frame 
+#write out data frame 
 write.csv(sp_min_sample_95, "sp_min_samp_95.csv")
+
+sessionInfo()

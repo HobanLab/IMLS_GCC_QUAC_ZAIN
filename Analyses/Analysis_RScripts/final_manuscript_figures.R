@@ -253,3 +253,52 @@ dev.off()
 
 #write session info out
 sessionInfo()
+
+
+#####################
+#     Plotting      #
+#####################
+#calculate standard errors
+allrich_garden_se <- sd(allrich_hexp_df[[1]][,1])/sqrt(length(allrich_hexp_df[[1]][,1]))
+allrich_wild_se <- sd(allrich_hexp_df[[2]][,1])/sqrt(length(allrich_hexp_df[[2]][,1]))
+
+#calculate standard errors
+hexp_garden_se <- sd(QUAC_hexp[[1]][,1])/sqrt(length(QUAC_hexp[[1]][,1]))
+hexp_wild_se <- sd(QUAC_hexp[[2]][,1])/sqrt(length(QUAC_hexp[[2]][,1]))
+
+#allrich comparison boxplot
+pdf("allrich_garden_wild_barplot.pdf", width = 8, height = 10)
+barplot(QUAC_allrich_mean_df[,1], beside = TRUE, 
+        ylim = c(0,15), col = c("darkgreen", "darkseagreen1"),
+        names = c("Garden", "Wild"), 
+        main = "Allelic Richness Compared Between Garden and Wild Populations", 
+        xlab = "Population Type", ylab = "Allelic Richness")
+arrows(x0 = 0.7, y0 = QUAC_allrich_mean_df[1,1] - allrich_garden_se, 
+       x1 = 0.7, y1 = QUAC_allrich_mean_df[1,1] + allrich_garden_se,
+       code=3, angle=90, length=0.1)
+
+arrows(x0 = 1.9, y0 = QUAC_allrich_mean_df[2,1] - allrich_wild_se, 
+       x1 = 1.9, y1 = QUAC_allrich_mean_df[2,1] + allrich_wild_se,
+       code=3, angle=90, length=0.1)
+
+abline(h = 0)
+dev.off()
+
+#hexp comparison boxplot
+pdf("hexp_garden_wild_barplot.pdf", width = 8, height = 10)
+barplot(QUAC_hexp_mean_df[,1], beside = TRUE, 
+        ylim = c(0,1), col = c("darkgreen", "darkseagreen1"),
+        names = c("Garden", "Wild"), 
+        main = "Expected Heterozygosity Compared Between Garden and Wild Populations", 
+        xlab = "Population Type", ylab = "Expected Heterozygosity")
+arrows(x0 = 0.7, y0 = QUAC_hexp_mean_df[1,1] - hexp_garden_se, 
+       x1 = 0.7, y1 = QUAC_hexp_mean_df[1,1] + hexp_garden_se,
+       code=3, angle=90, length=0.1)
+
+arrows(x0 = 1.9, y0 = QUAC_hexp_mean_df[2,1] - hexp_wild_se, 
+       x1 = 1.9, y1 = QUAC_hexp_mean_df[2,1] + hexp_wild_se,
+       code=3, angle=90, length=0.1)
+
+abline(h = 0)
+dev.off()
+
