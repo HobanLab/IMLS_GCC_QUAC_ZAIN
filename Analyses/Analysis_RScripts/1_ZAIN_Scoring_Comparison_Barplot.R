@@ -1,5 +1,11 @@
-##This script is used to determine if there are differences between 
-#scoring based on who scored them in Zamia integrifolia 
+###This script visualizes the differences in microsatellite scoring for ZAIN 
+##when scoring was performed by different labs. Wild ZAIN microsatellite scoring
+#was performed by the Griffith lab and at a different time than the scoring for
+#garden individuals, which were scored by the Hoban lab in 2021. Therefore,
+#we attempted to determine if there were consistent scoring differences that 
+#were due to different times and scorers. We then rebinned scores to create 
+#consistency between the data files and created barplots to determine if 
+#rebinning analysis lead to greater consistency among individuals. 
 
 #####################
 #     Libraries     #
@@ -20,8 +26,7 @@ setwd("../../Data_Files")
 #by the Griffith lab
 ZAIN_og_genind <- read.genepop("Adegenet_Files/Garden_Wild/ZAIN_og_garden_wild.gen", ncode = 3)
 
-#load in data frame with 2 pops - scored by Hoban lab (garden) and scored by 
-#Griffith lab 
+#load in file with 2 pops - scored by Hoban lab (garden) and scored by Griffith lab (wild)
 ZAIN_og_df <- read.csv("Data_Frames/ZAIN_og_allpop_df.csv")
 
 #convert to genpop
@@ -39,13 +44,18 @@ loci <- colnames(ZAIN_og_df)
 #clean list 
 loci <- unique(gsub("\\..*","",loci)[4:25])
 
-###############################
-#     Scoring Comparison      #
-###############################
-#loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
+#######################################
+#     Initial Scoring Comparison      #
+#######################################
+##Code to compare microsatellite scores performed by different labs at different
+#time points. 
+#Garden individuals were scored by the Hoban lab in 2021
+#Wild individuals were scored by the Griffith lab 2010 - 2018
+
 setwd("../Analyses/Results/Scoring_Comparison")
 pdf("ZAIN_scoring_comparison_barplots.pdf",width=20,height=9)
 
+#loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
 for(a in loci){
   
   ZAIN_scoring <- ZAIN_og_genpop[,which(grepl(a,colnames(ZAIN_og_genpop@tab)))]@tab
@@ -67,18 +77,23 @@ dev.off()
 ############################################################
 #     Scoring Comparison Following Rebinning Analysis      #
 ############################################################
-##loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
-
+##Code to plot ZAIN genind objects following rebinning analysis was performed
+#create pdf 
 pdf("ZAIN_scoring_comparison_barplots_post_rebinning.pdf",width=20,height=9)
+
+#loop to compare scoring between the Hoban Lab Scoring and the Griffith Lab
 for(a in loci){
   
+  #create data frame of each locus 
   ZAIN_scoring <- ZAIN_rebinned_genpop[,which(grepl(a,colnames(ZAIN_rebinned_genpop@tab)))]@tab
   
+  #loop to standardize score count by percent for each group - wild and garden individuals
   for(p in 1:2) ZAIN_scoring[p,] <- ZAIN_scoring[p,]/sum(ZAIN_scoring[p,])
-  #reorder data frame
+  
+  #reorder data frame for alleles to be plotted in numerical order
   ZAIN_scoring <- ZAIN_scoring[,sort(colnames(ZAIN_scoring))]
   
-  #now plot 
+  #plot barplots by locus
   ZAIN_barplot <- barplot(ZAIN_scoring, las = 2, beside = TRUE, col = c("darkgreen", "darkseagreen1"),
                           legend.text =  c("Hoban_Lab","Griffith_Lab"), ylim = c(0,1), main = paste0(a),
                           names = gsub("^.*\\.","",colnames(ZAIN_scoring)))
