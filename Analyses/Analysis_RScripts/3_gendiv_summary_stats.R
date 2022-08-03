@@ -1,14 +1,11 @@
 ##Here we calculate summary statistics 
 #First, we tested linkage disequilibrium, null alleles, and Hardy Weinberg 
 #equilibrium. Next, a data frame including expected heterozygosity, 
-#allelic richness, number of alleles, mean longtitude and latitude 
+#allelic richness, number of alleles, mean longitude and latitude 
 #for wild populations, and individual numbers. 
 #This table is included in full in the supplemental text of this manuscript.
-#When files are referred to as "clean" that means individuals 
-#that are clones and indviduals with too much missing data have been removed. 
-#When files and objects are titled "red" that means they have been reduced
-#for relatedness (25% or more related individuals are reduced to one individual
-#per phenotype)
+#We used files in this script that are referred to as "clean," which means
+#clones and individuals with too much missing data have been removed. 
 
 #########################
 #        Libraries      #

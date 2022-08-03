@@ -1,5 +1,14 @@
 ###This script calculates how many wild samples it would take to 
-##Capture different levels of diversity in wild samples. 
+##capture different levels of diversity in wild samples of both ZAIN and QUAC. 
+#We do this by resampling wild individuals and determining how many
+#alleles we capture. We then determine the number of individuals  
+#we would need to sample to capture 95% of diversity, a common target of 
+#sampling analyses. We also do this by allele frequency category (rare - global)
+#and use code to plot these graphs to visualize the improvement in sampling
+#different numbers of individuals. 
+#In this script we use genind objects that are referred to as "clean,"
+#which means clones and individuals with too much missing data (>25%) 
+#have been removed.
 
 #####################
 #     Libraries     #

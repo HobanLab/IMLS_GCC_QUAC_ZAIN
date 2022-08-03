@@ -1,10 +1,8 @@
 ##This script details the analyses run on Quercus acerifolia and Zamia integrifolia 
 #(referred to as QUAC and ZAIN in this script for brevity) genotype files 
 #to prepare them for genetic diversity and structure analyses. 
-#When files are referred to as "clean" that means individuals 
-#that are clones and individuals with too much missing data have been removed. 
-#When files and objects are titled "red" that means they have been reduced
-#for half-siblings (12.5% Loiselle relatedness coefficients)
+#We used files in this script that are referred to as "clean," which means
+#clones and individuals with too much missing data have been removed. 
 
 #########################
 #        Libraries      #
