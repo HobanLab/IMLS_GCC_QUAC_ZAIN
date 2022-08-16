@@ -21,12 +21,11 @@ library(tidyr)
 #######################
 #     Load files      #
 #######################
-##set working directory to load in data files
-#setwd("../../Data_Files")
-setwd("C:/Users/eschumacher/Documents/GitHub/GCC_QUAC_ZAIN/Data_Files")
+#set working directory to load in data files
+setwd("../../Data_Files")
 
 #genind objects 
-sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild/", pattern = "_clean.gen")
+sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
@@ -45,11 +44,6 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 # arp2gen(paste0("Adegenet_Files/Garden_Wild/", sp_arp_list[[sp]]))
 
 #}
-
-#list of scenarios 
-species_list <- c("QUAC_wK", "QUAC_wK_ESTSSR", "QUAC_wK_garden_wild_gSSR",
-                  "QUAC_woK", "QUAC_woK_ESTSSR", "QUAC_woK_garden_wild_gSSR",
-                  "ZAIN_og", "ZAIN_rebinned")
 
 #list out the scenarios 
 scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
@@ -78,7 +72,7 @@ QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
 #pvalue data frame 
 sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
 colnames(sp_allrich_hexp_pvalue) <- c("All_Rich", "Hexp")
-rownames(sp_allrich_hexp_pvalue) <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+rownames(sp_allrich_hexp_pvalue) <- scenarios_list
 
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(sp_genind_list)){
@@ -173,17 +167,13 @@ for(sp in 1:length(sp_genind_list)){
 }
 
 #write out df 
-write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_garden_wild_df.csv")
-
+write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_hexp_pvalue_df.csv")
 
 #################################
 #     Allelic capture code      #
 #################################
 #list out allele categories
 list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
-
-#remove gSSR and ESTSSR genind objects 
-sp_genind_list <- sp_genind_list[c(1,4,7:8)]
 
 ##create table for % alleles captured by frequency and how many duplicates were present  
 #create list with duplicates 
@@ -215,27 +205,38 @@ for(sp in 1:length(scenarios_list)){  #loop over every scenario
     if(ndrop == 2) n_drop_file <- "_ndrop2"
       
     #load genepop files as genind objects 
-    sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
+    sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
       
     #load data frames 
     sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
       
     #organize genind object
     rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
-    levels(sp_genind_temp@pop) <- unique(sp_df_temp[,3])
-      
-    #seppop genind - we only want to use the wild pops to calculate the alleles existing for capture
-    sp_seppop <- seppop(sp_genind_temp)
-      
+    
+    ##organize into pops - garden
+    #separate into garden genind object 
+    sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
+    #rename pops to be garden only 
+    levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[sp]]))
+    
+    ##organize into pop types 
+    #separate into wild genind object 
+    sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+    #rename to wild only 
+    levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
+    
+    #repool garden and wild individuals 
+    sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
+    
     #calculate number of individuals per pop
-    n_ind_p_pop <- as.numeric(table(sp_seppop[[2]]@pop))
+    n_ind_p_pop <- as.numeric(table(sp_wild_genind@pop))
       
     #convert the wild genind object to a genpop object
-    sp_wild_genpop <- genind2genpop(sp_seppop[[2]])
+    sp_wild_genpop <- genind2genpop(sp_wild_genind)
       
     #create documents for comparison 
-    n_ind_W<-table(sp_genind_temp@pop)[2];  n_ind_G<-table(sp_genind_temp@pop)[1]; 
-    sp_alleles_cap <- colSums(sp_seppop[[1]]@tab,na.rm=T)
+    n_ind_W <- table(sp_garden_wild_genind@pop)[2];  n_ind_G<-table(sp_garden_genind@pop)[1]; 
+    sp_alleles_cap <- colSums(sp_garden_genind@tab,na.rm=T)
       
     #first calculate the frequency categories of alleles in the wild individuals   	
     sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, as.numeric(n_ind_p_pop), n_drop = ndrop, glob_only = TRUE)	
