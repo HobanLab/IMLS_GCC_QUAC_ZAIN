@@ -66,41 +66,110 @@ hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list
 #sum stats df for garden wild comp 
 allrich_hexp_df <- matrix(nrow = 6, ncol = length(species_list))
 
-#loop to compare diversity capture in wild and botanic garden populations
-for(sp in 1:length(species_list)){
+#pop list 
+pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
+                 c(18:22), c(18:21), c(11:35), c(11:35))
 
+#initial lists 
+QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
+                   "PIE039", "FIR53", "FIR048", "PIE125")
+QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
+
+#pvalue data frame 
+sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
+colnames(sp_allrich_hexp_pvalue) <- c("All_Rich", "Hexp")
+rownames(sp_allrich_hexp_pvalue) <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
+#loop to compare diversity capture in wild and botanic garden populations
+for(sp in 1:length(sp_genind_list)){
+  
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
   
-  #combining into a df 
-  allrich_df <- gather(allelic.richness(sp_genind_temp)$Ar)
+  ##organize into pops - garden
+  #separate into garden genind object 
+  sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
+  #rename pops to be garden only 
+  levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[sp]]))
   
-  #run t-test 
-  allrich_pvalue <- as.numeric(kruskal.test(allrich_df[,2]~allrich_df[,1])[3])
- 
-  #name data frame
-  allrich_hexp_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
-  allrich_hexp_df[3,sp] <- allrich_pvalue
+  ##organize into pop types 
+  #separate into wild genind object 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+  #rename to wild only 
+  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
   
-  #run hexp code
-  hexp_df <- cbind(as.numeric(summary(seppop(sp_genind_temp)[[1]])$Hexp), as.numeric(summary(seppop(sp_genind_temp)[[2]])$Hexp))
-  #name columns 
-  colnames(hexp_df) <- c("Garden", "Wild")
+  #repool to calculate diversity stats 
+  sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
   
-  #transform the data frame for analyses 
-  hexp_temp_df <- gather(as.data.frame(hexp_df))
-  
-  #save p-value 
-  hexp_pvalue <- as.numeric(kruskal.test(hexp_temp_df[,2]~hexp_temp_df[,1])[3])
-  
-  #save in df 
-  allrich_hexp_df[(1:2)+3,sp] <- as.numeric(colMeans(hexp_df))
-  allrich_hexp_df[6,sp] <- hexp_pvalue
- 
-  #name colnames and rownames 
-  colnames(allrich_hexp_df) <- species_list
-  rownames(allrich_hexp_df) <- c("allrich_garden", "allrich_wild", "allrich_pvalue",
-                                 "hexp_garden", "hexp_wild", "hexp_pvalue")
+  #if statement for EST and gSSR comparison - QUAC only, sp == 1, sp == 2
+  if(sp == 1|sp == 2){
+    
+    ###calculate diversity stats for all scenarios 
+    ##just determine wild and garden diversity levels 
+    #calculate allelic richness and create data frame 
+    sp_allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
+    #calculate heterozygosity and create data frame 
+    sp_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp, summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
+    colnames(sp_hexp) <- c("Garden", "Wild")
+    sp_hexp_df <- gather(sp_hexp)
+    #name for category 
+    sp_allrich_df$cat_type <- paste0(sp_allrich_df[,1],"_allrich")
+    sp_hexp_df$cat_type <- paste0(sp_hexp_df[,1],"hexp")
+    
+    ##separate by loci combination 
+    #gSSR genind object
+    sp_gSSR_genind <- sp_garden_wild_genind[loc = QUAC_gSSR_loci]
+    #calculate allelic richness and create data frame 
+    sp_gSSR_allrich <- gather(allelic.richness(sp_gSSR_genind)$Ar)
+    #calculate hexp and create data frame 
+    sp_gSSR_hexp <- as.data.frame(cbind( summary(seppop(sp_gSSR_genind)[[1]])$Hexp,  summary(seppop(sp_gSSR_genind)[[2]])$Hexp))
+    colnames(sp_gSSR_hexp) <- c("Garden", "Wild")
+    sp_gSSR_hexp <- gather(sp_gSSR_hexp)
+    #create rownames with sections of names 
+    sp_gSSR_allrich$cat_type <- paste0(sp_gSSR_allrich[,1], "_gSSR_allrich")
+    sp_gSSR_hexp$cat_type <- paste0(sp_gSSR_allrich[,1], "_gSSR_hexp")
+    
+    ###calculate diversity stats for all scenarios 
+    ##separate by loci combination 
+    #EST SSR genind object 
+    sp_EST_genind <- sp_garden_wild_genind[loc = QUAC_EST_loci]
+    #calculate allelic richness and create data frame 
+    sp_EST_allrich <- gather(allelic.richness(sp_EST_genind)$Ar)
+    #calculate hexp and create data frame 
+    sp_EST_hexp <- as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp,  summary(seppop(sp_EST_genind)[[2]])$Hexp))
+    colnames(sp_EST_hexp) <- c("Garden", "Wild")
+    sp_EST_hexp <- gather(sp_EST_hexp)
+    #create rownames with sections of names 
+    sp_EST_allrich$cat_type <- paste0(sp_EST_allrich[,1], "_EST_allrich")
+    sp_EST_hexp$cat_type <- paste0(sp_EST_hexp[,1], "_EST_hexp")
+    
+    ##combine all categories for statistical tests 
+    #all rich
+    sp_allrich_allcat_df <- rbind(sp_allrich_df, sp_gSSR_allrich, sp_EST_allrich)
+    #hexp 
+    sp_hexp_allcat_df <- rbind(sp_hexp_df, sp_gSSR_hexp, sp_EST_hexp)
+    
+    #summary data frames 
+    sp_allrich_hexp_pvalue[sp,1] <- kruskal.test(sp_allrich_allcat_df[,2]~sp_allrich_allcat_df[,3])[3]$p.value
+    sp_allrich_hexp_pvalue[sp,2] <- kruskal.test(sp_hexp_allcat_df[,2]~sp_hexp_allcat_df[,3])[3]$p.value
+    
+  }else{
+    
+    #combining into a df 
+    allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
+    
+    #run t-test 
+    sp_allrich_hexp_pvalue[sp,1] <- kruskal.test(allrich_df[,2]~allrich_df[,1])[3]$p.value
+    
+    #run hexp code
+    sp_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp,  summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
+    colnames(sp_hexp) <- c("Garden", "Wild")
+    #create data frame for hexp
+    sp_hexp_df <- gather(sp_hexp)
+    #save p-value for hexp 
+    sp_allrich_hexp_pvalue[sp,2] <- kruskal.test(sp_hexp_df[,2]~sp_hexp_df[,1])[3]$p.value
+    
+  }
 }
 
 #write out df 
