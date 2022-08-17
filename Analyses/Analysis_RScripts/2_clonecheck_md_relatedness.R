@@ -109,7 +109,7 @@ for(sp in 1:length(scenario_list)){
   sp_clean_temp_df <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
   
   #convert genepop files to genind objects 
-  sp_clean_temp_gen <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[sp]]), ncode = 3)
+  sp_clean_temp_gen <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[1]]), ncode = 3)
   #name individuals in genind 
   rownames(sp_clean_temp_gen@tab) <- sp_clean_temp_df[,1]
   #name pops 

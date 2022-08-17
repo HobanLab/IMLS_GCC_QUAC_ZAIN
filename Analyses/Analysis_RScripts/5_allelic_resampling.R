@@ -19,6 +19,9 @@ library(diveRsity)
 library(poppr)
 library(hierfstat)
 library(tidyr)
+library(parallel)
+library(foreach)
+library(doParallel)
 
 #######################
 #     Load files      #
@@ -27,18 +30,17 @@ library(tidyr)
 setwd("../../Data_Files")
 
 #genind objects 
-sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "_clean.gen")
-#clean to not include gSSRs or ESTs genind objects
-sp_genind_list <- sp_genind_list[c(1,4,7:8)]
-
-#df files 
-sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
+sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #list out allele categories
 list_sp_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
 
 #list of scenarios 
 species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
+#pop list 
+pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
+                 c(18:22), c(18:21), c(11:35), c(11:35))
 
 #load in function to calculate allele frequency categories
 source("../Analyses/Functions/Fa_sample_funcs.R")
@@ -52,53 +54,69 @@ sp_resampling_list <- list()
 all_mean_list <- list()
 ndrop_list <- c(0,2)
 
+##using for each package and parallelization 
+#detect cores
+cores <- detectCores() - 1
+#
+cl<-makeCluster(cores)
+registerDoParallel(cl)
+
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(species_list)){
     
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[1]]), ncode = 3)
+
+  ##organize into pops - garden
+  #separate into garden genind object 
+  sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[1]]])
+  #rename pops to be garden only 
+  levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[1]]))
   
-  #load data frames 
-  sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
+  ##organize into pop types 
+  #separate into wild genind object 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[1+4]]])
+  #rename to wild only 
+  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[1+4]]))
   
-  #organize genind object
-  rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
-  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,3])
+  #repool to calculate diversity stats 
+  sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
   
   #run resampling code on all species 
   for(n in 1:length(ndrop_list)){
    
-  #set rep number
-  num_reps <- 1000
-  #include function for take the maximum value of a column
-  colMax <- function(data) sapply(data, max, na.rm = TRUE)
+    #set rep number
+    num_reps <- 1000
+    #include function for take the maximum value of a column
+    colMax <- function(data) sapply(data, max, na.rm = TRUE)
   
-  #create documents for allelic categorization code 
-  sp_wild_genind <- seppop(sp_genind_temp)[[2]]
-  n_total_indivs <- length(sp_wild_genind@tab[,1])
-  n_ind_p_pop <- table(sp_wild_genind@pop)
-  #list out allele categories
-  list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
-  #calculate allele category
-  allele_cat <- get.allele.cat(sp_wild_genind, region_makeup=NULL, 2, n_ind_p_pop,n_drop = ndrop_list[[n]], glob_only=T)
-  
-  #create summary results for allelic capture 
-  summ_results_tree <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
-  
-  #create a summary table 
-  sum_results_df <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
-  
-  #Repeat the resampling many times
-  for (nrep in 1:num_reps) {
+    #create documents for allelic categorization code 
+    n_total_indivs <- length(sp_wild_genind@tab[,1])
+    n_ind_p_pop <- table(sp_wild_genind@pop)
     
-    #create empty matrix to store sampling code 
-    alleles_samp <- matrix(nrow=nrow(sp_wild_genind@tab)-1,ncol=length(list_allele_cat))
+    #list out allele categories
+    list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+    #calculate allele category
+    allele_cat <- get.allele.cat(sp_wild_genind, region_makeup=NULL, 2, n_ind_p_pop,n_drop = ndrop_list[[n]], glob_only=T)
+  
+    #create summary results for allelic capture 
+    summ_results_tree <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
+  
+    #create a summary table 
+    sum_results_df <- array(dim = c((nrow(sp_wild_genind@tab)-1), length(list_allele_cat), num_reps)) 
+  
+      #Repeat the resampling many times
+      for(nrep in 1:num_reps) {
     
-    #This loop will sample trees from t = 2 to the total number of trees
-    for (t in 2:(nrow(sp_wild_genind@tab)-1)){
+        #create empty matrix to store sampling code 
+        alleles_samp <- matrix(nrow=nrow(sp_wild_genind@tab)-1,ncol=length(list_allele_cat))
+    
+          #This loop will sample trees from t = 2 to the total number of trees
+          for (t in 2:(nrow(sp_wild_genind@tab)-1)){
       
-      #create a sample of trees of length t, by using 'sample()' which randomly samples rows
-      alleles_samp <- colSums(sp_wild_genind@tab[sample(1:nrow(sp_wild_genind@tab), t),],na.rm=T)
+            #create a sample of trees of length t, by using 'sample()' which randomly samples rows
+            alleles_samp <- colSums(sp_wild_genind@tab[sample(1:nrow(sp_wild_genind@tab), t),],na.rm=T)
+          
       
       #Then simply compare that sample to your wild population with allele_cat
       for (cat in 1:length(allele_cat)) summ_results_tree[t,cat,nrep] <- sum(alleles_samp[allele_cat[[cat]]]>0, na.rm=T)

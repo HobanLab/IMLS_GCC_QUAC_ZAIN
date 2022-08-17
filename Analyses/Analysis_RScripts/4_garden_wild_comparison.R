@@ -48,6 +48,15 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 #list out the scenarios 
 scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
+#pop list 
+pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
+                 c(18:22), c(18:21), c(11:35), c(11:35))
+
+#initial lists 
+QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
+                   "PIE039", "FIR53", "FIR048", "PIE125")
+QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
+
 #################################################
 #     Comparing wild and garden populations     #
 #################################################
@@ -59,15 +68,6 @@ hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list
 
 #sum stats df for garden wild comp 
 allrich_hexp_df <- matrix(nrow = 6, ncol = length(species_list))
-
-#pop list 
-pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
-                 c(18:22), c(18:21), c(11:35), c(11:35))
-
-#initial lists 
-QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
-                   "PIE039", "FIR53", "FIR048", "PIE125")
-QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
 
 #pvalue data frame 
 sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
