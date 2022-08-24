@@ -46,10 +46,10 @@ for(sp in 1:length(scenario_list)){
   #read in data frame 
   sp_df <- read.csv(paste0("Data_Frames/",sp_df_list[[sp]]))
   
-  #name rows as individuals
+  #name rows with individual names
   rownames(sp_genind@tab) <- sp_df[,1]
   
-  #create population data frames
+  #create list with population names 
   sp_pop_names <- unique(sp_df[,2])
   
   #name populations 
