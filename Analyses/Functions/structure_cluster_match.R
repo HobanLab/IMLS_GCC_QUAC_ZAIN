@@ -29,13 +29,16 @@ str_clust_match <- function(x){
     #the second column is populations
     #following that, all the numbers are cluster assignments 
     #3 is the first cluster column and the last 3 columns are the added columns 
-    col_name <- x[c,3:ncol(x)-3] > 0.6
+    row_name <- x[c,3:ncol(x)-3] > 0.6
     
     #if there is a "true" value, that means there is a major cluster for the pop
     #assign it the name of the cluster that it is 
-    if(any(col_name) == TRUE) {
+    if(any(row_name) == TRUE) {
     
-        x$Cluster[c] <- paste0("Cluster", which(col_name))
+        #first reduce the cluster name to a number 
+        col_name <- names(which(row_name[,c(3:ncol(x)-3)]))[3]
+        #then combine with the word cluster
+        x$Cluster[c] <- paste0("Cluster", gsub("C", "", col_name))
     
       #if there is no true value, that means it was not assigned to a major cluster
       #name these cases 'none'
@@ -46,22 +49,29 @@ str_clust_match <- function(x){
       }
     }
     
-    #now create a list of all the populations 
-    pop_list <- unique(QUAC_k4$Pop)
-  
+    ##now create a list of all the populations
+    #pop names need to stored in the second column
+    pop_list <- unique(x[,2])
+    
+    #also, create a list to store all the cluster names 
     cluster_pop <- list()
 
-#create a column to link populations to each cluster 
-for(cl in 1:length(pop_list)){
+    #loop to create a column to link populations to each cluster 
+    for(cl in 1:length(pop_list)){
+      
+      #determines the cluster assignment associated with the most individuals
+      cluster_pop[[cl]] <- names(which.max(table(x[x$Pop == pop_list[[cl]],]$Cluster)))
   
-  cluster_pop[[cl]] <- names(which.max(table(QUAC_k4[QUAC_k4$Pop == pop_list[[cl]],]$Cluster)))
+      #saves cluster assignment to the data frame attached to its population
+      x[x$Pop == pop_list[[cl]],]$cluster_pop <- rep(paste0(cluster_pop[[cl]], "_", pop_list[[cl]]), 
+                                                             nrow(x[x$Pop == pop_list[[cl]],]))
   
+      #added column to determine if the match is correct
+      x$cluster_match <- gsub("_.*", "", x$cluster_pop) == x$Cluster
+      
+      #output final data frame 
+      return(x)
   
-  QUAC_k4[QUAC_k4$Pop == pop_list[[cl]],]$cluster_pop <- rep(paste0(cluster_pop[[cl]], "_", pop_list[[cl]]), 
-                                                             nrow(QUAC_k4[QUAC_k4$Pop == pop_list[[cl]],]))
-  
-  #calculate if the match is correct 
-  QUAC_k4$cluster_match <- gsub("_.*", "", QUAC_k4$cluster_pop) == QUAC_k4$Cluster
-  
-}
+    }
+    
 }

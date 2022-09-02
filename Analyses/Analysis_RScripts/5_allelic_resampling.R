@@ -33,7 +33,8 @@ setwd("../../Data_Files")
 sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #list out allele categories
-list_sp_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
+                   "reg_rare","loc_com_d1","loc_com_d2","loc_rare")
 
 #list of scenarios 
 species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
@@ -54,33 +55,16 @@ sp_resampling_list <- list()
 all_mean_list <- list()
 ndrop_list <- c(0,2)
 
-##using for each package and parallelization 
-#detect cores
-cores <- detectCores() - 1
-#
-cl<-makeCluster(cores)
-registerDoParallel(cl)
-
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(species_list)){
     
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[1]]), ncode = 3)
-
-  ##organize into pops - garden
-  #separate into garden genind object 
-  sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[1]]])
-  #rename pops to be garden only 
-  levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[1]]))
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
   
-  ##organize into pop types 
-  #separate into wild genind object 
-  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[1+4]]])
+  #separate wild individuals into a separate genind object 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
   #rename to wild only 
-  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[1+4]]))
-  
-  #repool to calculate diversity stats 
-  sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
+  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
   
   #run resampling code on all species 
   for(n in 1:length(ndrop_list)){
@@ -94,8 +78,6 @@ for(sp in 1:length(species_list)){
     n_total_indivs <- length(sp_wild_genind@tab[,1])
     n_ind_p_pop <- table(sp_wild_genind@pop)
     
-    #list out allele categories
-    list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
     #calculate allele category
     allele_cat <- get.allele.cat(sp_wild_genind, region_makeup=NULL, 2, n_ind_p_pop,n_drop = ndrop_list[[n]], glob_only=T)
   
@@ -136,12 +118,16 @@ for(sp in 1:length(species_list)){
 ########################################
 #     Reporting Resampling Results     #
 ########################################
+#set working directory to output results
 setwd("../Analyses/Results/Garden_Wild_Comparison")
 
+#collecting all of the resampling data frames
 resampling_list <- list.files(pattern = "resampling_df")
+#all names for results 
 name_list <- c("QUAC_wK_ndrop0", "QUAC_wK_ndrop2", "QUAC_woK_ndrop0", "QUAC_woK_ndrop2",
                "ZAIN_og_ndrop0", "ZAIN_og_ndrop2", "ZAIN_rebinned_ndrop0", "ZAIN_rebinned_ndrop2")
 
+#loop to create the resampling plots 
 for(sp in 1:length(resampling_list)){
   
   #load in data files 
@@ -156,12 +142,8 @@ for(sp in 1:length(resampling_list)){
 #create a data frame to store results 
 all_sp_min_samp_95 <- matrix(nrow = length(ndrop_list), ncol = length(list_allele_cat))
 
-#######minimum sample size loop   
-resampling_list <- list.files(pattern = "resampling_df")
-name_list <- c("QUAC_wK_ndrop0", "QUAC_wK_ndrop2", "QUAC_woK_ndrop0", "QUAC_woK_ndrop2",
-               "ZAIN_og_ndrop0", "ZAIN_og_ndrop2", "ZAIN_rebinned_ndrop0", "ZAIN_rebinned_ndrop2")
-
-#create data frame 
+##minimum sample size to represent 95% of diversity ex situ   
+#create 95% 
 sp_min_sample_95 <- matrix(nrow = length(name_list), ncol = length(list_allele_cat))
 
 for(sp in 1:length(resampling_list)){
