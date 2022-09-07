@@ -86,56 +86,5 @@ for(sp in 1:length(sp_genind)){
   #write out data frame
   write.csv(sp_clean_df, paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_df.csv"), row.names = FALSE)
 
-
 }
 
-#################################
-#      Relatedness Analysis     #
-#################################
-##code to reduce data frames by half-sibling relatedness 
-#create a data frame to store results of half sib 
-sib_df <- matrix(nrow = length(scenario_list), ncol = 4)
-
-#list clean data frames 
-sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
-
-#list clean genepop files 
-sp_clean_genepop_list <- list.files(path = "Adegenet_Files", pattern = "allpop_clean.gen")
-
-#loop over species data frames 
-for(sp in 1:length(scenario_list)){
-  
-  #load in garden data frame 
-  sp_clean_temp_df <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
-  
-  #convert genepop files to genind objects 
-  sp_clean_temp_gen <- read.genepop(paste0("Adegenet_Files/",sp_clean_genepop_list[[1]]), ncode = 3)
-  #name individuals in genind 
-  rownames(sp_clean_temp_gen@tab) <- sp_clean_temp_df[,1]
-  #name pops 
-  levels(sp_clean_temp_gen@pop) <- unique(sp_clean_temp_df[,2])
-  
-  ###Run relatedness reduction code 
-  ##Half-sibs
-  #Garden
-  sib_df[sp,1] <- halfsib_loiselle_sum_garden(sp_clean_temp_df)
-  
-  #Wild
-  sib_df[sp,2] <- halfsib_loiselle_sum_wild(sp_clean_temp_df)
-  
-  ##Full sibs 
-  #Garden
-  sib_df[sp,3] <- fullsib_loiselle_sum_garden(sp_clean_temp_df)
-  
-  #Wild
-  sib_df[sp,4] <- fullsib_loiselle_sum_wild(sp_clean_temp_df)
-  
-}
-
-#organize data frame
-rownames(sib_df) <- scenario_list
-colnames(sib_df) <- c("Garden_HalfSibs", "Wild_Halfsibs", "Garden_FullSibs", "Wild_FullSibs")
-#multiply by 100 and round
-sib_df <- signif(sib_df*100,3)
-#write out df
-write.csv(sib_df, "../Analyses/Results/Garden_Wild_Comparison/sib_df.csv")

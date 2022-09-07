@@ -27,6 +27,9 @@ sp_genind_list <- list.files(path = "Adegenet_Files/", pattern = "_clean.gen")
 #df files 
 sp_df_list <- list.files(path = "Data_Frames/", pattern = "_clean_df.csv")
 
+#wild df coords 
+sp_coord_df <- list.files(path = "Data_Frames/", pattern = "wild_coord_df")
+
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
@@ -64,7 +67,7 @@ for(sp in 1:length(scenario_list)){
   #limit genind object to wild individuals
   sp_wild_genind <- sp_genind[rownames(sp_genind@tab) %in% sp_wild_df[,1],]
 
-  #run hierfstat on 
+  #convert genind object to 
   sp_hierfstat <- genind2hierfstat(sp_wild_genind)
   
   #run pairwise Fst code 
@@ -74,6 +77,20 @@ for(sp in 1:length(scenario_list)){
   write.csv(sp_pwfst_df,paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_pwfst_df.csv"))
   
   ##Geographic analyses for each population
+  #load in wild coordinates 
+  if(sp == 1){
+    #use QUAC wild coordinates
+    sp_wild_coord_df <- read.csv(paste0("Data_Frames/", sp_coord_df[[1]]))
+  if(sp == 2){
+    #remove the Kessler individuals from the data frame 
+    sp_wild_coord_df <- read.csv(paste0("Data_Frames/", sp_coord_df[[1]]))
+    sp_wild_coord_df <- sp_wild_coord_df[!sp_wild_coord_df[,2] == "Kessler",]
+  }
+  }else{
+    #use ZAIN wild coordinates 
+    sp_wild_coord_df <- read.csv(paste0("Data_Frames/", sp_coord_df[[2]])) 
+  }
+
   #calculate mean longitude and latitude for each population
   sp_mean_lon <- matrix()
   sp_mean_lat <- matrix()
@@ -81,7 +98,7 @@ for(sp in 1:length(scenario_list)){
     #loops for mean lat/lon
     for(pop in sp_wild_pop_names){
     
-      sp_mean_lon[pop] <- mean(sp_wild_df[sp_wild_df[,2] == pop,][,4])  
+      sp_mean_lon[pop] <- mean(sp_wild_coord_df[sp_wild_coord_df[,2] == pop,][,3])  
     
     }
   
