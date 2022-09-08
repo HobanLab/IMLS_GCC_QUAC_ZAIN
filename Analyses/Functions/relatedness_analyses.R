@@ -17,13 +17,10 @@ library(Demerelate)
 #########################################
 ##halfsibs
 #function to output the % of halfsibs in all garden pops 
-halfsib_loiselle_sum_garden <- function(x){
+halfsib_garden_loiselle_list <- function(x){
     
-    #first need to run the relatedness analysis with just garden/wild designation
-    relatedness_df <- Demerelate(x[,-2], object = T, value = "loiselle", NA.rm	= TRUE)
-
     #next, determine the names of halfsibs
-    halfsibs_names <- names(which(unlist(relatedness_df$Empirical_Relatedness$Garden) > 0.125))
+    halfsibs_names <- names(which(unlist(x$Empirical_Relatedness[1]) > 0.125))
         
     #clean front characters
     halfsibs_clean_front <- gsub("^.*\\.","", halfsibs_names)
@@ -31,68 +28,39 @@ halfsib_loiselle_sum_garden <- function(x){
     #clean the duplicate name 
     halfsibs_clean_back <- gsub("^.*\\_","", halfsibs_clean_front)
         
-    #create list of unique individuals greater than and equal to half-sib relatedness
+    #create list of unique individuals greater than and equal to halfsib relatedness
     halfsib_list <- unique(halfsibs_clean_back)
-  
-    #calculate percent of half-sibs 
-    halfsib_garden_sum <- length(halfsib_list)/length(x[x[,3] == "Garden",][,1])
-    #name columns
-    return(halfsib_garden_sum)
+    
+    #return the list of halfsibs
+    return(halfsib_list)
 }
 
-#function to output the % of halfsibs in wild populations 
-halfsib_loiselle_sum_wild <- function(x){
-    
-    #limit data frame to just wild populations 
-    relate_wild_df <- x[x[,3] == "Wild",]
-    
-    #run relatedness analysis with just wild population names - remove pop type
-    relatedness_df <- Demerelate(relate_wild_df[,-3], object = T, value = "loiselle", NA.rm	= TRUE, )
-    
-    #create a population name list for each data frame 
-    pop_names <- unique(x[x[,3] == "Wild",][,2])
-    
-    #create a matrix to store # of related individuals
-    relate_pop_df <- matrix(nrow = length(pop_names), ncol = 1)
-    
-    #then create a loop to take the name of every population and assess the level of relatedness in each pop 
-    for(pop in 1:length(pop_names)){
-        
-        #next, determine the names of halfsibs
-        halfsibs_names <- names(which(unlist(relatedness_df$Empirical_Relatedness[pop_names[[pop]]]) > 0.125))
-        
-        #now clean the front 
-        halfsibs_clean_front <- gsub("^.*\\.","", halfsibs_names)
-        
-        #clean the back for the list of halfsibs
-        halfsibs_clean_back <- gsub("^.*\\_","", halfsibs_clean_front)
-        
-        #create list of half-sibs 
-        halfsib_list <- unique(halfsibs_clean_back)
-        
-        #create a list with all of the numbers of related individuals 
-        relate_pop_df[pop,1] <- length(halfsib_list)
-        
-    }
-    
-    #calculate percent of half sibs  
-    halfsib_wild_relate_sum <- sum(relate_pop_df)
-    #save output 
-    halfsib_wild_sum <- halfsib_wild_relate_sum/length(relate_wild_df[,1])
-    #name columns 
-    return(halfsib_wild_sum)
+##halfsibs
+#function to output the % of halfsibs in all wild pops 
+halfsib_wild_loiselle_list <- function(x){
+  
+  #next, determine the names of halfsibs
+  halfsibs_names <- names(which(unlist(x$Empirical_Relatedness) > 0.125))
+  
+  #clean front characters
+  halfsibs_clean_front <- gsub("^.*\\.","", halfsibs_names)
+  
+  #clean the duplicate name 
+  halfsibs_clean_back <- gsub("^.*\\_","", halfsibs_clean_front)
+  
+  #create list of unique individuals greater than and equal to halfsib relatedness
+  halfsib_list <- unique(halfsibs_clean_back)
+  
+  #return the list of halfsibs
+  return(halfsib_list)
 }
 
 ##full-sibs 
 #function to output the % of full sibs in all garden pops 
-fullsib_loiselle_sum_garden <- function(x){
-  
-  
-  #run relatedness analysis on individuals with only pop type - garden or wild 
-  relatedness_df <- Demerelate(x[,-2], object = T, value = "loiselle", NA.rm	= TRUE)
+fullsib_garden_loiselle_list <- function(x){
   
   #next, determine the names of full sibs 
-  fullsibs_names <- names(which(unlist(relatedness_df$Empirical_Relatedness$Garden) > 0.25))
+  fullsibs_names <- names(which(unlist(x$Empirical_Relatedness[1]) > 0.25))
   
   #now clean the front 
   fullsibs_clean_front <- gsub("^.*\\.","", fullsibs_names)
@@ -103,52 +71,25 @@ fullsib_loiselle_sum_garden <- function(x){
   #create list of sibs 
   fullsib_list <- unique(fullsibs_clean_back)
   
-  #calculate percent of sibs 
-  fullsib_garden_sum <- length(fullsib_list)/length(x[x[,3] == "Garden",][,1])
   #return percent of sibs  
-  return(fullsib_garden_sum)
+  return(fullsib_list)
 }
 
-#function to output the % of full sibs in wild populations 
-fullsib_loiselle_sum_wild <- function(x){
+#function to output the % of full sibs in all wild pops 
+fullsib_wild_loiselle_list <- function(x){
   
-  #limit data frame to just wild individuals 
-  relate_wild_df <- x[x[,3] == "Wild",]
+  #next, determine the names of full sibs 
+  fullsibs_names <- names(which(unlist(x$Empirical_Relatedness) > 0.25))
   
-  #run relatedness analysis with wild individuals 
-  relatedness_df <- Demerelate(relate_wild_df[,-3], object = T, value = "loiselle", NA.rm	= TRUE)
+  #now clean the front 
+  fullsibs_clean_front <- gsub("^.*\\.","", fullsibs_names)
   
-  #create a population name list for each data frame 
-  pop_names <- unique(relate_wild_df[,2])
+  #clean the back for the list of sibs
+  fullsibs_clean_back <- gsub("^.*\\_","", fullsibs_clean_front)
   
-  #create a matrix for relatedness 
-  relate_pop_df <- matrix(nrow = length(pop_names), ncol = 1)
+  #create list of sibs 
+  fullsib_list <- unique(fullsibs_clean_back)
   
-  #assess the level of relatedness in wild each pop 
-  for(pop in 1:length(pop_names)){
-    
-    #next, determine the names of halfsibs
-    fullsibs_names <- names(which(unlist(relatedness_df$Empirical_Relatedness[pop_names[[pop]]]) > 0.25))
-    
-    #now clean the front 
-    fullsibs_clean_front <- gsub("^.*\\.","", fullsibs_names)
-    
-    #clean the back for the list of sibs
-    fullsibs_clean_back <- gsub("^.*\\_","", fullsibs_clean_front)
-    
-    #create list of full sibs 
-    fullsib_list <- unique(fullsibs_clean_back)
-    
-    #create data frame by pop with the total individual numbers and the # of full sibs 
-    relate_pop_df[pop,1] <- length(fullsib_list)
-    
-  }
-  
-  #calculate percent of full sibs  
-  fullsib_wild_relate_sum <- sum(relate_pop_df)
-  #save output 
-  fullsib_wild_sum <- fullsib_wild_relate_sum/length(relate_wild_df[,1])
-  #return percent of full siblings 
-  return(fullsib_wild_sum)
+  #return percent of sibs  
+  return(fullsib_list)
 }
-

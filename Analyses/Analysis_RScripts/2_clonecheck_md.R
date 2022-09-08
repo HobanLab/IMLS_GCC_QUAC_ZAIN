@@ -28,9 +28,6 @@ sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv")
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
-#load in relatedness function 
-source("../Analyses/Functions/relatedness_analyses.R")
-
 ############################################################
 #    Remove Clones and Individuals with Missing Data       #
 ############################################################
