@@ -38,9 +38,9 @@ fullsib_loiselle_rel_fun <- function(x){
   return(fullsib_list)
 }
 
-#################################
-#      Relatedness Analysis     #
-#################################
+###################################
+#     Demerelate Ref Pop Test     #
+###################################
 
 ##first, load in one data file and run relatedness analysis to determine 
 #how different population structures changes levels of relatedness 
@@ -164,7 +164,16 @@ for(r in 1:length(rel_scen)){
   
 }
 
+###################################
+#     Relate Indicator Tests      #
+###################################
 
+##write out data table from the different pop structures analysis 
+#name rows and columns 
+rownames(rel_popstr_table) <- rel_scen
+colnames(rel_popstr_table) <- c("non_halfsibs")
+#write out table
+write.csv(rel_popstr_table, "../Analyses/Results/Relatedness/rel_popstr_table.csv")
 
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
