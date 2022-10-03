@@ -27,6 +27,23 @@ sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
 #################################
 #      Relatedness Analysis     #
 #################################
+
+##first, load in one data file and run relatedness analysis to determine 
+#how different population structures changes levels of relatedness 
+#detected. 
+
+#load in QUAC data file 
+QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+
+##run relatedness analysis on different edits of the data file 
+
+
+
+
+
+
+
+
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
