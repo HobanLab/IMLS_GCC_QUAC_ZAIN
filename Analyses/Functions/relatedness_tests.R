@@ -22,8 +22,22 @@ sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen$")
 #load relatedness data frame for relatedness analysis 
 sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
 
-#load in relatedness function 
-#source("../Analyses/RScripts/relatedness_analyses.R")
+#function to output the % of sibs in all garden pops 
+fullsib_loiselle_rel_fun <- function(x){
+  
+  #clean front characters
+  fullsib_clean_front <- gsub("^.*\\.","", x)
+  
+  #clean the duplicate name 
+  fullsib_clean_back <- gsub("^.*\\_","", fullsib_clean_front)
+  
+  #create list of unique individuals greater than and equal to full sib relatedness
+  fullsib_list <- unique(fullsib_clean_back)
+  
+  #return the list of full sibs
+  return(fullsib_list)
+}
+
 #################################
 #      Relatedness Analysis     #
 #################################
@@ -35,12 +49,120 @@ sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
 #load in QUAC data file 
 QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
 
-##run relatedness analysis on different edits of the data file 
+##run relatedness analysis on different organizations of the data file
+#list scenarios: 
+##gwtog indicates the data file for relatedness has the wild and garden
+#individuals combined in the data file
+##gwsep has removed the garden or wild depending on the pop of interest
+##labpopsep indicates that every population is separately named - all wild
+#pops and gardens pops 
+##labpopgr indicates all wild and garden individuals are grouped into
+#metapopulations of just "wild" and "garden"
+rel_scen <- c("gwtog_labpopsep_garden", "gwtog_labpopsep_wild", 
+              "gwtog_labpopgr_garden", "gwtog_labpopgr_wild", 
+              "gwsep_labpopsep_garden", "gwsep_labpopsep_wild",
+              "gwsep_labpopgr_garden", "gwsep_labpopgr_wild")
 
+#populations of gardens
+garden_pops <- unique(QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Garden",]$Pop)
+wild_pops <- unique(QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Wild",]$Pop)
 
+#create matrix to store results 
+rel_popstr_table <- matrix(nrow = length(rel_scen), 
+                           ncol = 1)
 
-
-
+#loop to calculate relatedness in different pop structures
+for(r in 1:length(rel_scen)){
+  
+  #wild and garden together with pops labeled separately 
+  if(r == 1|r == 2){
+    
+    #remove pop type column to run relatedness - wild and garden individuals grouped
+    #into large metapopulations 
+    QUAC_scen_rel_df <- QUAC_rel_df[,-3]
+      
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[1,1] <- 277 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness[garden_pops]) > 0.25))))
+    #wild relatedness
+    rel_popstr_table[2,1] <- 172 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness[wild_pops]) > 0.25))))
+  }
+  
+  #wild and garden together with pops grouped by garden and wild 
+  if(r == 3|r == 4){
+    
+    #remove separate garden and wild populations column  
+    QUAC_scen_rel_df <- QUAC_rel_df[,-2]
+    
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[3,1] <- 277 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness$Garden) > 0.25))))
+    #wild relatedness
+    rel_popstr_table[4,1] <- 172 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness$Wild) > 0.25))))
+    
+  }
+  
+  #garden separate with pops separated 
+  if(r == 5){
+    
+    QUAC_scen_rel_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Garden",-3]
+    
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[5,1] <- 277 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness[garden_pops]) > 0.25))))
+    
+  }
+  
+  #wild separate with pops separated
+  if(r == 6){
+    
+    QUAC_scen_rel_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Wild",-3]
+    
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[6,1] <- 172 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness[wild_pops]) > 0.25))))
+    
+  }
+  
+  #garden populations pooled with just garden individuals 
+  if(r == 7){
+    
+    #select only garden individuals and remove the sep pop labels
+    QUAC_scen_rel_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Garden",-2]
+    
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[7,1] <- 277 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness$Garden) > 0.25))))
+    
+    
+  }
+  
+  #wild populations pooled with just wild individuals 
+  if(r == 8){
+    
+    #select only garden individuals and remove the sep pop labels
+    QUAC_scen_rel_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Wild", -2]
+    
+    #run relatedness analysis for garden and wild pop types 
+    QUAC_relate_df <- Demerelate(QUAC_scen_rel_df, tab.dist = "NA", object = TRUE, value = "loiselle")
+    
+    #garden relatedness
+    rel_popstr_table[8,1] <- 172 - length(fullsib_loiselle_rel_fun(names(which(unlist(QUAC_relate_df$Empirical_Relatedness$Wild) > 0.25))))
+    
+    
+  }
+  
+}
 
 
 
