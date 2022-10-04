@@ -181,11 +181,9 @@ write.csv(rel_popstr_table, "../Analyses/Results/Relatedness/rel_popstr_table.cs
 #list clean data frames 
 sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
-#list of data frames
-sp_clean_temp_df <- list()
-
 #relatedness lists for all analyses
-sp_relate_levels <- list()
+sp_garden_relate_levels <- list()
+sp_wild_relate_levels <- list()
 
 #create a list of the relatedness tests 
 relatedness_analyses_list <- c("loiselle", "wang", "ritland")
@@ -222,7 +220,7 @@ for(sp in 1:length(scenario_list)){
     
     #save in df 
     relate_ind_fullsib_df[sp, relate] <- paste0(signif(((length(sp_garden_fullsib_list))/length(sp_garden_only_temp_df[,1])),3)*100, "% (", 
-                                                length(sp_garden_relate_red_df[,1]),")")
+                                                length(sp_garden_only_temp_df[,1]),")")
     
     
     ##Wild relatedness analysis 
@@ -239,8 +237,6 @@ for(sp in 1:length(scenario_list)){
                                                         length(sp_wild_clean_temp_df[,1])*100, 3), "% ",
                                                   "(", length(sp_wild_clean_temp_df[,1]) - length(sp_wild_fullsib_list), ")")
     
-   
-    
   }
 }
 
@@ -248,3 +244,46 @@ for(sp in 1:length(scenario_list)){
 rownames(relate_ind_fullsib_df) <- scenario_list
 colnames(relate_ind_fullsib_df) <- rep(relatedness_analyses_list, 2)
 write.csv(relate_ind_fullsib_df, "../Analyses/Results/Relatedness/relate_ind_fullsib_df.csv")
+
+
+##making histograms of relatedness
+#load in QUAC with Kessler data frame
+QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+
+#list to save results 
+
+#loop to run relatedness analyses 
+for(r in 1:length(relatedness_analyses_list)){
+  
+  ##Garden
+  #create garden df
+  sp_garden_temp_df <- QUAC_rel_df[,-2]
+  
+  #run relatedness analysis
+  sp_garden_rel_df <- Demerelate(sp_garden_temp_df, object = T, value = relatedness_analyses_list[[r]])
+  
+  #generate histogram 
+  pdf(paste0("../Analyses/Results/Relatedness/QUAC_garden_", relatedness_analyses_list[[r]],
+             "_distribution.pdf"), width = 8, height = 8)
+  hist(sp_garden_rel_df$Empirical_Relatedness$Garden, xlim = c(-1,1), ylim = c(0, 12000), 
+       col = "darkseagreen1", xlab = paste0(relatedness_analyses_list[[r]]," Garden"),
+       main = paste0("QUAC garden ",relatedness_analyses_list[[r]], " Distribution"))
+  dev.off()
+  
+  ##Wild
+  #limit to wild pops and remove pop type column 
+  sp_wild_temp_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Wild",-3]
+  
+  #run relatedness analysis
+  sp_wild_rel_df <- Demerelate(sp_wild_temp_df, object = T, value = relatedness_analyses_list[[1]])
+  
+  #generate histogram 
+  pdf(paste0("../Analyses/Results/Relatedness/QUAC_wild_", relatedness_analyses_list[[r]],
+             "_distribution.pdf"), width = 8, height = 8)
+  hist(as.numeric(unlist(sp_wild_rel_df$Empirical_Relatedness)), 
+       xlim = c(-1,1), ylim = c(0, 1000), 
+       col = "forestgreen", xlab = paste0(relatedness_analyses_list[[r]]," Wild"),
+       main = paste0("QUAC Wild ", relatedness_analyses_list[[r]], " Distribution"))
+  dev.off()
+  
+}
