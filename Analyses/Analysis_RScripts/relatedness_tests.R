@@ -250,7 +250,9 @@ write.csv(relate_ind_fullsib_df, "../Analyses/Results/Relatedness/relate_ind_ful
 #load in QUAC with Kessler data frame
 QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
 
-#list to save results 
+#matrix to store mean relatedness values for each relatedness analysis
+#and p-values for comparisons
+QUAC_rel_analysis_df <- matrix(nrow = 3, ncol = length(relatedness_analyses_list))
 
 #loop to run relatedness analyses 
 for(r in 1:length(relatedness_analyses_list)){
@@ -275,7 +277,7 @@ for(r in 1:length(relatedness_analyses_list)){
   sp_wild_temp_df <- QUAC_rel_df[QUAC_rel_df$Garden_Wild == "Wild",-3]
   
   #run relatedness analysis
-  sp_wild_rel_df <- Demerelate(sp_wild_temp_df, object = T, value = relatedness_analyses_list[[1]])
+  sp_wild_rel_df <- Demerelate(sp_wild_temp_df, object = T, value = relatedness_analyses_list[[r]])
   
   #generate histogram 
   pdf(paste0("../Analyses/Results/Relatedness/QUAC_wild_", relatedness_analyses_list[[r]],
@@ -286,4 +288,19 @@ for(r in 1:length(relatedness_analyses_list)){
        main = paste0("QUAC Wild ", relatedness_analyses_list[[r]], " Distribution"))
   dev.off()
   
+  #store garden means for each test
+  QUAC_rel_analysis_df[1,r] <- mean(sp_garden_rel_df$Empirical_Relatedness$Garden)
+  #store wild means for each test
+  QUAC_rel_analysis_df[2,r] <- mean(as.numeric(unlist(sp_wild_rel_df$Empirical_Relatedness)))
+  
+  #compare distributions using nonparametric t-test 
+  QUAC_rel_analysis_df[3,r] <- wilcox.test(sp_garden_rel_df$Empirical_Relatedness$Garden, 
+                                           as.numeric(unlist(sp_wild_rel_df$Empirical_Relatedness)), exact = TRUE)[3]$p.value 
+  
 }
+
+rownames(QUAC_rel_analysis_df) <- c("Garden", "Wild", "p-value")
+colnames(QUAC_rel_analysis_df) <- relatedness_analyses_list
+
+write.csv(QUAC_rel_analysis_df, "..Analyses/Results/Relatedness/QUAC_relatedness_analyses_sum_df.csv")
+
