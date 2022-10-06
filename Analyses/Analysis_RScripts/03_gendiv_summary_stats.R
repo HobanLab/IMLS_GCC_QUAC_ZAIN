@@ -70,36 +70,46 @@ for(sp in 1:length(sp_genind_list)){
   write.csv(sp_HWE_allpop_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], 
                                      "_HWE_dev_pop.csv"))
   
+  #calculate % of null alleles/locus
+  #use parallelization because this step takes quite a while without
+  #Calculate the number of cores
+  cores <- detectCores() - 1
+  #Initiate cluster
+  cl <- makeCluster(cores)
   
-   
+  #run null allele calculations over all genind objects
+  sp_null_all <- parLapply(cl, sp_genind_temp, null.all)
+  
+  #create null allele frequency summary data frame
+  sp_null_all_df <- signif(data.frame(sp_null_all[[sp]]$null.allele.freq$summary2),3)
+  
+  #stop clustering
+  stopCluster(cl) 
+  
+  #write out to CSV
+  write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]] , 
+                                   "_null_all_df.csv"))
+  
+  ##calculate linkage disequilibrium 
+  #use parallelization because this step takes quite a while without
+  #Calculate the number of cores
+  cores <- detectCores() - 1
+  #Initiate cluster
+  cl <- makeCluster(cores)
+  #calculate linkage disequilbrium
+  sp_ld <- parLapply(cl, sp_genind_temp, pair.ia, sample = 1000)
+  
+  #convert to a data frame
+  sp_ld_df <- data.frame(round(sp_ld[[sp]], digits = 2))
+  
+  #write out 
+  write.csv(sp_ld_df, paste0("../Analyses/Results/Sum_Stats/", 
+                             scenario_list[[sp]], "_LD.csv"))
+  
+  #stop clustering
+  stopCluster(cl)
+  
 }
-
-#calculate % of null alleles/locus
-#use parallelization because this step takes quite a while without
-#Calculate the number of cores
-cores <- detectCores() - 1
-#Initiate cluster
-cl <- makeCluster(cores)
-
-#run null allele calculations over all genind objects
-sp_null_all <- parLapply(cl, sp_genind_temp, null.all)
-
-#create null allele frequency summary data frame
-sp_null_all_df <- signif(data.frame(sp_null_all[[sp]]$null.allele.freq$summary2),3)
-
-#write out to CSV
-write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]] , "_null_all_df.csv"))
-
-#calculate linkage disequilibrium 
-#sp_ld <- pair.ia(sp_genind_temp, sample = 1000)
-
-#convert to a data frame
-#sp_ld_df <- data.frame(round(sp_ld,digits = 2))
-
-#write out 
-#write.csv(sp_ld_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_LD.csv"))
-
-
 
 ###########################################
 #          Genetic Stats by Pop           #
