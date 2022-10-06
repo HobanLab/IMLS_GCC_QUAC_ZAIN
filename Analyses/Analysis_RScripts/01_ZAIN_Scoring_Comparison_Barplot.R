@@ -41,7 +41,7 @@ ZAIN_rebinned_genpop <- genind2genpop(ZAIN_rebinned_genind)
 #create a list of loci 
 loci <- colnames(ZAIN_og_df)
 
-#clean list 
+#clean list to just locus name
 loci <- unique(gsub("\\..*","",loci)[4:25])
 
 #######################################
