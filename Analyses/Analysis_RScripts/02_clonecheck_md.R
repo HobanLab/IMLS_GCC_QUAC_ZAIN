@@ -1,8 +1,8 @@
-##This script details the analyses run on Quercus acerifolia and Zamia integrifolia 
-#(referred to as QUAC and ZAIN in this script for brevity) genotype files 
-#to prepare them for genetic diversity and structure analyses. 
-#We used files in this script that are referred to as "clean," which means
-#clones and individuals with too much missing data have been removed. 
+###This script details the analyses run on Quercus acerifolia and Zamia integrifolia 
+##(referred to as QUAC and ZAIN in this script for brevity) to prep individuals
+#for genetic analyses. We remove individuals that are clones and with more than
+#25% missing data, creating "clean" genotype files (genepop and tables), which all
+#subsequent genetic analyses are run on.
 
 #########################
 #        Libraries      #
