@@ -45,8 +45,12 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 
 #}
 
-#list out the scenarios 
-scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+#list out species
+species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
+#list scenarios 
+scenario_list <- c("Garden_allSSR", "Wild_allSSR", "Garden_gSSR", "Wild_gSSR",
+                   "Garden_EST", "Wild_EST")
 
 #pop list 
 pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
@@ -61,18 +65,21 @@ QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
 #     Comparing wild and garden populations     #
 #################################################
 #comparing wild and garden individuals 
-allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(scenarios_list)))
+allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
 
 #comparing wild and garden individuals 
-hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(scenarios_list)))
+hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
 
-#sum stats df for garden wild comp 
-allrich_hexp_df <- matrix(nrow = 6, ncol = 8)
+#sum stats df for garden wild comp - allelic richness
+allrich_df <- matrix(nrow = length(scenario_list), ncol = length(species_list))
+
+#sum stats df for garden wild comp - hexp
+hexp_df <- matrix(nrow = length(scenario_list), ncol = length(species_list))
 
 #pvalue data frame 
 sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
 colnames(sp_allrich_hexp_pvalue) <- c("All_Rich", "Hexp")
-rownames(sp_allrich_hexp_pvalue) <- scenarios_list
+rownames(sp_allrich_hexp_pvalue) <- species_list
 
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(sp_genind_list)){
@@ -101,7 +108,10 @@ for(sp in 1:length(sp_genind_list)){
     ###calculate diversity stats for all scenarios 
     ##just determine wild and garden diversity levels 
     #calculate allelic richness 
-    allrich_hexp_df[1:2,sp] <- colMeans(allelic.richness(sp_garden_wild_genind)$Ar)
+    allrich_df[1:2,sp] <- colMeans(allelic.richness(sp_garden_wild_genind)$Ar)
+    #calculate hexp 
+    hexp_df[1:2,sp] <- colMeans(as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp, 
+                                                    summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))) 
     
     #create statistical analysis data frame 
     sp_allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
@@ -116,13 +126,16 @@ for(sp in 1:length(sp_genind_list)){
     ##separate by loci combination 
     #gSSR genind object
     sp_gSSR_genind <- sp_garden_wild_genind[loc = QUAC_gSSR_loci]
-    #store allelic richness in data frame
-    allrich_hexp_df[3:4,sp] <- colMeans(allelic.richness(sp_gSSR_genind)$Ar)
+    #calculate allelic richness for gSSRs
+    allrich_df[3:4,sp] <- colMeans(allelic.richness(sp_gSSR_genind)$Ar)
+    #calculate expected heterozygosity
+    hexp_df[3:4,sp] <- colMeans(as.data.frame(cbind(summary(seppop(sp_gSSR_genind)[[1]])$Hexp, 
+                                 summary(seppop(sp_gSSR_genind)[[2]])$Hexp)))
     
     #create statistical analysis data frame
     sp_gSSR_allrich <- gather(allelic.richness(sp_gSSR_genind)$Ar)
     #calculate hexp and create data frame 
-    sp_gSSR_hexp <- as.data.frame(cbind( summary(seppop(sp_gSSR_genind)[[1]])$Hexp,  summary(seppop(sp_gSSR_genind)[[2]])$Hexp))
+    sp_gSSR_hexp <- as.data.frame(cbind(summary(seppop(sp_gSSR_genind)[[1]])$Hexp,  summary(seppop(sp_gSSR_genind)[[2]])$Hexp))
     colnames(sp_gSSR_hexp) <- c("Garden", "Wild")
     sp_gSSR_hexp <- gather(sp_gSSR_hexp)
     #create rownames with sections of names 
@@ -136,12 +149,19 @@ for(sp in 1:length(sp_genind_list)){
     #calculate allelic richness and create data frame 
     sp_EST_allrich <- gather(allelic.richness(sp_EST_genind)$Ar)
     #calculate hexp and create data frame 
-    sp_EST_hexp <- as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp,  summary(seppop(sp_EST_genind)[[2]])$Hexp))
+    sp_EST_hexp <- as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp,
+                                       summary(seppop(sp_EST_genind)[[2]])$Hexp))
     colnames(sp_EST_hexp) <- c("Garden", "Wild")
     sp_EST_hexp <- gather(sp_EST_hexp)
     #create rownames with sections of names 
     sp_EST_allrich$cat_type <- paste0(sp_EST_allrich[,1], "_EST_allrich")
     sp_EST_hexp$cat_type <- paste0(sp_EST_hexp[,1], "_EST_hexp")
+    
+    #store allelic richness in data frame
+    allrich_df[5:6,sp] <- colMeans(allelic.richness(sp_EST_genind)$Ar)
+    #store expected heterozygosity in a data frame 
+    hexp_df[5:6,sp] <- colMeans(as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp, 
+                                                    summary(seppop(sp_EST_genind)[[2]])$Hexp)))
     
     ##combine all categories for statistical tests 
     #all rich
@@ -155,29 +175,46 @@ for(sp in 1:length(sp_genind_list)){
     
   }else{
     
-    #combining into a df 
-    allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
+    #calculate wild and garden allelic richness 
+    allrich_df[1:2, sp] <- colMeans(allelic.richness(sp_garden_wild_genind)$Ar)
+    #calculate hexp for garden and wild 
+    hexp_df[1:2, sp] <- colMeans(as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp,  
+                                                     summary(seppop(sp_garden_wild_genind)[[2]])$Hexp)))
+    
+    #for ZAIN, calculate allelic richness and hexp and compare
+    sp_allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
     
     #run t-test 
-    sp_allrich_hexp_pvalue[sp,1] <- kruskal.test(allrich_df[,2]~allrich_df[,1])[3]$p.value
+    sp_allrich_hexp_pvalue[sp,1] <- kruskal.test(sp_allrich_df[,2]~sp_allrich_df[,1])[3]$p.value
     
     #run hexp code
-    sp_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp,  summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
+    sp_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp,  
+                                   summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
     colnames(sp_hexp) <- c("Garden", "Wild")
     #create data frame for hexp
     sp_hexp_df <- gather(sp_hexp)
     #save p-value for hexp 
     sp_allrich_hexp_pvalue[sp,2] <- kruskal.test(sp_hexp_df[,2]~sp_hexp_df[,1])[3]$p.value
     
+    
   }
 }
 
-#write out df 
-write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_hexp_pvalue_df.csv")
+###write out summary tables for allelic richness and hexp comparisons
+##label data frames
+colnames(allrich_df) <- species_list
+rownames(allrich_df) <- scenario_list
+colnames(hexp_df) <- species_list
+rownames(hexp_df) <- scenario_list
 
-#################################
-#     Allelic capture code      #
-#################################
+#write out data frames
+write.csv(allrich_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_df.csv", row.names = FALSE)
+write.csv(hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_hexp_df.csv", row.names = FALSE)
+write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_hexp_pvalue_df.csv", row.names = FALSE)
+
+########################################
+#     Allelic representation code      #
+########################################
 #list out allele categories
 list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
 
@@ -203,7 +240,7 @@ sp_allele_cap <-matrix(nrow = (length(dup_reps)), ncol = length(list_allele_cat)
 ##run loop to generate allelic capture table 
 #the outer loop is calculating how many copies of each allele in each category exists
 #the inner loop is calculating the percent capture of each allele in each frequency category 
-for(sp in 1:length(scenarios_list)){  #loop over every scenario
+for(sp in 1:length(species_list)){  #loop over every scenario
   for(ndrop in c(0,2)){     #loop to include very rare or not 
     
     #ndrop or not   
@@ -275,9 +312,9 @@ for(sp in 1:length(scenarios_list)){  #loop over every scenario
   colnames(sp_allele_cap) <- list_allele_cat
   
   ##write out data frames
-  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
-  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
-  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",scenarios_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
+  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], n_drop_file, ".csv"))
   
   }
 }
