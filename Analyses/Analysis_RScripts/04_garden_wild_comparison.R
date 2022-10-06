@@ -61,13 +61,13 @@ QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
 #     Comparing wild and garden populations     #
 #################################################
 #comparing wild and garden individuals 
-allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
+allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(scenarios_list)))
 
 #comparing wild and garden individuals 
-hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
+hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(scenarios_list)))
 
 #sum stats df for garden wild comp 
-allrich_hexp_df <- matrix(nrow = 6, ncol = length(species_list))
+allrich_hexp_df <- matrix(nrow = 6, ncol = 8)
 
 #pvalue data frame 
 sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
@@ -100,7 +100,10 @@ for(sp in 1:length(sp_genind_list)){
     
     ###calculate diversity stats for all scenarios 
     ##just determine wild and garden diversity levels 
-    #calculate allelic richness and create data frame 
+    #calculate allelic richness 
+    allrich_hexp_df[1:2,sp] <- colMeans(allelic.richness(sp_garden_wild_genind)$Ar)
+    
+    #create statistical analysis data frame 
     sp_allrich_df <- gather(allelic.richness(sp_garden_wild_genind)$Ar)
     #calculate heterozygosity and create data frame 
     sp_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp, summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
@@ -113,7 +116,10 @@ for(sp in 1:length(sp_genind_list)){
     ##separate by loci combination 
     #gSSR genind object
     sp_gSSR_genind <- sp_garden_wild_genind[loc = QUAC_gSSR_loci]
-    #calculate allelic richness and create data frame 
+    #store allelic richness in data frame
+    allrich_hexp_df[3:4,sp] <- colMeans(allelic.richness(sp_gSSR_genind)$Ar)
+    
+    #create statistical analysis data frame
     sp_gSSR_allrich <- gather(allelic.richness(sp_gSSR_genind)$Ar)
     #calculate hexp and create data frame 
     sp_gSSR_hexp <- as.data.frame(cbind( summary(seppop(sp_gSSR_genind)[[1]])$Hexp,  summary(seppop(sp_gSSR_genind)[[2]])$Hexp))
