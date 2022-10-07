@@ -19,9 +19,6 @@ library(diveRsity)
 library(poppr)
 library(hierfstat)
 library(tidyr)
-library(parallel)
-library(foreach)
-library(doParallel)
 
 #######################
 #     Load files      #
