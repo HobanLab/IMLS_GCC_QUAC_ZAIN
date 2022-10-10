@@ -25,7 +25,7 @@ sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
 #sp_allgarden_allwildpop_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
 #sp_garden_allwildpop_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "allwildpop")
 #sp_garden_allwildpop_df_list <- list.files(path = "Data_Frames/Garden_Wild", pattern = "allwildpop")
-#sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
+sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
 #list of scenarios 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
@@ -88,30 +88,28 @@ for(sp in 1:length(scenario_list)){
   
 }
 
-#loop to generate all pops PCA 
-for(sp in 1:length(sp_allgarden_allwildpop_genind_list)){
+#loop to generate all wild pops PCA 
+for(sp in 1:length(scenario_list)){
   
-  #read in genepop files as a genind object
-  sp_genind <- read.genepop(paste0("Adegenet_Files/",sp_allgarden_allwildpop_genind_list[[sp]]), ncode = 3)
+  #load in genind object 
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/", sp_genind_list[[sp]]), ncode = 3)
   
-  #read in data frame 
+  #load data frame 
   sp_df <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
   
-  #name rows in the genind object 
-  rownames(sp_genind@tab) <- sp_df[,1]
-  #name pops
-  levels(sp_genind@pop) <- unique(sp_df[,2])
-  
+  #separate wild individuals 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+
   #create tab object for genind 
-  sp_tab <- tab(sp_genind, freq=TRUE, NA.method="mean")
+  sp_tab <- tab(sp_wild_genind, freq=TRUE, NA.method="mean")
   
   #run PCA
   sp_PCA <- dudi.pca(sp_tab, scale = FALSE, nf = 2, scannf = FALSE)
   
   #create PCA data frame 
   sp_PCA_df_temp <- as.data.frame(cbind(as.numeric(sp_PCA$li$Axis1), 
-                                        as.numeric(sp_PCA$li$Axis2), 
-                                        sp_df$Garden_Wild))
+                                        as.numeric(sp_PCA$li$Axis2),
+                                        sp_df[,2]))
   colnames(sp_PCA_df_temp) <- c("Axis1","Axis2","Pop")
   
   #calculate % variation explained by axis 
@@ -119,14 +117,14 @@ for(sp in 1:length(sp_allgarden_allwildpop_genind_list)){
   sp_pc2 <- signif(((sp_PCA$eig[2])/sum(sp_PCA$eig))*100, 3)
   
   #plot PCA
-  pdf(paste0("../Analyses/Results/Clustering/", species_list[[sp]], "_allpop_PCA.pdf"),width = 10, height = 8)
+  pdf(paste0("../Analyses/Results/Clustering/PCA/", species_list[[sp]], "_wildpop_PCA.pdf"),width = 10, height = 8)
   
   print(ggplot(sp_PCA_df_temp, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
           stat_ellipse() +
           xlab(paste0("PC1 (", sp_pc1, "%)")) +
           ylab(paste0("PC2 (", sp_pc2, "%)")) + 
           theme_bw() +  
-          scale_color_manual(values=hcl.colors(n = length(unique(sp_PCA_df_temp$Pop)), palette = "viridis")))
+          scale_color_manual(values=randomColor(count = length(unique(sp_PCA_df_temp$Pop)))))
   dev.off()
   
   
