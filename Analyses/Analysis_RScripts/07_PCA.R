@@ -21,42 +21,54 @@ library(ggplot2)
 setwd("../../Data_Files")
 
 #data file lists 
-sp_genepop_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "clean.gen")
-sp_allgarden_allwildpop_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
-sp_garden_allwildpop_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "allwildpop")
-sp_garden_allwildpop_df_list <- list.files(path = "Data_Frames/Garden_Wild", pattern = "allwildpop")
-sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
-species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
+#sp_allgarden_allwildpop_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
+#sp_garden_allwildpop_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "allwildpop")
+#sp_garden_allwildpop_df_list <- list.files(path = "Data_Frames/Garden_Wild", pattern = "allwildpop")
+#sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
+#list of scenarios 
+scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
+#pop list 
+pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
+                 c(18:22), c(18:21), c(11:35), c(11:35))
 
 ###############
 #     PCA     #
 ###############
 
 #loop to write garden and wild comparison PCA 
-for(sp in 1:length(species_list)){
+for(sp in 1:length(scenario_list)){
   
-  #read in genepop files as a genind object
-  sp_genind <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genepop_list[[sp]]), ncode = 3)
+  ##code to reorganize genind objects into "garden" and "wild" genind objects
+  #load genepop files as genind objects 
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
   
-  #read in data frame 
-  sp_df <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
+  #separate garden individuals into one population 
+  sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
+  #rename populations
+  levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[sp]]))
   
-  #name rows in the genind object 
-  rownames(sp_genind@tab) <- sp_df[,1]
-  #name pops
-  levels(sp_genind@pop) <- c("Garden", "Wild")
+  #separate wild individuals and garden individuals 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+  #rename to wild only 
+  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
+  
+  #combine into one genind object 
+  sp_genind_rp <- repool(sp_garden_genind, sp_wild_genind)
     
   #create tab object for genind 
-  sp_tab <- tab(sp_genind, freq=TRUE, NA.method="mean")
+  sp_tab <- tab(sp_genind_rp, freq=TRUE, NA.method = "mean")
   
   #run PCA
   sp_PCA <- dudi.pca(sp_tab, scale = FALSE, nf = 2, scannf = FALSE)
   
   #create PCA data frame 
   sp_PCA_df_temp <- as.data.frame(cbind(as.numeric(sp_PCA$li$Axis1), 
-                                       as.numeric(sp_PCA$li$Axis2), 
-                                      sp_df$Garden_Wild))
+                                        as.numeric(sp_PCA$li$Axis2), 
+                                        c(rep("Garden", as.numeric(table(sp_garden_genind@pop))),
+                                          rep("Wild", as.numeric(table(sp_wild_genind@pop))))))
   colnames(sp_PCA_df_temp) <- c("Axis1","Axis2","Pop")
   
   #calculate % variation explained by axis 
@@ -64,7 +76,7 @@ for(sp in 1:length(species_list)){
   sp_pc2 <- signif(((sp_PCA$eig[2])/sum(sp_PCA$eig))*100, 3)
   
   #plot PCA
-  pdf(paste0("../Analyses/Results/Clustering/", species_list[[sp]], "_garden_wild_PCA.pdf"),width = 10, height = 8)
+  pdf(paste0("../Analyses/Results/Clustering/PCA/", scenario_list[[sp]], "_garden_wild_PCA.pdf"),width = 10, height = 8)
   
   print(ggplot(sp_PCA_df_temp, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
           stat_ellipse() +
