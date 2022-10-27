@@ -1,0 +1,294 @@
+Ind,Population,Str_Cluster,Wild_Source,C1,C2,C3,C4
+QAc-G-0029,AP,Pryor,Pryor,0.011,0.004,0.012,0.973
+QAc-G-0030,AP,Pryor,Pryor,0.003,0.003,0.004,0.99
+QAc-G-0031,AP,Pryor,Pryor,0.003,0.003,0.005,0.989
+NA,NA,,,0,0,0,0
+QAc-G-0061,Arnold,Pryor,Pryor,0.006,0.004,0.004,0.986
+QAc-G-0062,Arnold,Magazine,Magazine,0.103,0.71,0.18,0.007
+QAc-G-0063,Arnold,Sugar Loaf,Magazine,0.094,0.012,0.887,0.007
+QAc-G-0064,Arnold,Magazine,Magazine,0.012,0.979,0.006,0.004
+QAc-G-0065,Arnold,Magazine,Magazine,0.005,0.986,0.003,0.005
+QAc-G-0066,Arnold,Sugar Loaf,Magazine,0.004,0.003,0.988,0.005
+QAc-G-0067,Arnold,Magazine,Magazine,0.006,0.972,0.005,0.017
+QAc-G-0068,Arnold,Sugar Loaf,Magazine,0.006,0.421,0.568,0.005
+QAc-G-0070,Arnold,Sugar Loaf,Magazine,0.135,0.023,0.834,0.008
+QAc-G-0071,Arnold,Sugar Loaf,Magazine,0.004,0.003,0.987,0.006
+QAc-G-0072,Arnold,Sugar Loaf,Magazine,0.005,0.003,0.987,0.005
+QAc-G-0073,Arnold,Porter,Porter,0.985,0.004,0.004,0.006
+QAc-G-0074,Arnold,Porter,Porter,0.792,0.012,0.19,0.006
+QAc-G-0075,Arnold,Porter,Porter,0.961,0.015,0.013,0.012
+QAc-G-0076,Arnold,Porter,Porter,0.969,0.008,0.011,0.012
+QAc-G-0077,Arnold,Pryor,Pryor,0.005,0.005,0.008,0.982
+QAc-G-0078,Arnold,Pryor,Pryor,0.003,0.003,0.003,0.991
+QAc-G-0079,Arnold,Pryor,Pryor,0.004,0.004,0.005,0.987
+QAc-G-0080,Arnold,Pryor,Pryor,0.142,0.069,0.018,0.77
+QAc-G-0081,Arnold,Porter,Sugar Loaf,0.954,0.027,0.009,0.009
+QAc-G-0082,Arnold,Porter ,Sugar Loaf,0.944,0.033,0.006,0.016
+QAc-G-0083,Arnold,Sugar Loaf,Magazine,0.372,0.091,0.463,0.074
+NA,NA,,,0,0,0,0
+QAc-G-0001,Bartlett,Pryor,NA,0.003,0.003,0.005,0.988
+QAc-G-0002,Bartlett,Pryor,NA,0.003,0.003,0.003,0.991
+NA,NA,,,0,0,0,0
+QAc-G-0285,CBG,Sugar Loaf,NA,0.015,0.014,0.96,0.011
+QAc-G-0286,CBG,Sugar Loaf,Magazine,0.003,0.003,0.99,0.004
+QAc-G-0287,CBG,Sugar Loaf,Magazine,0.003,0.003,0.99,0.004
+QAc-G-0288,CBG,Sugar Loaf,Magazine,0.01,0.005,0.971,0.014
+QAc-G-0289,CBG,Sugar Loaf,Magazine,0.004,0.003,0.988,0.004
+QAc-G-0290,CBG,Sugar Loaf,Magazine,0.005,0.005,0.987,0.004
+QAc-G-0291,CBG,Sugar Loaf,Magazine,0.003,0.003,0.989,0.006
+QAc-G-0292,CBG,Sugar Loaf,Magazine,0.043,0.037,0.916,0.004
+QAc-G-0293,CBG,Sugar Loaf,Magazine,0.003,0.003,0.988,0.007
+QAc-G-0294,CBG,Porter,Porter,0.962,0.02,0.005,0.013
+QAc-G-0295,CBG,Porter,Porter,0.951,0.007,0.023,0.019
+QAc-G-0296,CBG,Porter,Porter,0.978,0.009,0.01,0.004
+QAc-G-0297,CBG,Porter,Porter,0.93,0.06,0.003,0.007
+QAc-G-0298,CBG,Porter,Porter,0.979,0.007,0.005,0.009
+QAc-G-0299,CBG,Porter,Porter,0.969,0.01,0.013,0.007
+QAc-G-0300,CBG,Porter,Porter,0.982,0.01,0.004,0.004
+QAc-G-0301,CBG,Porter,Porter,0.931,0.041,0.017,0.011
+QAc-G-0302,CBG,Magazine,Magazine,0.024,0.962,0.007,0.006
+QAc-G-0303,CBG,Magazine,Magazine,0.035,0.951,0.006,0.008
+QAc-G-0304,CBG,Sugar Loaf,Magazine,0.004,0.003,0.99,0.004
+QAc-G-0305,CBG,Sugar Loaf,Magazine,0.018,0.054,0.81,0.119
+QAc-G-0306,CBG,Sugar Loaf,Magazine,0.003,0.003,0.99,0.005
+QAc-G-0307,CBG,Pryor,Pryor,0.063,0.018,0.019,0.9
+QAc-G-0308,CBG,Pryor,Pryor,0.011,0.007,0.013,0.969
+QAc-G-0309,CBG,Pryor,Pryor,0.006,0.004,0.005,0.985
+QAc-G-0310,CBG,Pryor,Pryor,0.005,0.003,0.005,0.987
+QAc-G-0311,CBG,Pryor,Pryor,0.003,0.002,0.003,0.992
+QAc-G-0312,CBG,Pryor,Pryor,0.23,0.165,0.008,0.597
+QAc-G-0313,CBG,Porter,Sugar Loaf,0.871,0.048,0.059,0.022
+QAc-G-0314,CBG,Porter,Sugar Loaf,0.961,0.026,0.003,0.009
+QAc-G-0315,CBG,Magazine,Sugar Loaf,0.297,0.649,0.045,0.008
+QAc-G-0316,CBG,Porter,Sugar Loaf,0.822,0.102,0.013,0.063
+NA,NA,,,0,0,0,0
+QAc-G-0032,DBG,Magazine,Magazine,0.011,0.974,0.008,0.007
+QAc-G-0033,DBG,Porter,Porter,0.978,0.009,0.006,0.007
+QAc-G-0034,DBG,Porter,Porter,0.945,0.016,0.006,0.033
+QAc-G-0035,DBG,Porter,Porter,0.974,0.009,0.01,0.007
+QAc-G-0036,DBG,Porter,Porter,0.971,0.007,0.014,0.008
+QAc-G-0037,DBG,Porter,Porter,0.941,0.007,0.028,0.023
+QAc-G-0038,DBG,Porter,Porter,0.989,0.004,0.004,0.002
+QAc-G-0039,DBG,Porter,Porter,0.949,0.008,0.007,0.036
+QAc-G-0040,DBG,Porter,Porter,0.969,0.007,0.016,0.008
+QAc-G-0041,DBG,Porter,Porter,0.987,0.005,0.004,0.004
+QAc-G-0042,DBG,Porter,Porter,0.974,0.012,0.011,0.004
+QAc-G-0043,DBG,Porter,Porter,0.974,0.004,0.01,0.012
+QAc-G-0044,DBG,Porter,Porter,0.943,0.04,0.013,0.004
+QAc-G-0045,DBG,Porter,Porter,0.958,0.011,0.009,0.021
+QAc-G-0046,DBG,Porter,Porter,0.97,0.005,0.003,0.021
+QAc-G-0047,DBG,Porter,Porter,0.939,0.012,0.007,0.042
+QAc-G-0048,DBG,Porter,Porter,0.987,0.005,0.005,0.003
+QAc-G-0049,DBG,Pryor,Pryor,0.003,0.003,0.005,0.989
+QAc-G-0050,DBG,Magazine,Pryor,0.043,0.627,0.067,0.263
+QAc-G-0051,DBG,Pryor,Pryor,0.003,0.003,0.004,0.99
+QAc-G-0052,DBG,Pryor,Pryor,0.011,0.012,0.004,0.973
+QAc-G-0053,DBG,Pryor,Pryor,0.007,0.003,0.009,0.981
+QAc-G-0054,DBG,Pryor,Pryor,0.378,0.087,0.005,0.53
+QAc-G-0055,DBG,Pryor,Pryor,0.19,0.139,0.006,0.666
+QAc-G-0056,DBG,Porter/Magazine,Pryor,0.485,0.43,0.017,0.067
+QAc-G-0057,DBG,Pryor,Pryor,0.004,0.003,0.004,0.989
+QAc-G-0058,DBG,Pryor,Pryor,0.004,0.004,0.004,0.989
+QAc-G-0059,DBG,Pryor,Pryor,0.178,0.074,0.003,0.744
+QAc-G-0060,DBG,Pryor,Pryor,0.011,0.01,0.012,0.967
+NA,NA,,,0,0,0,0
+QAc-G-0276,FGT,Sugar Loaf,Magazine,0.023,0.005,0.95,0.022
+QAc-G-0279,FGT,Sugar Loaf,Porter,0.004,0.003,0.987,0.007
+QAc-G-0280,FGT,Sugar Loaf,Porter,0.006,0.004,0.986,0.004
+QAc-G-0281,FGT,Pryor,Pryor,0.004,0.004,0.007,0.984
+NA,NA,,,0,0,0,0
+QAc-G-0018,HBG,Porter,Porter,0.94,0.024,0.008,0.027
+QAc-G-0019,HBG,Porter,Porter,0.959,0.021,0.016,0.004
+QAc-G-0020,HBG,Porter,Porter,0.976,0.012,0.004,0.008
+QAc-G-0021,HBG,Porter,Porter,0.967,0.012,0.004,0.017
+QAc-G-0022,HBG,Porter,Porter,0.967,0.019,0.006,0.009
+QAc-G-0023,HBG,Pryor,Pryor,0.004,0.003,0.004,0.989
+QAc-G-0024,HBG,Pryor,Pryor,0.006,0.004,0.003,0.987
+QAc-G-0016,HBG,Magazine,Pryor,0.078,0.538,0.02,0.364
+QAc-G-0017,HBG,Magazine,Pryor,0.008,0.984,0.006,0.003
+NA,NA,,,0,0,0,0
+QAc-G-0250,Meis,Sugar Loaf,NA,0.083,0.275,0.609,0.033
+NA,NA,,,0,0,0,0
+QAc-G-0003,MBG,Sugar Loaf,Magazine,0.005,0.004,0.985,0.005
+QAc-G-0004,MBG,Magazine,Magazine,0.046,0.938,0.005,0.011
+QAc-G-0005,MBG,Magazine,Magazine,0.006,0.985,0.004,0.005
+QAc-G-0006,MBG,Magazine,Magazine,0.052,0.936,0.007,0.005
+NA,NA,,,0,0,0,0
+QAc-G-0283,Moore,Porter,,0.937,0.042,0.015,0.006
+NA,NA,,,0,0,0,0
+QAc-G-0265,MA,Porter/Pryor,NA,0.494,0.025,0.026,0.455
+QAc-G-0266,MA,Pryor,Pryor,0.003,0.002,0.005,0.989
+QAc-G-0267,MA,Porter,Magazine,0.902,0.033,0.058,0.008
+QAc-G-0268,MA,Sugar Loaf/Magazine,Magazine,0.019,0.333,0.638,0.011
+QAc-G-0269,MA,Sugar Loaf,Magazine,0.004,0.003,0.988,0.005
+QAc-G-0270,MA,Porter,Pryor,0.979,0.008,0.007,0.005
+QAc-G-0271,MA,Porter,Pryor,0.84,0.149,0.006,0.005
+QAc-G-0272,MA,Porter,Pryor,0.94,0.01,0.041,0.009
+QAc-G-0273,MA,Pryor,Magazine,0.005,0.006,0.005,0.984
+QAc-G-0274,MA,Magazine,Pryor,0.01,0.982,0.004,0.004
+NA,NA,,,0,0,0,0
+QAc-G-0251,Peckerwood,Porter,Porter,0.926,0.064,0.005,0.005
+QAc-G-0252,Peckerwood,Porter,Porter,0.974,0.014,0.007,0.005
+QAc-G-0253,Peckerwood,Pryor,Pryor,0.005,0.003,0.005,0.987
+QAc-G-0254,Peckerwood,Pryor,Pryor,0.003,0.003,0.003,0.991
+QAc-G-0255,Peckerwood,Magazine,Magazine,0.013,0.977,0.005,0.006
+QAc-G-0256,Peckerwood,Magazine,Magazine,0.007,0.975,0.012,0.006
+QAc-G-0257,Peckerwood,Magazine,Magazine,0.008,0.983,0.004,0.005
+QAc-G-0258,Peckerwood,Magazine,Magazine,0.006,0.988,0.003,0.003
+QAc-G-0259,Peckerwood,Porter,Magazine,0.696,0.297,0.004,0.004
+QAc-G-0260,Peckerwood,Magazine,Magazine,0.127,0.794,0.059,0.02
+QAc-G-0261,Peckerwood,Magazine,Magazine,0.011,0.978,0.005,0.006
+QAc-G-0262,Peckerwood,Magazine,Magazine,0.01,0.971,0.01,0.008
+NA,NA,,,0,0,0,0
+QAc-G-0010,TMA,Sugar Loaf,Porter,0.038,0.006,0.935,0.021
+QAc-G-0011,TMA,Porter ,Pryor,0.983,0.009,0.004,0.004
+QAc-G-0015,TMA,Pryor,Pryor,0.036,0.069,0.007,0.888
+QAc-G-0106,TMA,Magazine,Magazine,0.005,0.99,0.003,0.003
+QAc-G-0107,TMA,Magazine,Magazine,0.009,0.971,0.009,0.011
+QAc-G-0108,TMA,Magazine,Magazine,0.01,0.981,0.006,0.003
+QAc-G-0109,TMA,Magazine,Magazine,0.013,0.974,0.005,0.008
+QAc-G-0110,TMA,Magazine,Magazine,0.173,0.698,0.119,0.01
+QAc-G-0111,TMA,Magazine,Magazine,0.015,0.965,0.011,0.008
+QAc-G-0112,TMA,Magazine,Magazine,0.007,0.959,0.025,0.01
+QAc-G-0113,TMA,Magazine,Magazine,0.006,0.974,0.008,0.011
+QAc-G-0114,TMA,Magazine,Magazine,0.072,0.871,0.03,0.027
+QAc-G-0115,TMA,Magazine,Magazine,0.006,0.984,0.006,0.004
+QAc-G-0116,TMA,Magazine,Magazine,0.008,0.975,0.01,0.008
+QAc-G-0117,TMA,Magazine,Magazine,0.101,0.872,0.01,0.016
+QAc-G-0118,TMA,Magazine,Magazine,0.007,0.986,0.004,0.003
+QAc-G-0119,TMA,Magazine,Magazine,0.011,0.981,0.002,0.006
+QAc-G-0120,TMA,Magazine,Magazine,0.042,0.942,0.007,0.008
+QAc-G-0121,TMA,Magazine,Magazine,0.006,0.986,0.004,0.004
+QAc-G-0122,TMA,Magazine,Magazine,0.01,0.96,0.025,0.005
+QAc-G-0123,TMA,Magazine,Magazine,0.012,0.981,0.002,0.004
+QAc-G-0124,TMA,Magazine,Magazine,0.021,0.968,0.005,0.007
+QAc-G-0125,TMA,Magazine,Magazine,0.085,0.845,0.029,0.041
+QAc-G-0126,TMA,Magazine,Magazine,0.014,0.956,0.006,0.023
+QAc-G-0127,TMA,Magazine,Magazine,0.01,0.98,0.004,0.005
+QAc-G-0128,TMA,Magazine,Magazine,0.008,0.976,0.01,0.006
+QAc-G-0129,TMA,Magazine,Magazine,0.008,0.984,0.004,0.003
+QAc-G-0130,TMA,Magazine,Magazine,0.007,0.986,0.004,0.003
+QAc-G-0131,TMA,Magazine,Magazine,0.01,0.979,0.005,0.006
+QAc-G-0132,TMA,Magazine,Magazine,0.006,0.981,0.007,0.005
+QAc-G-0133,TMA,Magazine,Magazine,0.025,0.962,0.007,0.005
+QAc-G-0134,TMA,Magazine,Magazine,0.009,0.98,0.005,0.006
+QAc-G-0135,TMA,Magazine,Magazine,0.023,0.952,0.01,0.015
+QAc-G-0136,TMA,Magazine,Magazine,0.013,0.964,0.014,0.008
+QAc-G-0137,TMA,Magazine,Magazine,0.011,0.98,0.005,0.004
+QAc-G-0138,TMA,Magazine,Magazine,0.009,0.974,0.006,0.011
+QAc-G-0139,TMA,Magazine,Magazine,0.009,0.984,0.004,0.003
+QAc-G-0140,TMA,Magazine,Magazine,0.008,0.979,0.007,0.006
+QAc-G-0141,TMA,Magazine,Magazine,0.262,0.656,0.026,0.056
+QAc-G-0142,TMA,Magazine,Magazine,0.012,0.981,0.004,0.003
+QAc-G-0143,TMA,Magazine,Magazine,0.204,0.749,0.028,0.019
+QAc-G-0144,TMA,Magazine,Magazine,0.017,0.962,0.009,0.012
+QAc-G-0145,TMA,Sugar Loaf,Magazine,0.004,0.003,0.989,0.004
+QAc-G-0146,TMA,Magazine,Magazine,0.017,0.972,0.006,0.005
+QAc-G-0147,TMA,Magazine,Magazine,0.074,0.911,0.009,0.007
+QAc-G-0148,TMA,Magazine,Magazine,0.015,0.968,0.008,0.008
+QAc-G-0149,TMA,Magazine,Magazine,0.009,0.982,0.005,0.004
+QAc-G-0150,TMA,Sugar Loaf,Magazine,0.004,0.003,0.987,0.005
+QAc-G-0151,TMA,Magazine,Magazine,0.013,0.977,0.006,0.004
+QAc-G-0152,TMA,Magazine,Magazine,0.055,0.928,0.005,0.011
+QAc-G-0153,TMA,Magazine,Magazine,0.016,0.971,0.01,0.003
+QAc-G-0154,TMA,Magazine,Magazine,0.011,0.979,0.007,0.004
+QAc-G-0155,TMA,Magazine,Magazine,0.024,0.967,0.005,0.004
+QAc-G-0158,TMA,Magazine,Magazine,0.005,0.984,0.005,0.005
+QAc-G-0159,TMA,Magazine,Magazine,0.01,0.974,0.01,0.006
+QAc-G-0160,TMA,Sugar Loaf,Magazine,0.003,0.003,0.991,0.003
+QAc-G-0161,TMA,Sugar Loaf,Magazine,0.003,0.003,0.991,0.003
+QAc-G-0162,TMA,Sugar Loaf,Magazine,0.319,0.01,0.665,0.006
+QAc-G-0163,TMA,Sugar Loaf,Magazine,0.017,0.012,0.968,0.003
+QAc-G-0164,TMA,Sugar Loaf,Magazine,0.007,0.003,0.977,0.012
+QAc-G-0165,TMA,Sugar Loaf,Magazine,0.006,0.006,0.984,0.004
+QAc-G-0166,TMA,Sugar Loaf,Magazine,0.005,0.003,0.988,0.004
+QAc-G-0167,TMA,Sugar Loaf,Magazine,0.006,0.004,0.986,0.005
+QAc-G-0168,TMA,Sugar Loaf,Magazine,0.003,0.003,0.99,0.004
+QAc-G-0169,TMA,Magazine/Sugar Loaf,Magazine,0.057,0.385,0.551,0.006
+QAc-G-0170,TMA,Sugar Loaf,Magazine,0.006,0.005,0.985,0.005
+QAc-G-0171,TMA,Sugar Loaf,Magazine,0.005,0.003,0.988,0.004
+QAc-G-0172,TMA,Magazine,Magazine,0.027,0.93,0.034,0.009
+QAc-G-0173,TMA,Sugar Loaf,Magazine,0.003,0.003,0.988,0.006
+QAc-G-0174,TMA,Sugar Loaf,Magazine,0.049,0.066,0.877,0.008
+QAc-G-0175,TMA,Sugar Loaf,Magazine,0.004,0.003,0.989,0.004
+QAc-G-0176,TMA,Sugar Loaf,Magazine,0.129,0.008,0.852,0.011
+QAc-G-0177,TMA,Sugar Loaf,Magazine,0.004,0.003,0.989,0.004
+QAc-G-0178,TMA,Sugar Loaf,Magazine,0.015,0.007,0.948,0.031
+QAc-G-0179,TMA,Sugar Loaf,Magazine,0.004,0.003,0.99,0.004
+QAc-G-0180,TMA,Sugar Loaf,Magazine,0.004,0.003,0.99,0.003
+QAc-G-0181,TMA,Sugar Loaf,Magazine,0.007,0.004,0.986,0.003
+QAc-G-0182,TMA,Sugar Loaf,Magazine,0.035,0.047,0.915,0.004
+QAc-G-0183,TMA,Sugar Loaf,Magazine,0.004,0.005,0.985,0.006
+QAc-G-0184,TMA,Sugar Loaf,Magazine,0.004,0.003,0.989,0.003
+QAc-G-0185,TMA,Sugar Loaf,Magazine,0.012,0.009,0.973,0.006
+QAc-G-0186,TMA,Sugar Loaf,Magazine,0.008,0.003,0.986,0.003
+QAc-G-0187,TMA,Sugar Loaf,Magazine,0.018,0.005,0.95,0.027
+QAc-G-0188,TMA,Magazine,Magazine,0.047,0.663,0.285,0.004
+QAc-G-0189,TMA,Sugar Loaf,Magazine,0.003,0.003,0.99,0.005
+QAc-G-0190,TMA,Sugar Loaf,Magazine,0.005,0.004,0.986,0.005
+QAc-G-0191,TMA,Sugar Loaf,Magazine,0.004,0.004,0.987,0.005
+QAc-G-0192,TMA,Sugar Loaf,Magazine,0.003,0.003,0.99,0.004
+QAc-G-0193,TMA,Sugar Loaf,Magazine,0.005,0.004,0.987,0.004
+QAc-G-0194,TMA,Sugar Loaf,Magazine,0.007,0.004,0.983,0.006
+QAc-G-0195,TMA,Sugar Loaf,Magazine,0.012,0.005,0.898,0.086
+QAc-G-0196,TMA,Sugar Loaf,Magazine,0.004,0.003,0.987,0.006
+QAc-G-0197,TMA,Sugar Loaf,Magazine,0.003,0.003,0.991,0.003
+QAc-G-0198,TMA,Sugar Loaf,Magazine,0.004,0.004,0.989,0.003
+QAc-G-0199,TMA,Sugar Loaf,Magazine,0.058,0.008,0.915,0.019
+QAc-G-0200,TMA,Sugar Loaf,Magazine,0.008,0.003,0.985,0.004
+QAc-G-0201,TMA,Sugar Loaf,Magazine,0.004,0.003,0.99,0.004
+QAc-G-0202,TMA,Sugar Loaf,Magazine,0.004,0.004,0.981,0.01
+QAc-G-0203,TMA,Sugar Loaf,Magazine,0.004,0.006,0.975,0.015
+QAc-G-0204,TMA,Sugar Loaf,Pryor,0.005,0.003,0.986,0.005
+QAc-G-0205,TMA,Pryor,Pryor,0.003,0.003,0.004,0.991
+QAc-G-0206,TMA,Pryor,Pryor,0.052,0.052,0.004,0.892
+QAc-G-0207,TMA,Pryor,Pryor,0.009,0.005,0.007,0.98
+QAc-G-0208,TMA,Pryor,Pryor,0.003,0.003,0.004,0.989
+QAc-G-0209,TMA,Pryor,Pryor,0.004,0.003,0.007,0.987
+QAc-G-0210,TMA,Pryor,Pryor,0.003,0.003,0.003,0.99
+QAc-G-0211,TMA,Pryor,Pryor,0.003,0.004,0.003,0.99
+QAc-G-0212,TMA,Pryor,Pryor,0.003,0.003,0.004,0.99
+QAc-G-0213,TMA,Pryor,Pryor,0.006,0.003,0.005,0.987
+QAc-G-0214,TMA,Pryor,Pryor,0.003,0.003,0.005,0.99
+QAc-G-0215,TMA,Pryor,Pryor,0.004,0.004,0.004,0.989
+QAc-G-0216,TMA,Pryor,Pryor,0.075,0.448,0.114,0.363
+QAc-G-0217,TMA,Pryor,Pryor,0.007,0.01,0.006,0.977
+QAc-G-0218,TMA,Pryor,Pryor,0.008,0.003,0.005,0.983
+QAc-G-0219,TMA,Pryor,Pryor,0.015,0.031,0.009,0.945
+QAc-G-0220,TMA,Pryor,Pryor,0.008,0.012,0.003,0.977
+QAc-G-0221,TMA,Pryor,Pryor,0.025,0.012,0.011,0.953
+QAc-G-0222,TMA,Pryor,Pryor,0.004,0.003,0.005,0.988
+QAc-G-0223,TMA,Pryor,Pryor,0.006,0.004,0.003,0.986
+QAc-G-0224,TMA,Pryor,Pryor,0.004,0.003,0.005,0.987
+QAc-G-0226,TMA,Pryor,Porter,0.004,0.003,0.003,0.989
+QAc-G-0227,TMA,Magazine,Porter,0.957,0.027,0.01,0.006
+QAc-G-0228,TMA,Magazine,Porter,0.975,0.006,0.007,0.011
+QAc-G-0229,TMA,Magazine,Porter,0.975,0.01,0.008,0.007
+QAc-G-0230,TMA,Magazine,Porter,0.964,0.007,0.009,0.02
+QAc-G-0231,TMA,Pryor,Porter,0.003,0.004,0.006,0.986
+QAc-G-0232,TMA,Porter,Porter,0.986,0.008,0.003,0.004
+QAc-G-0233,TMA,Porter,Porter,0.979,0.005,0.005,0.011
+QAc-G-0234,TMA,Porter,Porter,0.971,0.006,0.016,0.006
+QAc-G-0235,TMA,Magazine,Porter,0.021,0.948,0.013,0.018
+QAc-G-0236,TMA,Porter,Porter,0.973,0.012,0.008,0.007
+QAc-G-0237,TMA,Porter,Porter,0.957,0.015,0.015,0.013
+QAc-G-0238,TMA,Porter,Porter,0.97,0.006,0.009,0.014
+QAc-G-0239,TMA,Porter,Porter,0.982,0.006,0.006,0.007
+QAc-G-0240,TMA,Porter,Porter,0.98,0.012,0.004,0.003
+QAc-G-0241,TMA,Porter,Porter,0.971,0.013,0.011,0.005
+QAc-G-0242,TMA,Porter,Porter,0.977,0.009,0.005,0.008
+QAc-G-0243,TMA,Porter,Porter,0.969,0.015,0.004,0.012
+QAc-G-0244,TMA,Porter,Porter,0.962,0.019,0.01,0.009
+QAc-G-0245,TMA,Porter,Porter,0.973,0.014,0.008,0.004
+QAc-G-0246,TMA,Porter,Porter,0.971,0.01,0.012,0.007
+QAc-G-0247,TMA,Porter,Porter,0.986,0.005,0.003,0.006
+QAc-G-0248,TMA,Porter,NA,0.985,0.008,0.004,0.004
+NA,NA,,,0,0,0,0
+QAc-G-0249,TTA,Porter,NA,0.96,0.007,0.023,0.011
+NA,NA,,,0,0,0,0
+QAc-G-0025,USNA,Pryor,Magazine,0.004,0.003,0.004,0.989
+QAc-G-0028,USNA,Porter,Porter,0.973,0.004,0.009,0.014
+NA,NA,,,0,0,0,0
+QAc-G-0275,UWBG,Pryor,Pyror,0.005,0.003,0.011,0.981
+NA,NA,,,0,0,0,0
+QAc-G-0263,ZBGP,Porter/Sugar Loaf,Magazine,0.278,0.1,0.519,0.102

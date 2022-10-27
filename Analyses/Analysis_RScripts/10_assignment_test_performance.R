@@ -81,5 +81,17 @@ rownames(assign_success_df) <- strsplit(sp_geneclass_output, split='_output.csv'
 #write out data frame
 write.csv(assign_success_df, "Results/Sum_Stats/geneclass_assign_success_df.csv")
 
+###QUAC structure testing assignment 
+#read in data file 
+QUAC_str_assign_df <- read.csv("Results/Clustering/Structure/QUAC/QUAC_str_assignment.csv")
 
+#clean data file for NAs
+QUAC_str_assign_df <- na.omit(QUAC_str_assign_df)
+
+#add a column for correct assignment
+QUAC_str_assign_df$str_success_assign <- QUAC_str_assign_df$Str_Cluster == QUAC_str_assign_df$Wild_Source
+
+#calculate the percent of correct assignment 
+QUAC_str_assign_success <- length(QUAC_str_assign_df[QUAC_str_assign_df$str_success_assign == TRUE,][,1])/
+                            length(QUAC_str_assign_df$str_success_assign)
 
