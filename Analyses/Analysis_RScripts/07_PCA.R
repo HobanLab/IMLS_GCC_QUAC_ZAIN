@@ -127,25 +127,33 @@ for(sp in 1:length(scenario_list)){
           scale_color_manual(values=randomColor(count = length(unique(sp_PCA_df_temp$Pop)))))
   dev.off()
   
-  
 }
 
 #loop to generate garden vs. all wild pops PCA 
-for(sp in 1:length(sp_allgarden_allwildpop_genind_list)){
+for(sp in 1:length(scenario_list)){
   
-  #read in genepop files as a genind object
-  sp_genind <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_garden_allwildpop_genind_list[[sp]]), ncode = 3)
+  #load in genind object 
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/", sp_genind_list[[sp]]), ncode = 3)
+
+  #load in species data frame
+  sp_df <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
   
-  #read in data frame 
-  sp_df <- read.csv(paste0("Data_Frames/Garden_Wild/", sp_garden_allwildpop_df_list[[sp]]))
+  #separate garden individuals into one population 
+  sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
+  #rename populations
+  levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[sp]]))
   
-  #name rows in the genind object 
-  rownames(sp_genind@tab) <- sp_df[,1]
-  #name pops
-  levels(sp_genind@pop) <- unique(sp_df[,2])
+  #separate wild individuals 
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+  
+  #name pops by wild pop 
+  levels(sp_wild_genind@pop) <- unique(sp_df[,2])
+    
+  #combine objects into one genind object from wild and garden processing
+  sp_garden_allwildpop_genind <- repool(sp_garden_genind, sp_wild_genind)
   
   #create tab object for genind 
-  sp_tab <- tab(sp_genind, freq=TRUE, NA.method="mean")
+  sp_tab <- tab(sp_garden_allwildpop_genind, freq=TRUE, NA.method="mean")
   
   #run PCA
   sp_PCA <- dudi.pca(sp_tab, scale = FALSE, nf = 2, scannf = FALSE)
@@ -161,7 +169,7 @@ for(sp in 1:length(sp_allgarden_allwildpop_genind_list)){
   sp_pc2 <- signif(((sp_PCA$eig[2])/sum(sp_PCA$eig))*100, 3)
   
   #plot PCA
-  pdf(paste0("../Analyses/Results/Clustering/", species_list[[sp]], "_garden_allwildpop_PCA.pdf"),width = 10, height = 8)
+  pdf(paste0("../Analyses/Results/Clustering/PCA/", species_list[[sp]], "_garden_allwildpop_PCA.pdf"),width = 10, height = 8)
   
   print(ggplot(sp_PCA_df_temp, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
           stat_ellipse() +
