@@ -13,6 +13,7 @@
 library(adegenet)
 library(diveRsity)
 library(ggplot2)
+library(randomcoloR)
 
 #########################
 #     Load in Files     #
@@ -22,9 +23,6 @@ setwd("../../Data_Files")
 
 #data file lists 
 sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
-#sp_allgarden_allwildpop_genind_list <- list.files(path = "Adegenet_Files", pattern = "clean.gen")
-#sp_garden_allwildpop_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild", pattern = "allwildpop")
-#sp_garden_allwildpop_df_list <- list.files(path = "Data_Frames/Garden_Wild", pattern = "allwildpop")
 sp_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
 
 #list of scenarios 
@@ -117,7 +115,7 @@ for(sp in 1:length(scenario_list)){
   sp_pc2 <- signif(((sp_PCA$eig[2])/sum(sp_PCA$eig))*100, 3)
   
   #plot PCA
-  pdf(paste0("../Analyses/Results/Clustering/PCA/", species_list[[sp]], "_wildpop_PCA.pdf"),width = 10, height = 8)
+  pdf(paste0("../Analyses/Results/Clustering/PCA/", scenario_list[[sp]], "_wildpop_PCA.pdf"),width = 10, height = 8)
   
   print(ggplot(sp_PCA_df_temp, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
           stat_ellipse() +
@@ -169,7 +167,7 @@ for(sp in 1:length(scenario_list)){
   sp_pc2 <- signif(((sp_PCA$eig[2])/sum(sp_PCA$eig))*100, 3)
   
   #plot PCA
-  pdf(paste0("../Analyses/Results/Clustering/PCA/", species_list[[sp]], "_garden_allwildpop_PCA.pdf"),width = 10, height = 8)
+  pdf(paste0("../Analyses/Results/Clustering/PCA/", scenario_list[[sp]], "_garden_allwildpop_PCA.pdf"),width = 10, height = 8)
   
   print(ggplot(sp_PCA_df_temp, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop)) + geom_point() + 
           stat_ellipse() +
