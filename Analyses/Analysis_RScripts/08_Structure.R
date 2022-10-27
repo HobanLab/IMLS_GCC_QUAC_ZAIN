@@ -11,11 +11,11 @@ library(RColorBrewer)
 #######################
 #     Load files      # 
 #######################
-setwd("../../Data_Files")
+setwd("../Analyses/Results/Clustering/Structure")
 
 #create a data frame list 
-QUAC_wk_list <- list.files(path = "Structure_Files/QUAC/QUAC_wild_wK", pattern = ".csv")
-QUAC_woK_list <- list.files(path = "Structure_Files/QUAC/QUAC_wild_woK", pattern = ".csv")
+QUAC_wk_list <- list.files(path = "QUAC/QUAC_allpop_wK", pattern = ".csv")
+QUAC_woK_list <- list.files(path = "QUAC/QUAC_allpop_woK", pattern = ".csv")
 QUAC_garden_wild_wk_list <- list.files(path = "Structure_Files/QUAC/QUAC_allpop_wK", pattern = ".csv")
 QUAC_garden_wild_woK_list <- list.files(path = "Structure_Files/QUAC/QUAC_allpop_woK", pattern = ".csv")
 ZAIN_garden_wild_og_list <- list.files(path = "Structure_Files/ZAIN/ZAIN_og_allpop_STR", pattern = ".csv")
@@ -30,13 +30,13 @@ label_pos <- c(25,55,92,140,173)
 
 for(k in 1:length(QUAC_wk_list)){
   
-  QUAC_k <- read.csv(paste0("Structure_Files/QUAC_wild_wK/",QUAC_wk_list[[k]]))
+  QUAC_k <- read.csv(paste0("QUAC/QUAC_allpop_wK/",QUAC_wk_list[[k]]))
   
   QUAC_k_ready <- QUAC_k[,-c(1:2)]
   
   colors <- viridis::viridis(k+1)
   
-  pdf(paste0("../Analyses/Results/Clustering/QUAC_wild_wK_STR_k",k+1,".pdf"), width = 20, height = 10)
+  pdf(paste0("QUAC/QUAC_garden_wild_wK_STR_k",k+1,".pdf"), width = 20, height = 10)
   # Graphing parameters
   par(mar=c(7,2,10,1)+0.1, mgp = c(3,1,1))
 
@@ -70,15 +70,15 @@ for(k in 1:length(QUAC_wk_list)){
 QUAC_pop_names_woK <- c("Porter", "Magazine", "Pryor", "Sugar Loaf")
 label_pos <- c(25,55,92,140)
 
-for(k in 1:length(QUAC_garden_wild_wk_list)){
+for(k in 1:length(QUAC_woK_list)){
   
-  QUAC_k <- read.csv(paste0("Structure_Files/QUAC_wild_woK/",QUAC_woK_list[[k]]))
+  QUAC_k <- read.csv(paste0("QUAC/QUAC_allpop_woK/",QUAC_woK_list[[k]]))
   
   QUAC_k_ready <- QUAC_k[,-c(1:2)]
   
   colors <- viridis::viridis(k+1)
   
-  pdf(paste0("../Analyses/Results/Clustering/QUAC_wild_woK_STR_k",k+1,".pdf"), width = 20, height = 10)
+  pdf(paste0("QUAC/QUAC_garden_wild_woK_STR_k",k+1,".pdf"), width = 20, height = 10)
   # Graphing parameters
   par(mar=c(7,2,10,1)+0.1, mgp = c(3,1,1))
   
