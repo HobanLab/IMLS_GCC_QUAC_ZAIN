@@ -146,26 +146,26 @@ for(sp in 1:length(sp_coord_df)){
 
 }
 
-df_list[[2]][is.na(df_list[[2]])] <- 0
+#df_list[[2]][is.na(df_list[[2]])] <- 0
 
-df_list[[2]][lower.tri(df_list[[2]])]
-summary(lm(df_list[[2]][lower.tri(df_list[[2]])]~df_list[[1]][lower.tri(df_list[[1]])]))
+#df_list[[2]][lower.tri(df_list[[2]])]
+#summary(lm(df_list[[2]][lower.tri(df_list[[2]])]~df_list[[1]][lower.tri(df_list[[1]])]))
 
 ##compare pairwise distance and pairwise Fst between pops
 #create a matrix to store final results 
 sp_fst_dist_df <- matrix(nrow = length(scenario_list), ncol = 2)
 
-#loop to compare 
+#loop to compare pairwise fst and distance 
 for(sp in 1:length(sp_coord_df)){
+  
+  #first, replace NA values with zeroes in the pwfst dfs
+  sp_pwfst_df[[sp]][is.na(sp_pwfst_df[[sp]])] <- 0
   
   #create regression 
   reg <- lm(sp_pwfst_df[[sp]][lower.tri(sp_pwfst_df[[sp]])]~sp_dist_df_list[[sp]][lower.tri(sp_dist_df_list[[sp]])])
   
   #summarize
-  sp_reg_sum <- summary(reg)
-  
-  #sp_fst_dist_df[sp,1] <- 
-  
+  #sp_reg_sum <- summary(reg)
   
 }
 
