@@ -264,4 +264,61 @@ for(k in 1:length(ZAIN_rebinned_garden_wild_list)){
   dev.off()
 }
 
+##ZAIN wild pops only structure diagrams 
+#create lists with population labels
+ZAIN_rebinned_wild_pop_names <- unique(read.csv(paste0("ZAIN/ZAIN_rebinned_wild/", ZAIN_rebinned_wild_klist[[1]]))[,2])
+#remove NA from this list 
+ZAIN_rebinned_wild_pop_names <- ZAIN_rebinned_wild_pop_names[c(1,3:26)]
+#create list for label positions
+ZAIN_rebinned_wild_label_positions <- c(19,52,89,130,160,181,216,257,294,334,
+                                        366,408,452,490,524,544,560,582,610,624,
+                                        638,665,707,733,756)
+
+#loop to create struture diagrams for all delta K clustering values 
+for(k in 1:length(ZAIN_rebinned_wild_klist)){
+  
+  #load in k Q value list
+  ZAIN_k <- read.csv(paste0("ZAIN/ZAIN_rebinned_wild/",ZAIN_rebinned_wild_klist[[k]]))
+  
+  #remove columns with ind and pop names 
+  ZAIN_k_ready <- ZAIN_k[,-c(1:2)]
+  
+  #generate colors for clusters
+  colors <- distinctColorPalette(length(ZAIN_k_ready))
+  
+  ##create PDF for structure diagrams 
+  pdf(paste0("ZAIN/ZAIN_rebinned_wild_STR_k",length(ZAIN_k_ready),".pdf"), width = 20, height = 10)
+  
+  #indicate graphing margins
+  par(mar=c(7,2,10,1)+0.1, mgp = c(3,1,1))
+  
+  #loop to create structure diagrams
+  for(i in 1:length(ZAIN_k_ready)){
+    
+    #create first column 
+    if(i==1){
+      
+      #generate barplot with the first column 
+      barplot(ZAIN_k_ready[,i], xlim=c(0,length(ZAIN_k_ready[,1])), horiz=F, 
+              beside=F, col=colors[i], axisnames=T, space=0, yaxt= "n", 
+              main=paste0("K = ", length(ZAIN_k_ready)),border = NA)
+      #create offset for other columns 
+      off.value <- ZAIN_k_ready[,i]
+    }else{
+      #create all other columns 
+      barplot(ZAIN_k_ready[,i], offset=off.value, add=T, beside=F, 
+              xlim=c(0,length(ZAIN_k_ready[,1])), horiz=F, col=colors[i], 
+              yaxt= "n", space=0,border = NA)
+      off.value <- off.value + ZAIN_k_ready[,i]
+      
+    }
+  }
+  
+  #label axes with populations
+  axis(2, at = c(0, 0.25, 0.5, 0.75, 1), labels=c("0", "0.25", "0.50", "0.75", "1.00"), 
+       cex.axis = 1, las = 2, pos = -0.2, xpd=T)
+  text(x=ZAIN_rebinned_wild_label_positions, y=-0.031, srt=35, adj=1, xpd=TRUE, 
+       labels=ZAIN_rebinned_wild_pop_names, cex=1.2)  
+  dev.off()
+}
 
