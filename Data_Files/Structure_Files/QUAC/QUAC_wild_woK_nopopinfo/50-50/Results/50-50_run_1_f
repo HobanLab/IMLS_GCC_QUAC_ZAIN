@@ -1,0 +1,417 @@
+
+
+----------------------------------------------------
+STRUCTURE by Pritchard, Stephens and Donnelly (2000)
+     and Falush, Stephens and Pritchard (2003)
+       Code by Pritchard, Falush and Hubisz
+             Version 2.3.4 (Jul 2012)
+----------------------------------------------------
+
+
+
+Command line arguments:   bin\structure -m C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\QUAC\QUAC_wild_woK_nopopinfo\50-50\mainparams -e C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\QUAC\QUAC_wild_woK_nopopinfo\50-50\extraparams 
+Input File:    C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\QUAC\QUAC_wild_woK_nopopinfo\project_data
+
+Run parameters:
+   164 individuals
+   15 loci
+   1 populations assumed
+   50000 Burn-in period
+   50000 Reps
+
+
+--------------------------------------------
+Overall proportion of membership of the
+sample in each of the 1 clusters
+
+Inferred Clusters
+  1    
+1.000  
+
+--------------------------------------------
+
+Allele-freq. divergence among pops (Net nucleotide distance),
+computed using point estimates of P.
+
+      1      
+ 1      -    
+
+Average distances (expected heterozygosity) between individuals in same cluster:
+cluster  1  : 0.6000 
+
+--------------------------------------------
+Estimated Ln Prob of Data   = -6959.6
+Mean value of ln likelihood = -6930.0
+Variance of ln likelihood   = 59.2
+
+Mean value of Fst_1         = 0.0027
+
+
+Inferred ancestry of individuals:
+        Label (%Miss) :  Inferred clusters
+  1 QAc-W-0001    (0)   :  1.000 
+  2 QAc-W-0002    (0)   :  1.000 
+  3 QAc-W-0003    (0)   :  1.000 
+  4 QAc-W-0004    (0)   :  1.000 
+  5 QAc-W-0005    (0)   :  1.000 
+  6 QAc-W-0006    (0)   :  1.000 
+  7 QAc-W-0007   (13)   :  1.000 
+  8 QAc-W-0008    (6)   :  1.000 
+  9 QAc-W-0009    (0)   :  1.000 
+ 10 QAc-W-0010    (0)   :  1.000 
+ 11 QAc-W-0011    (0)   :  1.000 
+ 12 QAc-W-0012    (0)   :  1.000 
+ 13 QAc-W-0013    (0)   :  1.000 
+ 14 QAc-W-0014    (0)   :  1.000 
+ 15 QAc-W-0015    (0)   :  1.000 
+ 16 QAc-W-0016    (0)   :  1.000 
+ 17 QAc-W-0017    (0)   :  1.000 
+ 18 QAc-W-0018    (0)   :  1.000 
+ 19 QAc-W-0019    (0)   :  1.000 
+ 20 QAc-W-0020    (0)   :  1.000 
+ 21 QAc-W-0021    (0)   :  1.000 
+ 22 QAc-W-0022    (0)   :  1.000 
+ 23 QAc-W-0023    (6)   :  1.000 
+ 24 QAc-W-0024    (0)   :  1.000 
+ 25 QAc-W-0025    (0)   :  1.000 
+ 26 QAc-W-0026    (0)   :  1.000 
+ 27 QAc-W-0027    (0)   :  1.000 
+ 28 QAc-W-0028    (0)   :  1.000 
+ 29 QAc-W-0029    (0)   :  1.000 
+ 30 QAc-W-0030    (0)   :  1.000 
+ 31 QAc-W-0031    (0)   :  1.000 
+ 32 QAc-W-0032    (0)   :  1.000 
+ 33 QAc-W-0033    (0)   :  1.000 
+ 34 QAc-W-0034    (0)   :  1.000 
+ 35 QAc-W-0035    (0)   :  1.000 
+ 36 QAc-W-0036    (0)   :  1.000 
+ 37 QAc-W-0037    (0)   :  1.000 
+ 38 QAc-W-0038    (0)   :  1.000 
+ 39 QAc-W-0039    (0)   :  1.000 
+ 40 QAc-W-0040    (0)   :  1.000 
+ 41 QAc-W-0041    (0)   :  1.000 
+ 42 QAc-W-0042    (0)   :  1.000 
+ 43 QAc-W-0043    (0)   :  1.000 
+ 44 QAc-W-0044    (0)   :  1.000 
+ 45 QAc-W-0045    (0)   :  1.000 
+ 46 QAc-W-0046    (0)   :  1.000 
+ 47 QAc-W-0047    (0)   :  1.000 
+ 48 QAc-W-0048    (0)   :  1.000 
+ 49 QAc-W-0049    (0)   :  1.000 
+ 50 QAc-W-0050    (0)   :  1.000 
+ 51 QAc-W-0051    (0)   :  1.000 
+ 52 QAc-W-0052    (0)   :  1.000 
+ 53 QAc-W-0053    (0)   :  1.000 
+ 54 QAc-W-0054    (0)   :  1.000 
+ 55 QAc-W-0055    (0)   :  1.000 
+ 56 QAc-W-0056    (0)   :  1.000 
+ 57 QAc-W-0057    (0)   :  1.000 
+ 58 QAc-W-0058    (0)   :  1.000 
+ 59 QAc-W-0059    (0)   :  1.000 
+ 60 QAc-W-0060    (0)   :  1.000 
+ 61 QAc-W-0061    (0)   :  1.000 
+ 62 QAc-W-0062    (0)   :  1.000 
+ 63 QAc-W-0063    (0)   :  1.000 
+ 64 QAc-W-0064    (0)   :  1.000 
+ 65 QAc-W-0065    (0)   :  1.000 
+ 66 QAc-W-0066    (0)   :  1.000 
+ 67 QAc-W-0067    (0)   :  1.000 
+ 68 QAc-W-0068    (0)   :  1.000 
+ 69 QAc-W-0069    (0)   :  1.000 
+ 70 QAc-W-0070    (0)   :  1.000 
+ 71 QAc-W-0071    (6)   :  1.000 
+ 72 QAc-W-0072    (0)   :  1.000 
+ 73 QAc-W-0073    (0)   :  1.000 
+ 74 QAc-W-0074    (0)   :  1.000 
+ 75 QAc-W-0075    (0)   :  1.000 
+ 76 QAc-W-0076    (0)   :  1.000 
+ 77 QAc-W-0077    (0)   :  1.000 
+ 78 QAc-W-0078    (0)   :  1.000 
+ 79 QAc-W-0079    (6)   :  1.000 
+ 80 QAc-W-0080   (13)   :  1.000 
+ 81 QAc-W-0081    (0)   :  1.000 
+ 82 QAc-W-0082    (0)   :  1.000 
+ 83 QAc-W-0083    (0)   :  1.000 
+ 84 QAc-W-0084    (0)   :  1.000 
+ 85 QAc-W-0085    (0)   :  1.000 
+ 86 QAc-W-0086    (0)   :  1.000 
+ 87 QAc-W-0087    (0)   :  1.000 
+ 88 QAc-W-0088    (0)   :  1.000 
+ 89 QAc-W-0089    (0)   :  1.000 
+ 90 QAc-W-0090    (0)   :  1.000 
+ 91 QAc-W-0091    (0)   :  1.000 
+ 92 QAc-W-0092    (0)   :  1.000 
+ 93 QAc-W-0093    (0)   :  1.000 
+ 94 QAc-W-0094    (0)   :  1.000 
+ 95 QAc-W-0095    (0)   :  1.000 
+ 96 QAc-W-0096    (0)   :  1.000 
+ 97 QAc-W-0097    (0)   :  1.000 
+ 98 QAc-W-0098    (0)   :  1.000 
+ 99 QAc-W-0099    (0)   :  1.000 
+100 QAc-W-0100    (0)   :  1.000 
+101 QAc-W-0101    (0)   :  1.000 
+102 QAc-W-0104    (0)   :  1.000 
+103 QAc-W-0105    (0)   :  1.000 
+104 QAc-W-0106    (0)   :  1.000 
+105 QAc-W-0107    (0)   :  1.000 
+106 QAc-W-0108    (0)   :  1.000 
+107 QAc-W-0109    (0)   :  1.000 
+108 QAc-W-0110   (13)   :  1.000 
+109 QAc-W-0111    (6)   :  1.000 
+110 QAc-W-0112   (13)   :  1.000 
+111 QAc-W-0113   (13)   :  1.000 
+112 QAc-W-0114   (13)   :  1.000 
+113 QAc-W-0115    (0)   :  1.000 
+114 QAc-W-0116    (0)   :  1.000 
+115 QAc-W-0117    (0)   :  1.000 
+116 QAc-W-0118    (0)   :  1.000 
+117 QAc-W-0119    (0)   :  1.000 
+118 QAc-W-0120    (0)   :  1.000 
+119 QAc-W-0121    (0)   :  1.000 
+120 QAc-W-0122    (0)   :  1.000 
+121 QAc-W-0123    (6)   :  1.000 
+122 QAc-W-0124    (0)   :  1.000 
+123 QAc-W-0125    (0)   :  1.000 
+124 QAc-W-0126   (13)   :  1.000 
+125 QAc-W-0127    (6)   :  1.000 
+126 QAc-W-0128   (13)   :  1.000 
+127 QAc-W-0129   (13)   :  1.000 
+128 QAc-W-0130   (13)   :  1.000 
+129 QAc-W-0131    (0)   :  1.000 
+130 QAc-W-0132    (6)   :  1.000 
+131 QAc-W-0133    (6)   :  1.000 
+132 QAc-W-0134    (0)   :  1.000 
+133 QAc-W-0135    (0)   :  1.000 
+134 QAc-W-0136    (0)   :  1.000 
+135 QAc-W-0137    (0)   :  1.000 
+136 QAc-W-0138    (0)   :  1.000 
+137 QAc-W-0139    (0)   :  1.000 
+138 QAc-W-0140    (0)   :  1.000 
+139 QAc-W-0141    (6)   :  1.000 
+140 QAc-W-0142    (0)   :  1.000 
+141 QAc-W-0143    (0)   :  1.000 
+142 QAc-W-0144    (0)   :  1.000 
+143 QAc-W-0145    (0)   :  1.000 
+144 QAc-W-0146    (0)   :  1.000 
+145 QAc-W-0147    (0)   :  1.000 
+146 QAc-W-0148    (0)   :  1.000 
+147 QAc-W-0149    (0)   :  1.000 
+148 QAc-W-0150    (0)   :  1.000 
+149 QAc-W-0151    (0)   :  1.000 
+150 QAc-W-0152    (0)   :  1.000 
+151 QAc-W-0153    (0)   :  1.000 
+152 QAc-W-0154    (0)   :  1.000 
+153 QAc-W-0155    (0)   :  1.000 
+154 QAc-W-0156    (0)   :  1.000 
+155 QAc-W-0157    (0)   :  1.000 
+156 QAc-W-0158    (0)   :  1.000 
+157 QAc-W-0159    (0)   :  1.000 
+158 QAc-W-0160    (0)   :  1.000 
+159 QAc-W-0161    (0)   :  1.000 
+160 QAc-W-0162    (0)   :  1.000 
+161 QAc-W-0163    (0)   :  1.000 
+162 QAc-W-0164    (0)   :  1.000 
+163 QAc-W-0165    (0)   :  1.000 
+164 QAc-W-0166    (0)   :  1.000 
+
+
+Estimated Allele Frequencies in each cluster
+First column gives estimated ancestral frequencies
+
+
+Locus 1 : 
+15 alleles
+0.0% missing data
+ 200   (0.241) 0.248 
+ 208   (0.044) 0.044 
+ 210   (0.117) 0.120 
+ 212   (0.134) 0.137 
+ 218   (0.081) 0.081 
+ 224   (0.059) 0.058 
+ 206   (0.014) 0.012 
+ 202   (0.042) 0.041 
+ 216   (0.056) 0.056 
+ 222   (0.070) 0.070 
+ 214   (0.061) 0.061 
+ 232   (0.019) 0.017 
+ 226   (0.036) 0.035 
+ 228   (0.017) 0.015 
+ 220   (0.008) 0.006 
+
+Locus 2 : 
+12 alleles
+0.0% missing data
+ 171   (0.163) 0.165 
+ 187   (0.037) 0.036 
+ 173   (0.176) 0.179 
+ 189   (0.063) 0.062 
+ 175   (0.060) 0.059 
+ 181   (0.155) 0.158 
+ 179   (0.131) 0.132 
+ 185   (0.100) 0.100 
+ 177   (0.048) 0.047 
+ 183   (0.043) 0.041 
+ 191   (0.017) 0.015 
+ 169   (0.008) 0.006 
+
+Locus 3 : 
+4 alleles
+6.1% missing data
+ 206   (0.914) 0.921 
+ 208   (0.059) 0.057 
+ 204   (0.015) 0.013 
+ 212   (0.012) 0.009 
+
+Locus 4 : 
+10 alleles
+7.9% missing data
+ 161   (0.443) 0.452 
+ 157   (0.021) 0.019 
+ 167   (0.128) 0.128 
+ 163   (0.156) 0.157 
+ 153   (0.008) 0.006 
+ 165   (0.152) 0.154 
+ 177   (0.018) 0.016 
+ 169   (0.012) 0.010 
+ 173   (0.043) 0.042 
+ 159   (0.018) 0.016 
+
+Locus 5 : 
+15 alleles
+0.0% missing data
+ 166   (0.036) 0.035 
+ 140   (0.113) 0.114 
+ 146   (0.087) 0.087 
+ 152   (0.101) 0.102 
+ 148   (0.154) 0.157 
+ 144   (0.142) 0.145 
+ 150   (0.042) 0.041 
+ 138   (0.143) 0.146 
+ 154   (0.076) 0.076 
+ 158   (0.039) 0.038 
+ 160   (0.020) 0.018 
+ 142   (0.014) 0.012 
+ 162   (0.020) 0.018 
+ 156   (0.008) 0.006 
+ 164   (0.008) 0.006 
+
+Locus 6 : 
+11 alleles
+0.0% missing data
+ 235   (0.332) 0.340 
+ 237   (0.151) 0.153 
+ 233   (0.137) 0.138 
+ 239   (0.077) 0.076 
+ 243   (0.023) 0.021 
+ 229   (0.057) 0.056 
+ 245   (0.057) 0.056 
+ 225   (0.043) 0.041 
+ 241   (0.060) 0.059 
+ 227   (0.040) 0.038 
+ 231   (0.023) 0.021 
+
+Locus 7 : 
+3 alleles
+0.0% missing data
+ 118   (0.968) 0.973 
+ 124   (0.015) 0.012 
+ 116   (0.018) 0.015 
+
+Locus 8 : 
+5 alleles
+0.0% missing data
+ 139   (0.806) 0.814 
+ 137   (0.145) 0.144 
+ 143   (0.026) 0.024 
+ 141   (0.011) 0.009 
+ 135   (0.011) 0.009 
+
+Locus 9 : 
+10 alleles
+0.0% missing data
+ 116   (0.350) 0.356 
+ 114   (0.173) 0.175 
+ 118   (0.169) 0.171 
+ 122   (0.077) 0.077 
+ 130   (0.020) 0.018 
+ 112   (0.109) 0.109 
+ 126   (0.031) 0.030 
+ 128   (0.011) 0.009 
+ 120   (0.023) 0.021 
+ 124   (0.037) 0.035 
+
+Locus 10 : 
+3 alleles
+0.0% missing data
+ 232   (0.893) 0.897 
+ 238   (0.099) 0.097 
+ 244   (0.008) 0.006 
+
+Locus 11 : 
+4 alleles
+0.0% missing data
+ 165   (0.855) 0.862 
+ 161   (0.033) 0.030 
+ 167   (0.101) 0.099 
+ 163   (0.011) 0.009 
+
+Locus 12 : 
+5 alleles
+0.0% missing data
+ 140   (0.217) 0.217 
+ 134   (0.181) 0.180 
+ 137   (0.577) 0.582 
+ 125   (0.018) 0.015 
+ 146   (0.008) 0.006 
+
+Locus 13 : 
+17 alleles
+0.6% missing data
+ 206   (0.178) 0.184 
+ 192   (0.078) 0.079 
+ 210   (0.139) 0.143 
+ 194   (0.100) 0.102 
+ 208   (0.047) 0.047 
+ 204   (0.025) 0.023 
+ 202   (0.086) 0.088 
+ 190   (0.061) 0.061 
+ 214   (0.039) 0.038 
+ 200   (0.055) 0.055 
+ 184   (0.045) 0.044 
+ 216   (0.016) 0.014 
+ 182   (0.008) 0.006 
+ 198   (0.011) 0.009 
+ 212   (0.089) 0.091 
+ 186   (0.008) 0.006 
+ 196   (0.014) 0.012 
+
+Locus 14 : 
+8 alleles
+1.2% missing data
+ 151   (0.457) 0.464 
+ 157   (0.256) 0.259 
+ 154   (0.071) 0.069 
+ 139   (0.096) 0.096 
+ 145   (0.077) 0.076 
+ 163   (0.014) 0.012 
+ 160   (0.011) 0.009 
+ 142   (0.017) 0.015 
+
+Locus 15 : 
+11 alleles
+2.4% missing data
+ 256   (0.149) 0.151 
+ 258   (0.167) 0.169 
+ 248   (0.160) 0.163 
+ 254   (0.076) 0.075 
+ 246   (0.094) 0.094 
+ 252   (0.055) 0.054 
+ 260   (0.053) 0.051 
+ 242   (0.102) 0.103 
+ 262   (0.073) 0.073 
+ 250   (0.050) 0.048 
+ 244   (0.020) 0.018 
+
+Values of parameters used in structure:
+DATAFILE=C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\QUAC\QUAC_wild_woK_nopopinfo\project_data,	OUTFILE=C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Data_Files\Structure_Files\QUAC\QUAC_wild_woK_nopopinfo\50-50\Results\50-50_run_1,	NUMINDS=164,	NUMLOCI=15,	MISSING=-9,	LABEL=1,	POPDATA=0,	POPFLAG=0,	PHENOTYPE=0,	EXTRACOLS=0,	MAXPOPS=1,	BURNIN=50000,	NUMREPS=50000,	USEPOPINFO=0,	INFERALPHA=1,	INFERLAMBDA=0,	POPSPECIFICLAMBDA=0,	POPALPHAS=0,	COMPUTEPROB=1,	NOADMIX=0,	ADMBURNIN=2500,	UPDATEFREQ=1,	PRINTLIKES=0,	INTERMEDSAVE=0,	PRINTKLD=0,	PRINTNET=0,	PRINTLAMBDA=0,	ANCESTDIST=0,	NUMBOXES=1000,	ANCESTPINT=0.90000,	GENSBACK=2,	MIGRPRIOR=0.05000,	PRINTQHAT=0,	PRINTQSUM=0,	ALPHA=1.0000,	FREQSCORR=1,	FPRIORMEAN=0.0100,	FPRIORSD=0.0500,	ONEFST=0,	LAMBDA=1.0000,	UNIFPRIORALPHA=1,	ALPHAMAX=10.0000,	ALPHAPRIORA=1.0000,	ALPHAPRIORB=2.0000,	ALPHAPROPSD=0.0250,	STARTATPOPINFO=0,	RANDOMIZE=1,	LINKAGE=0,	METROFREQ=10,	REPORTHITRATE=0,	MARKOVPHASE=-1,	PHASED=0,	PLOIDY=2,	PHASEINFO=0	LOCPRIOR=0, 	LOCPRIORINIT=1.000000, 	LOCDATA=0, 	LOCISPOP=0, 	LOCPRIORSTEP=0.100000, 	MAXLOCPRIOR=20.000000, 	SEED=1666983845,	
+[STRAT parameters]:    NUMSIMSTATS=1000,	PHENOTYPECOL=-9,	POOLFREQ=10,	LOCUSxONLY=0,	EMERROR=0.00100,	MISSINGPHENO=-9,	
