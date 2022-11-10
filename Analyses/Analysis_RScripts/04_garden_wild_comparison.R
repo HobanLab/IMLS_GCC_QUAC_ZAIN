@@ -54,7 +54,8 @@ scenario_list <- c("Garden_allSSR", "Wild_allSSR", "Garden_gSSR", "Wild_gSSR",
 
 #pop list 
 pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
-                 c(18:22), c(18:21), c(11:35), c(11:35))
+                 c(18:22), c(18:21), c(11:19, 23:26,28:32,34:35), 
+                 c(11:19, 23:26,28:32,34:35))
 
 #initial lists 
 QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
@@ -208,9 +209,9 @@ colnames(hexp_df) <- species_list
 rownames(hexp_df) <- scenario_list
 
 #write out data frames
-write.csv(allrich_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_df.csv", row.names = FALSE)
-write.csv(hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_hexp_df.csv", row.names = FALSE)
-write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_hexp_pvalue_df.csv", row.names = FALSE)
+write.csv(allrich_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_df.csv")
+write.csv(hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_hexp_df.csv")
+write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_sp_allrich_hexp_pvalue_df.csv")
 
 ########################################
 #     Allelic representation code      #
