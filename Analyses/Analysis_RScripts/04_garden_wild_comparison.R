@@ -278,7 +278,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     sp_wild_genpop <- genind2genpop(sp_wild_genind)
       
     #create documents for comparison 
-    n_ind_W <- table(sp_garden_wild_genind@pop)[2];  n_ind_G<-table(sp_garden_genind@pop)[1]; 
+    n_ind_W <- nrow(sp_wild_genpop@tab);  n_ind_G <- nrow(sp_garden_genind@tab); 
     sp_alleles_cap <- colSums(sp_garden_genind@tab,na.rm=T)
       
     #first calculate the frequency categories of alleles in the wild individuals   	
