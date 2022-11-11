@@ -285,11 +285,12 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     #first calculate the frequency categories of alleles in the wild individuals   	
     sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, as.numeric(n_ind_p_pop), n_drop = ndrop, glob_only = TRUE)	
       
-    #create a data frame with all of the alleles existing by category
+    #exterior loop to look at alleles by frequency category
+    #interior loop to alleles by "duplication" amount - how many copies of each allele 
     for(cat in 1:length(list_allele_cat)){
       for(dup in 1:length(dup_reps)){
         
-      #calculating 
+      #calculating alleles that exist by allelic category
       sp_all_exist_df[dup, cat] <- round(sum(sp_alleles_cap[sp_allele_cat[[cat]]] > dup_reps[[dup]]))
     
       #now determine how many wild alleles were captured per category 
