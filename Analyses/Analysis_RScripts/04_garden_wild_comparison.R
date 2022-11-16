@@ -54,13 +54,18 @@ scenario_list <- c("Garden_allSSR", "Wild_allSSR", "Garden_gSSR", "Wild_gSSR",
 
 #pop list 
 pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
-                 c(18:22), c(18:21), c(11:19, 23:26,28:32,34:35), 
-                 c(11:19, 23:26,28:32,34:35))
+                 c(18:22), c(18:21), c(11:19, 23:26, 28:32, 34:35), 
+                 c(11:19, 23:26, 28:32, 34:35))
 
 #initial lists 
 QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
                    "PIE039", "FIR53", "FIR048", "PIE125")
 QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
+
+#list out allele categories
+list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
+                   "reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+
 
 #################################################
 #     Comparing wild and garden populations     #
@@ -216,9 +221,6 @@ write.csv(sp_allrich_hexp_pvalue, "../Analyses/Results/Garden_Wild_Comparison/QU
 ########################################
 #     Allelic representation code      #
 ########################################
-#list out allele categories
-list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_rare","loc_com_d1","loc_com_d2","loc_rare")
-
 ##create table for % alleles captured by frequency and how many duplicates were present  
 #create list with duplicates 
 dup_reps <- c(0:9)
@@ -254,37 +256,37 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     #load data frames 
     sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
       
-    #organize genind object
+    ##organize genind object
+    #add individual names to each row of the tab 
     rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
+    #add pop names to the genind object 
+    levels(sp_genind_temp@pop) <- unique(sp_df_temp$Pop)
     
     ##organize into pops - garden
     #separate into garden genind object 
     sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
     #rename pops to be garden only 
-    levels(sp_garden_genind@pop) <- rep("Garden", length(pop_list[[sp]]))
+    levels(sp_garden_genind@pop) <- rep("Garden", length(levels(sp_garden_genind@pop)))
     
     ##organize into pop types 
     #separate into wild genind object 
     sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
-    #rename to wild only 
-    levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
+    #rename 
+    levels(sp_wild_genind@pop) <- rep("Wild", length(levels(sp_wild_genind@pop)))
     
-    #repool garden and wild individuals 
+    #repool genind objects 
     sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
     
-    #calculate number of individuals per pop
-    n_ind_p_pop <- as.numeric(table(sp_wild_genind@pop))
-      
     #convert the wild genind object to a genpop object
-    sp_wild_genpop <- genind2genpop(sp_wild_genind)
+    sp_wild_genpop <- genind2genpop(seppop(sp_garden_wild_genind)[2]$Wild)
       
     #create documents for comparison 
-    n_ind_W <- nrow(sp_wild_genpop@tab);  n_ind_G <- nrow(sp_garden_genind@tab); 
-    sp_alleles_cap <- colSums(sp_garden_genind@tab,na.rm=T)
+    n_ind_W <- nrow(sp_wild_genind@tab);  n_ind_G <- nrow(sp_garden_genind@tab); 
+    sp_alleles_cap <- colSums(seppop(sp_garden_wild_genind)[[1]]@tab,na.rm=T)
       
     #first calculate the frequency categories of alleles in the wild individuals   	
-    sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, as.numeric(n_ind_p_pop), n_drop = ndrop, glob_only = TRUE)	
-      
+    sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, n_ind_W, n_drop = ndrop, glob_only = TRUE)	
+    
     #exterior loop to look at alleles by frequency category
     #interior loop to alleles by "duplication" amount - how many copies of each allele 
     for(cat in 1:length(list_allele_cat)){
