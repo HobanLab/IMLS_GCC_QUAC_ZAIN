@@ -1,6 +1,12 @@
 # Converting coordinates from DMS or DdM formats to decimal
 # DMS = "degrees minutes seconds"; DdM = "degrees decimal minutes" 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#load in data frame
+
+ZAIN_garden_coords <- read.csv("Data_Frames/ZAIN_garden_source_coords.csv")
+
 dg2dec <- function(varb, Dg=NA, Min=NA, Sec=NA, SW.Hemisphere="S|W") {
   # Dg=decimal, Min=minutes and Sec=seconds; 
   # NOTE 1 - if the format is "degrees decimal minutes - DdM" (e.g. 40° 26.767' N) and not 
@@ -27,6 +33,26 @@ dg2dec <- function(varb, Dg=NA, Min=NA, Sec=NA, SW.Hemisphere="S|W") {
   SW <- grepl(pattern = SW.Hemisphere, x = varb, ignore.case = TRUE)
   return(ifelse(SW, -1, 1) * decdg)
 }
+
+dg2dec(ZAIN_garden_coords[,2], Dg="°", Min="'", Sec="\"", SW.Hemisphere="S")
+
+ZAIN_coord_con <- matrix(nrow = nrow(ZAIN_garden_coords),
+                         ncol = 3)
+
+for(n in 1:nrow(ZAIN_garden_coords)){
+  
+  ZAIN_coord_con[n,1] <- dg2dec(ZAIN_garden_coords[n,2], Dg="°", Min="'", Sec="\"", SW.Hemisphere="S")
+  ZAIN_coord_con[n,2] <- dg2dec(ZAIN_garden_coords[n,3], Dg="°", Min="'", Sec="\"", SW.Hemisphere="W")
+  
+}
+
+write.csv(ZAIN_coord_con, "Data_Frames/ZAIN_coords_convert_garden.csv",
+          row.names = FALSE)
+
+#for weird cases
+dg2dec(ZAIN_garden_coords[20,2], Dg="°", Min="'", Sec=NA, SW.Hemisphere="S")
+
+
 
 # References:
 # http://stackoverflow.com/questions/14404596/converting-geo-coordinates-from-degree-to-decimal
