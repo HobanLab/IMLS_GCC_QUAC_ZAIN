@@ -83,5 +83,13 @@ for(sp in 1:length(sp_genind)){
   #write out data frame
   write.csv(sp_clean_df, paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_df.csv"), row.names = FALSE)
 
+  #create an individual summary data frame 
+  sp_ind_df <- cbind(summary(sp_temp_genind)[[2]], summary(sp_genind_nomd)[[2]])
+  #name columns 
+  colnames(sp_ind_df) <- c("before_datacleaning", "after_datacleaning")
+  
+  #write out summary individual data frame 
+  write.csv(sp_ind_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], "_ind_n.csv"))
+  
 }
 

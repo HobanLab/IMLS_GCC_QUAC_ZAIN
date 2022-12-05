@@ -46,7 +46,7 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 #}
 
 #list out species
-species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned", "ZAIN_red_sample")
 
 #list scenarios 
 scenario_list <- c("Garden_allSSR", "Wild_allSSR", "Garden_gSSR", "Wild_gSSR",
