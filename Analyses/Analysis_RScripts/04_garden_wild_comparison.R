@@ -52,10 +52,17 @@ species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned", "ZAIN_red_s
 scenario_list <- c("Garden_allSSR", "Wild_allSSR", "Garden_gSSR", "Wild_gSSR",
                    "Garden_EST", "Wild_EST")
 
-#pop list 
-pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
-                 c(18:22), c(18:21), c(11:19, 23:26, 28:32, 34:35), 
-                 c(11:19, 23:26, 28:32, 34:35))
+#population lists for separating by garden/wild
+#the first five are garden pops
+#the last five are wild pops for both species 
+pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10), c(1:10),
+                 c(18:22), c(18:21), c(11:35), c(11:35), c(11:35))
+
+ZAIN_garden_list <- list(c(1:10), c(1:10), c(1:10))
+ZAIN_wild_red_list <- list( c(11:19, 23:26, 28:32, 34:35), 
+                            c(11:19, 23:26, 28:32, 34:35),
+                            c(11:19, 23:26, 28:32, 34:35))
+                     
 
 #initial lists 
 QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
@@ -77,15 +84,16 @@ allrich_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_l
 hexp_garden_wild_df <- as.data.frame(matrix(nrow = 3, ncol = length(species_list)))
 
 #sum stats df for garden wild comp - allelic richness
-allrich_df <- matrix(nrow = length(scenario_list), ncol = length(species_list))
+allrich_df <- matrix(nrow = length(scenario_list), ncol = length(species_list)+3)
 
 #sum stats df for garden wild comp - hexp
-hexp_df <- matrix(nrow = length(scenario_list), ncol = length(species_list))
+hexp_df <- matrix(nrow = length(scenario_list), ncol = length(species_list)+3)
 
 #pvalue data frame 
-sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list), ncol = 2)
+sp_allrich_hexp_pvalue <- matrix(nrow = length(sp_genind_list)+3, ncol = 2)
 colnames(sp_allrich_hexp_pvalue) <- c("All_Rich", "Hexp")
-rownames(sp_allrich_hexp_pvalue) <- species_list
+rownames(sp_allrich_hexp_pvalue) <- c(species_list, "ZAIN_og_wo_smallpops", 
+                                      "ZAIN_rebinned_wo_smallpops", "ZAIN_sample_wo_smallpops")
 
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(sp_genind_list)){
@@ -101,9 +109,9 @@ for(sp in 1:length(sp_genind_list)){
   
   ##organize into pop types 
   #separate into wild genind object 
-  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+  sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+5]]])
   #rename to wild only 
-  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+4]]))
+  levels(sp_wild_genind@pop) <- rep("Wild", length(pop_list[[sp+5]]))
   
   #repool to calculate diversity stats 
   sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
@@ -202,15 +210,60 @@ for(sp in 1:length(sp_genind_list)){
     #save p-value for hexp 
     sp_allrich_hexp_pvalue[sp,2] <- kruskal.test(sp_hexp_df[,2]~sp_hexp_df[,1])[3]$p.value
     
+    #loop to create genind objects and diversity for genind objects 
+    #without small ZAIN pops 
+    for(pop in 1:length(ZAIN_garden_list)){
+      
+      #create a genind object without small pops for ZAIN, garden
+      sp_genind_red_garden_temp <- repool(seppop(sp_genind_temp)[ZAIN_garden_list[[pop]]])
     
+      #rename pops to just garden 
+      levels(sp_genind_red_garden_temp@pop) <- rep("Garden", length(levels(sp_genind_red_garden_temp@pop)))
+    
+      #create a genind object without small pops for ZAIN, wild
+      sp_genind_red_wild_temp <- repool(seppop(sp_genind_temp)[ZAIN_wild_red_list[[pop]]])
+    
+      #rename pops to just wild 
+      levels(sp_genind_red_wild_temp@pop) <- rep("Wild", length(levels(sp_genind_red_wild_temp@pop)))
+    
+      #now repool 
+      sp_genind_red_garden_wild <- repool(sp_genind_red_garden_temp, sp_genind_red_wild_temp)
+    
+      #calculate wild and garden allelic richness 
+      allrich_df[1:2, sp+3] <- colMeans(allelic.richness(sp_genind_red_garden_wild)$Ar)
+      
+      #calculate hexp for garden and wild 
+      hexp_df[1:2, sp+3] <- colMeans(as.data.frame(cbind(summary(seppop(sp_genind_red_garden_wild)[[1]])$Hexp,  
+                                                     summary(seppop(sp_genind_red_garden_wild)[[2]])$Hexp)))
+      
+      #run hexp code
+      sp_red_hexp <- as.data.frame(cbind(summary(seppop(sp_garden_wild_genind)[[1]])$Hexp,  
+                                     summary(seppop(sp_garden_wild_genind)[[2]])$Hexp))
+      colnames(sp_red_hexp) <- c("Garden", "Wild")
+      #create data frame for hexp
+      sp_hexp_red_df <- gather(sp_red_hexp)
+      
+      #calculate p-values
+      #for ZAIN, calculate allelic richness and hexp and compare
+      sp_allrich_red_df <- gather(allelic.richness(sp_genind_red_garden_wild)$Ar)
+      
+      #run mann whitney u test for allelic richness 
+      sp_allrich_hexp_pvalue[sp+3,1] <- kruskal.test(sp_allrich_red_df[,2]~sp_allrich_red_df[,1])[3]$p.value
+      
+     # run mann whitney u test for hexp
+      sp_allrich_hexp_pvalue[sp+3,2] <- kruskal.test(sp_hexp_red_df[,2]~sp_hexp_red_df[,1])[3]$p.value
+      
+    }
   }
 }
 
 ###write out summary tables for allelic richness and hexp comparisons
 ##label data frames
-colnames(allrich_df) <- species_list
+colnames(allrich_df) <- c(species_list, "ZAIN_og_wo_smallpops", 
+                          "ZAIN_rebinned_wo_smallpops", "ZAIN_sample_wo_smallpops")
 rownames(allrich_df) <- scenario_list
-colnames(hexp_df) <- species_list
+colnames(hexp_df) <- c(species_list, "ZAIN_og_wo_smallpops", 
+                       "ZAIN_rebinned_wo_smallpops", "ZAIN_sample_wo_smallpops")
 rownames(hexp_df) <- scenario_list
 
 #write out data frames
@@ -270,7 +323,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     
     ##organize into pop types 
     #separate into wild genind object 
-    sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+4]]])
+    sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+5]]])
     #rename 
     levels(sp_wild_genind@pop) <- rep("Wild", length(levels(sp_wild_genind@pop)))
     
