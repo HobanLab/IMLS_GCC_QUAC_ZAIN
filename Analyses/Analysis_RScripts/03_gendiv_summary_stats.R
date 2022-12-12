@@ -32,8 +32,24 @@ sp_genind_list <- list.files(path = "Adegenet_Files/", pattern = "_clean.gen")
 #df files 
 sp_df_list <- list.files(path = "Data_Frames/", pattern = "_clean_df.csv")
 
-#create scenario list 
-scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+#create data cleaning list 
+scen_data_clean_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+
+
+
+#pop list by species
+QUAC_pop_list <- list(c(1:22), c(1:21))
+QUAC_pop_names <- c("wK", "woK")
+
+ZAIN_pop_list <- list(c(1:35), c(1:35), c(1:35),
+                      c(1:19, 23:26, 28:32, 34:35),
+                      c(1:19, 23:26, 28:32, 34:35), 
+                      c(1:19, 23:26, 28:32, 34:35))
+
+ZAIN_pop_names <- c("og_allpop", "rebinned_allpop", "sample_allpop",
+                    "og_wosmallpops", "rebinned_wosmallpops", "sample_wosmallpops")
+
+
 
 ############################################################
 #  Null Alleles, HWE Deviation, Linkage Disequilibrium     #
@@ -41,8 +57,8 @@ scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 #loop to save genind objects
 sp_genind_temp <- list()
 
-#loop to load in genind objects and run HWE devitation test
-for(sp in 1:length(sp_genind_list)){
+#loop to load in genind objects and run HWE deviation test
+for(sp in 1:length(scen_data_clean_list)){
   
   #load genepop files as genind objects 
   sp_genind_temp[[sp]] <- read.genepop(paste0("Adegenet_Files/", sp_genind_list[[sp]]), ncode = 3)
@@ -67,7 +83,7 @@ for(sp in 1:length(sp_genind_list)){
   #round to the 3rd digit
   sp_HWE_allpop_df <- signif(sp_HWE_pop_df, 3)
   #write out HWE deviation data files
-  write.csv(sp_HWE_allpop_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]], 
+  write.csv(sp_HWE_allpop_df, paste0("../Analyses/Results/Sum_Stats/", scen_data_clean_list[[sp]], 
                                      "_HWE_dev_pop.csv"))
   
   #calculate % of null alleles/locus
@@ -87,7 +103,7 @@ for(sp in 1:length(sp_genind_list)){
   stopCluster(cl) 
   
   #write out to CSV
-  write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]] , 
+  write.csv(sp_null_all_df, paste0("../Analyses/Results/Sum_Stats/", scen_data_clean_list[[sp]] , 
                                    "_null_all_df.csv"))
   
   ##calculate linkage disequilibrium 
@@ -104,7 +120,7 @@ for(sp in 1:length(sp_genind_list)){
   
   #write out 
   write.csv(sp_ld_df, paste0("../Analyses/Results/Sum_Stats/", 
-                             scenario_list[[sp]], "_LD.csv"))
+                             scen_data_clean_list[[sp]], "_LD.csv"))
   
   #stop clustering
   stopCluster(cl)
@@ -114,62 +130,92 @@ for(sp in 1:length(sp_genind_list)){
 ###########################################
 #          Genetic Stats by Pop           #
 ###########################################
-#create a list of pop types 
-pop_type_list <- c("Garden", "Wild")
+###############################
+#     Run gendiv analyses     #
+###############################
 
-###loops to generate genetic summary statistics for populations 
-##outer loop is by species
-#inner loop is by wild or botanic garden
 for(sp in 1:length(sp_genind_list)){
-  ##write loop to calculate all summary stats 
-  for(pop_type in 1:length(pop_type_list)){
   
-    #load genepop files as genind objects 
-    sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
-    
-    #load data frames 
-    sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
+  #load in genepop object 
+  sp_genind_temp <- read.genepop(paste0("C:/Users/eschumacher/Documents/GitHub/GCC_QUAC_ZAIN/Data_Files/Adegenet_Files/", 
+                                        sp_genind_list[[sp]]), ncode = 3)
   
-    #organize genind 
-    rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
-    levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
+  #load in data frames 
+  sp_df_temp <- read.csv(paste0("C:/Users/eschumacher/Documents/GitHub/GCC_QUAC_ZAIN/Data_Files/Data_Frames/", sp_df_list[[sp]]))
+  
+  
+  #name populations in genind object 
+  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
+  
+  #for QUAC, keep pops 
+  if(sp == 1|sp == 2){
     
-    #add loop to remove pops < 20 individuals for ZAIN 
-    if(sp == 3|sp == 4){
-      
-    #limit by populations that are too small, wild 
-    sp_genind_temp <- repool(seppop(sp_genind_temp)[c(1:19, 23:26,28:32,34:35)])
+    #indicate which pops should be included 
+    sp_genind_temp <- repool(seppop(sp_genind_temp)[QUAC_pop_list[[sp]]])
     
-    #limit by pop_type 
-    sp_poptype_df_temp <- sp_df_temp[sp_df_temp[,3] == paste0(pop_type_list[[pop_type]]),]
-    sp_poptype_genind_temp <- sp_genind_temp[rownames(sp_genind_temp@tab) %in% sp_poptype_df_temp[,1],]
-    
+    #run stats
     ##start genetic analyses
     #create genetic summary of the genind file 
-    sp_sum <- summary(sp_poptype_genind_temp)
+    sp_sum <- summary(sp_genind_temp)
     #create poppr file 
-    sp_poppr <- poppr(sp_poptype_genind_temp)
+    sp_poppr <- poppr(sp_genind_temp)
     #save mean for final output table 
-    sp_hexp_mean <- sp_poppr[1:length(levels(sp_poptype_genind_temp@pop)),10]
+    sp_hexp_mean <- sp_poppr[1:length(levels(sp_genind_temp@pop)),10]
     #allele numbers by pop 
     sp_nall <- sp_sum$pop.n.all
     #individual numbers
-    sp_ind <- sp_poppr[1:length(levels(sp_poptype_genind_temp@pop)), 2:3]
+    sp_ind <- sp_poppr[1:length(levels(sp_genind_temp@pop)), 2:3]
     #save allelic richness for comparison
-    sp_allrich_list <- allelic.richness(sp_poptype_genind_temp)$Ar
-    sp_allrich_mean <- colMeans(allelic.richness(sp_poptype_genind_temp)$Ar)	
-  
+    sp_allrich_list <- allelic.richness(sp_genind_temp)$Ar
+    sp_allrich_mean <- colMeans(allelic.richness(sp_genind_temp)$Ar)	
+    
     #create data frame 
     sp_allpop_gendiv_sumstat_df <- signif(cbind(sp_ind, sp_nall, sp_allrich_mean, sp_hexp_mean),3)
     
     #name rows 
-    rownames(sp_allpop_gendiv_sumstat_df) <- levels(sp_poptype_genind_temp@pop)
+    rownames(sp_allpop_gendiv_sumstat_df) <- levels(sp_genind_temp@pop)
     colnames(sp_allpop_gendiv_sumstat_df) <- c("Ind","MLG", "NAll", "All_Rich", "Hexp")
     
-    #write out data frame
-    write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/", pop_type_list[[pop_type]], "_", gsub("\\..*","",sp_genind_list[[sp]]), 
-                                                  "_gendiv_sumstats.csv"))
-  
+    #write out df 
+    write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/QUAC_", QUAC_pop_names[[sp]],"_gendiv_sumstats.csv"))
+    
+  }else{
+    
+    for(pop in 1:length(ZAIN_pop_list)){
+      
+      sp_genind_repool_temp <- repool(seppop(sp_genind_temp)[ZAIN_pop_list[[pop]]])
+      
+      #run stats
+      ##start genetic analyses
+      #create genetic summary of the genind file 
+      sp_sum <- summary(sp_genind_repool_temp)
+      #create poppr file 
+      sp_poppr <- poppr(sp_genind_repool_temp)
+      #save mean for final output table 
+      sp_hexp_mean <- sp_poppr[1:length(levels(sp_genind_repool_temp@pop)),10]
+      #allele numbers by pop 
+      sp_nall <- sp_sum$pop.n.all
+      #individual numbers
+      sp_ind <- sp_poppr[1:length(levels(sp_genind_repool_temp@pop)), 2:3]
+      #save allelic richness for comparison
+      sp_allrich_list <- allelic.richness(sp_genind_repool_temp)$Ar
+      sp_allrich_mean <- colMeans(allelic.richness(sp_genind_repool_temp)$Ar)	
+      
+      #create data frame 
+      sp_allpop_gendiv_sumstat_df <- signif(cbind(sp_ind, sp_nall, sp_allrich_mean, sp_hexp_mean),3)
+      
+      #name rows 
+      rownames(sp_allpop_gendiv_sumstat_df) <- levels(sp_genind_repool_temp@pop)
+      colnames(sp_allpop_gendiv_sumstat_df) <- c("Ind","MLG", "NAll", "All_Rich", "Hexp")
+      
+      #write out df 
+      write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/ZAIN_", ZAIN_pop_names[[pop]],"_gendiv_sumstats.csv"))  
+      
+      
     }
+    
+    
   }
+  
 }
+
