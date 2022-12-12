@@ -153,4 +153,36 @@ for(sp in 1:length(sp_genind_list)){
     #write out data frame
     write.csv(sp_allpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/", scenario_list[[sp]],  
                                                   "_gendiv_sumstats.csv"))
+    
+    #also run ZAIN individuals with reduced pop size  
+    if(sp == 3|sp == 4|sp == 5){
+      
+      sp_genind_red_temp <- repool(seppop(sp_genind_temp)[c(1:19, 23:26, 28:32, 34:35)])
+      
+      sp_sum <- summary(sp_genind_red_temp)
+      #create poppr file 
+      sp_poppr <- poppr(sp_genind_red_temp)
+      #save mean for final output table 
+      sp_hexp_mean <- sp_poppr[1:length(levels(sp_genind_red_temp@pop)),10]
+      #allele numbers by pop 
+      sp_nall <- sp_sum$pop.n.all
+      #individual numbers
+      sp_ind <- sp_poppr[1:length(levels(sp_genind_red_temp@pop)), 2:3]
+      #save allelic richness for comparison
+      sp_allrich_list <- allelic.richness(sp_genind_red_temp)$Ar
+      sp_allrich_mean <- colMeans(allelic.richness(sp_genind_red_temp)$Ar)	
+      
+      #create data frame 
+      sp_redpop_gendiv_sumstat_df <- signif(cbind(sp_ind, sp_nall, sp_allrich_mean, sp_hexp_mean),3)
+      
+      #name rows 
+      rownames(sp_redpop_gendiv_sumstat_df) <- levels(sp_genind_red_temp@pop)
+      colnames(sp_redpop_gendiv_sumstat_df) <- c("Ind","MLG", "NAll", "All_Rich", "Hexp")
+      
+      #write out data frame
+      write.csv(sp_redpop_gendiv_sumstat_df, paste0("../Analyses/Results/Sum_Stats/",
+                                                    scenario_list[[sp]], "gendiv_sumstats_redpop.csv"))
+      
+    }
+    
 }
