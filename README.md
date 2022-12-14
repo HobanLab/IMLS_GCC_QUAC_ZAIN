@@ -26,7 +26,7 @@ The code in this repo details the analyses performed on nuclear microsatellite d
  
 <b><p><h1 style="color:red;font-size:20px;">Folder Descriptions</b></p></h1>
 
-This repo is divided into 2 main files - Analyses and Data_Files. 
+This repo is divided into 2 main files - Analyses and Data_Files. There is also an Archive folder but this is temporary file to store code that is being refined. 
 
 <b>Data_Files:</b> This file contains the input data files for each analysis performed in the repo. There are 2 main types of data files - data frames and adegenet files. 
 <ul><li><b>CSV files</b> contain the genotypes of each individual for each species in a format where individual IDs are in the first column, population names are in the second column (either wild population name or botanic garden name) and an ID for what population type the individual is (either a wild or botanic garden individual) is the third column. The fourth column onward is where the allele data are stored, with one column per allele and each consecutive column pair being the 2 alleles for one locus. Alleles are indicated with their microsatellite length.</li></ul>
