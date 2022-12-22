@@ -74,35 +74,37 @@ This repo is divided into 2 main files - Analyses and Data_Files. There is also 
 <b>Organization of Analyses folder:</b> 
 <ul><li>Analysis_RScripts</li></ul>
 <ul><ul><li>1_ZAIN_Scoring_Comparison_Barplot.R</li></ul></ul>
-<ul><ul><li>2_clonecheck_md_relatedness.R</li></ul></ul>
+<ul><ul><li>2_clonecheck_md.R</li></ul></ul>
 <ul><ul><li>3_gendiv_summary_stats.R</li></ul></ul>
 <ul><ul><li>4_garden_wild_comparison.R</li></ul></ul>
 <ul><ul><li>5_allelic_resampling.R</li></ul></ul>
-<ul><ul><li>6_IBD.R</li></ul></ul>
 <ul><ul><li>7_PCA.R</li></ul></ul>
 <ul><ul><li>8_Structure.R</li></ul></ul>
 <ul><ul><li>9_maternal_accessions.R</li></ul></ul>
-<ul><ul><li>10_geneclass_sum_stats.R</li></ul></ul>
+<ul><ul><li>10_assignment_test_performance.R</li></ul></ul>
+<ul><ul><li>11_relatedness.R</li></ul></ul>
+<ul><ul><li>final_manuscript_figures.R</li></ul></ul>
+<ul><ul><li>final_map_figs.R</li></ul></ul>
 <ul><ul><li>QUAC_clonal_propagation.R</li></ul></ul>
+
 <ul><li>Functions</li></ul>
 <ul><ul><li>accession_count.R</li></ul></ul>
 <ul><ul><li>dms_degree_conversion.R</li></ul></ul>
 <ul><ul><li>Fa_sample_funcs.R</li></ul></ul>
 <ul><ul><li>maternal_accession.R</li></ul></ul>
 <ul><ul><li>relatedness_analyses.R</li></ul></ul>
-<ul><ul><li>relatedness_tests.R</li></ul></ul>
 <ul><ul><li>resampling.R</li></ul></ul>
+<ul><ul><li>structure_cluster_match.R</li></ul></ul>
 
 <ul><li>Results</li></ul>
 <ul><ul><li>Clustering</li></ul></ul>
 <ul><ul><ul><li>Geneclass</li></ul></ul></ul>
 <ul><ul><ul><li>PCA</li></ul></ul></ul>
-<ul><ul><ul><ul><li>QUAC</li></ul></ul></ul></ul>
-<ul><ul><ul><ul><li>ZAIN</li></ul></ul></ul></ul>
 <ul><ul><ul><li>Structure</li></ul></ul></ul>
 <ul><ul><ul><ul><li>QUAC</li></ul></ul></ul></ul>
 <ul><ul><ul><ul><li>ZAIN</li></ul></ul></ul></ul>
 <ul><ul><li>Garden_Wild_Comparisons</li></ul></ul>
+<ul><ul><li>Relatedness</li></ul></ul>
 <ul><ul><li>Scoring_Comparison</li></ul></ul>
 <ul><ul><li>Sum_Stats</li></ul></ul>
 
