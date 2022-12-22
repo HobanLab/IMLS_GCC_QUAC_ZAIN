@@ -42,14 +42,20 @@ This repo is divided into 2 main files - Analyses and Data_Files. There is also 
 
 <b>Organization:</b> The overall file structure of the "Data_Files" folder
 <ul><li>Adegenet_Files</li></ul>
-<ul><ul><li>Garden_Wild</li></ul></ul>
 <ul><li>Data_Frames</li></ul>
-<ul><ul><li>Garden_Wild</li></ul></ul>
 <ul><li>Geneclass_Files</li></ul>
+<ul><li>Spagedi_Files</li></ul>
 <ul><li>Structure_Files</li></ul>
+<ul><ul><li>QUAC</li></ul></ul>
+<ul><ul><ul><li>QUAC_wK_nopopinfo_garden_wild</li></ul></ul></ul>
+<ul><ul><ul><li>QUAC_wK_nopopinfo_wild</li></ul></ul></ul>
+<ul><ul><ul><li>QUAC_woK_nopopinfo_garden_wild</li></ul></ul></ul>
+<ul><ul><ul><li>QUAC_woK_nopopinfo_wild</li></ul></ul></ul>
+<ul><ul><li>ZAIN</li></ul></ul>
+<ul><ul><ul><li>ZAIN_rebinned_nopopinfo_garden_wild</li></ul></ul></ul>
+<ul><ul><ul><li>ZAIN_rebinned_nopopinfo_wild</li></ul></ul></ul>
 
 <b>Analyses:</b> The three main folders in this folder are Analysis_RScripts, Functions, and Results. The RScripts are used to run analyses on the files in the Data_Files folder, the Functions folder contains functions created to run certain analyses, and the Results folder contains the results of those analyses. 
-
 
 <b>Analysis steps</b>
 <p>For each genepop file we performed several analysis steps for both QUAC and ZAIN; below we list all analysis RScripts and what results they are used to generate.</p>
