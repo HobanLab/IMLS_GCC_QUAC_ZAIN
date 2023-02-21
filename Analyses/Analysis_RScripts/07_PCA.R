@@ -39,6 +39,8 @@ ZAIN_rebinned_PCA_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop_cl
 #load data frames 
 QUAC_wK_PCA_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
 ZAIN_rebinned_PCA_df <- read.csv("Data_Frames/ZAIN_rebinned_allpop_clean_df.csv")
+#load population reference for varieties of ZAIN 
+ZAIN_pop_df <- read.csv("Data_Frames/ZAIN_pop_df.csv")
 
 ###############
 #     PCA     #
@@ -287,7 +289,7 @@ QUAC_PCA_df$Variety <- c(rep("Garden", length(row.names(QUAC_garden_gen@tab))),
                             )
                                     
 #name columns 
-colnames(QUAC_wK_PCA_df) <- c("Axis1", "Axis2", "Pop_Type", "Variety")
+colnames(QUAC_PCA_df) <- c("Axis1", "Axis2", "Pop_Type", "Variety")
 
 
 #calculate % variation explained by axis 
@@ -296,28 +298,36 @@ QUAC_pc2 <- signif(((QUAC_wK_PCA$eig[2])/sum(QUAC_wK_PCA$eig))*100, 3)
 
 #plot PCA 
 pdf("../Analyses/Results/Clustering/QUAC_PCA.pdf", width = 10, height = 8)
-ggplot(QUAC_wK_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop_Type, shape = Variety)) + 
+ggplot(QUAC_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Variety, shape = Variety)) + 
   geom_point(size = 4) +
   xlab(paste0("PC1 (", QUAC_pc1, "%)")) +
   ylab(paste0("PC2 (", QUAC_pc2, "%)")) + 
   theme_bw() +  
-  scale_color_manual(values = c("mediumseagreen", "black")) +
-  scale_shape_manual(values = c(16,17,15,19,3,4))
+  scale_color_manual(values = c("black", "red", "purple", "coral", "deeppink4", "pink")) +
+  scale_shape_manual(values = c(20,17,15,19,18,16))
 dev.off()
 
 
 ####Run PCA code - ZAIN
 #create tab object for genind 
-ZAIN_rebinned_tab <- tab(ZAIN_rebinned_PCA_genind, freq=TRUE, NA.method="mean")
+ZAIN_rebinned_tab <- tab(ZAIN_garden_wild_PCA_genind, freq=TRUE, NA.method="mean")
 
 #run PCA
 ZAIN_rebinned_PCA <- dudi.pca(ZAIN_rebinned_tab, scale = FALSE, nf = 2, scannf = FALSE)
 
 #create PCA data frame 
 ZAIN_PCA_df <- as.data.frame(cbind(as.numeric(ZAIN_rebinned_PCA$li$Axis1), 
-                                   as.numeric(ZAIN_rebinned_PCA$li$Axis2), ZAIN_rebinned_df$Pop_Type, 
-                                   ZAIN_rebinned_df$Variety))
+                                   as.numeric(ZAIN_rebinned_PCA$li$Axis2)))
+#specify wild vs. garden individual
+ZAIN_PCA_df$Pop_Type <- c(rep(levels(ZAIN_garden_wild_PCA_genind@pop)[1], 
+                              as.numeric(table(ZAIN_garden_wild_PCA_genind@pop)[1])), 
+                          rep(levels(ZAIN_garden_wild_PCA_genind@pop)[2], 
+                              as.numeric(table(ZAIN_garden_wild_PCA_genind@pop)[2]))) 
 
+#add variety 
+ZAIN_PCA_df$Variety <- ZAIN_pop_df$Variety
+
+#name columns of the  PCA data frame 
 colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Pop_Type", "Variety")
 
 #calculate % variation explained by axis 
