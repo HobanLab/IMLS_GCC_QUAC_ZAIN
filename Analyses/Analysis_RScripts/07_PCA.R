@@ -32,6 +32,14 @@ scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned", "ZAIN_samp
 pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10), c(1:10),
                  c(18:22), c(18:21), c(11:35), c(11:35), c(11:35))
 
+#load genind objects 
+QUAC_wK_PCA_genind <- read.genepop("Adegenet_Files/QUAC_wK_allpop_clean.gen", ncode = 3)
+ZAIN_rebinned_PCA_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop_clean.gen", ncode = 3)
+
+#load data frames 
+QUAC_wK_PCA_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+ZAIN_rebinned_PCA_df <- read.csv("Data_Frames/ZAIN_rebinned_allpop_clean_df.csv")
+
 ###############
 #     PCA     #
 ###############
@@ -230,6 +238,61 @@ pdf("../Analyses/Results/Clustering/QUAC_allwildpop_PCA.pdf", width = 10, height
 dev.off()
 
 #####final PCA figures for publishing 
+
+##reorganize genind objects
+#QUAC - combine all garden collections into one population in genind 
+QUAC_garden_gen <- repool(seppop(QUAC_wK_PCA_genind)[1:17])
+levels(QUAC_garden_gen@pop) <- rep("Garden", length(levels(QUAC_garden_gen@pop))) 
+
+#create wild pop QUAC genind 
+QUAC_wild_gen <- repool(seppop(QUAC_wK_PCA_genind)[18:22])
+levels(QUAC_wild_gen@pop) <- unique(QUAC_wK_PCA_df$Pop)[18:22]
+
+#now repool with wild individuals 
+QUAC_garden_allwildpop_PCA_genind <- repool(QUAC_garden_gen, QUAC_wild_gen)
+
+#reorganize ZAIN 
+
+levels(ZAIN_rebinned_PCA_genind@pop) <- c("Garden", "Wild")
+
+
+
+####Run PCA code - QUAC
+#create tab file 
+QUAC_wK_tab <- tab(QUAC_wK_PCA_genind, freq=TRUE, NA.method="mean")
+
+#run PCA 
+QUAC_wK_PCA <- dudi.pca(QUAC_wK_tab, scale = FALSE, nf = 2, scannf = FALSE)
+
+#create PCA data frame 
+QUAC_wK_PCA_df <- as.data.frame(cbind(as.numeric(QUAC_wK_PCA$li$Axis1), 
+                                      as.numeric(QUAC_wK_PCA$li$Axis2), QUAC_wK_df$Pop_Type, QUAC_wK_df$Variety))
+
+colnames(QUAC_wK_PCA_df) <- c("Axis1", "Axis2", "Pop_Type", "Variety")
+
+
+#calculate % variation explained by axis 
+QUAC_pc1 <- signif(((QUAC_wK_PCA$eig[1])/sum(QUAC_wK_PCA$eig))*100, 3)
+QUAC_pc2 <- signif(((QUAC_wK_PCA$eig[2])/sum(QUAC_wK_PCA$eig))*100, 3)
+
+####Run PCA code - ZAIN
+#create tab object for genind 
+ZAIN_rebinned_tab <- tab(ZAIN_rebinned_PCA_genind, freq=TRUE, NA.method="mean")
+
+#run PCA
+ZAIN_rebinned_PCA <- dudi.pca(ZAIN_rebinned_tab, scale = FALSE, nf = 2, scannf = FALSE)
+
+#create PCA data frame 
+ZAIN_PCA_df <- as.data.frame(cbind(as.numeric(ZAIN_rebinned_PCA$li$Axis1), 
+                                   as.numeric(ZAIN_rebinned_PCA$li$Axis2), ZAIN_rebinned_df$Pop_Type, 
+                                   ZAIN_rebinned_df$Variety))
+
+colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Pop_Type", "Variety")
+
+#calculate % variation explained by axis 
+ZAIN_pc1 <- signif(((ZAIN_rebinned_PCA$eig[1])/sum(ZAIN_rebinned_PCA$eig))*100, 3)
+ZAIN_pc2 <- signif(((ZAIN_rebinned_PCA$eig[2])/sum(ZAIN_rebinned_PCA$eig))*100, 3)
+
 
 ##QUAC
 pdf("../Analyses/Results/Clustering/QUAC_PCA.pdf", width = 10, height = 8)
