@@ -229,4 +229,28 @@ pdf("../Analyses/Results/Clustering/QUAC_allwildpop_PCA.pdf", width = 10, height
 
 dev.off()
 
+#####final PCA figures for publishing 
+
+##QUAC
+pdf("../Analyses/Results/Clustering/QUAC_PCA.pdf", width = 10, height = 8)
+ggplot(QUAC_wK_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop_Type, shape = Variety)) + 
+  geom_point(size = 4) +
+  xlab(paste0("PC1 (", QUAC_pc1, "%)")) +
+  ylab(paste0("PC2 (", QUAC_pc2, "%)")) + 
+  theme_bw() +  
+  scale_color_manual(values = c("mediumseagreen", "black")) +
+  scale_shape_manual(values = c(16,17,15,19,3,4))
+dev.off()
+
+##ZAIN
+pdf("../Analyses/Results/Clustering/ZAIN_PCA.pdf", width = 10, height = 8)
+ggplot(ZAIN_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop_Type, 
+                        shape = Variety)) + 
+  geom_point(size = 4) +
+  xlab(paste0("PC1 (", ZAIN_pc1, "%)")) +
+  ylab(paste0("PC2 (", ZAIN_pc2, "%)")) + 
+  theme_bw() +  
+  scale_color_manual(values = c("mediumseagreen", "black")) +
+  scale_shape_manual(values = c(16,18, 3))
+dev.off()
 
