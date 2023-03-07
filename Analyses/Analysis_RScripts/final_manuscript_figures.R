@@ -18,7 +18,7 @@ library(tidyr)
 setwd("C:/Users/eschumacher/Documents/GitHub/GCC_QUAC_ZAIN/Data_Files")
 
 #genind objects 
-sp_genind_list <- list.files(path = "Adegenet_Files/Garden_Wild/", pattern = "_clean.gen")
+sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #df files 
 sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
@@ -38,13 +38,9 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 
 #}
 
-#list of scenarios 
-species_list <- c("QUAC_wK", "QUAC_wK_ESTSSR", "QUAC_wK_garden_wild_gSSR",
-                  "QUAC_woK", "QUAC_woK_ESTSSR", "QUAC_woK_garden_wild_gSSR",
-                  "ZAIN_og", "ZAIN_rebinned")
-
 #list out the scenarios 
-scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
+scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned", 
+                    "ZAIN_rebinned_sample")
 
 #################################################
 #     Comparing wild and garden populations     #
@@ -63,45 +59,21 @@ allrich_df_list <- list()
 hexp_df_list <- list()
 
 #loop to compare diversity capture in wild and botanic garden populations
-for(sp in 1:length(species_list)){
+for(sp in 1:length(scenarios_list)){
   
   #load genepop files as genind objects 
-  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/Garden_Wild/",sp_genind_list[[sp]]), ncode = 3)
+  sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
   
-  #name populations 
-  levels(sp_genind_temp@pop) <- c(paste0(species_list[[sp]], "_Garden"), paste0(species_list[[sp]], "_Wild"))
+  #load data frame 
+  sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
   
-  #combining into a df 
-  allrich_df_list[[sp]] <- gather(allelic.richness(sp_genind_temp)$Ar)
+  ##reorganize genind objects 
+  #name pops 
+  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
   
+  #name inds 
+  rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
   
-  
-  #run t-test 
-  #allrich_pvalue <- as.numeric(kruskal.test(allrich_df_list[[sp]][,2]~allrich_df_list[[sp]][,1])[3])
-  
-  #name data frame
-  # allrich_hexp_df[1:2,sp] <- as.numeric(colMeans(as.data.frame(allelic.richness(sp_genind_temp)$Ar)))
-  #allrich_hexp_df[3,sp] <- allrich_pvalue
-  
-  #run hexp code
-  # hexp_df <- cbind(as.numeric(summary(seppop(sp_genind_temp)[[1]])$Hexp), as.numeric(summary(seppop(sp_genind_temp)[[2]])$Hexp))
-  #name columns 
-  # colnames(hexp_df) <- c("Garden", "Wild")
-  
-  #transform the data frame for analyses 
-  # hexp_temp_df[[sp]] <- gather(as.data.frame(hexp_df))
-  
-  #save p-value 
-  # hexp_pvalue <- as.numeric(kruskal.test(hexp_temp_df[,2]~hexp_temp_df[,1])[3])
-  
-  #save in df 
-  # allrich_hexp_df[(1:2)+3,sp] <- as.numeric(colMeans(hexp_df))
-  # allrich_hexp_df[6,sp] <- hexp_pvalue
-  
-  #name colnames and rownames 
-  #colnames(allrich_hexp_df) <- species_list
-  #rownames(allrich_hexp_df) <- c("allrich_garden", "allrich_wild", "allrich_pvalue",
-  #                               "hexp_garden", "hexp_wild", "hexp_pvalue")
 }
 
 #create a data frame of all QUAC allelic richness results 

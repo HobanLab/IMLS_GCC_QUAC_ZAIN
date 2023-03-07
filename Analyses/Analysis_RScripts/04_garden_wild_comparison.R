@@ -64,12 +64,12 @@ ZAIN_wild_red_list <- list( c(11:19, 23:26, 28:32, 34:35),
                             c(11:19, 23:26, 28:32, 34:35))
                      
 
-#initial lists 
+#QUAC loci lists - EST vs. gSSRs  
 QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
                    "PIE039", "FIR53", "FIR048", "PIE125")
 QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
 
-#list out allele categories
+#allele frequency category lists 
 list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
                    "reg_rare","loc_com_d1","loc_com_d2","loc_rare")
 
