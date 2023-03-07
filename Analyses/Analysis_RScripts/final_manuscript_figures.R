@@ -9,6 +9,7 @@ library(diveRsity)
 library(poppr)
 library(hierfstat)
 library(tidyr)
+library(dplyr)
 
 #######################
 #     Load files      #
@@ -42,6 +43,15 @@ colMax <- function(data) sapply(data, max, na.rm = TRUE)
 scenarios_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned", 
                     "ZAIN_rebinned_sample")
 
+#QUAC loci lists  
+QUAC_EST_loci <- c("FIR031", "GOT009", "POR016", "FIR013", "FIR043", "GOTO40", 
+                   "PIE039", "FIR53", "FIR048", "PIE125")
+QUAC_gSSR_loci <- c("0C11", "1G13", "G07", "1F02","QpZAG9")
+
+QUAC_genind <- read.genepop("Adegenet_Files/QUAC_woK_allpop_clean.gen", ncode = 3)
+
+ZAIN_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop_clean.gen", ncode = 3)
+
 #################################################
 #     Comparing wild and garden populations     #
 #################################################
@@ -67,12 +77,102 @@ for(sp in 1:length(scenarios_list)){
   #load data frame 
   sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
   
-  ##reorganize genind objects 
-  #name pops 
-  levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
+  #reorganize genind object for QUAC without Kessler for figure 
+  if(sp == 2){
+    
+    ##reorganize individuals into garden and wild pools, but also by loci type 
+    #create QUAC garden/wild genind object 
+    #first, separate garden genind object 
+    QUAC_garden_genind <- repool(seppop(QUAC_genind)[1:17])
+    levels(QUAC_garden_genind@pop) <- rep("Garden", 17)
+    
+    #create wild pop genind 
+    QUAC_wild_genind <- repool(seppop(QUAC_genind)[18:21])
+    levels(QUAC_wild_genind@pop) <- rep("Wild", 4)
+    
+    #repool wild/garden genind object 
+    QUAC_garden_wild_genind <- repool(QUAC_garden_genind, QUAC_wild_genind)
+    
+    ###calculate diversity stats for all scenarios 
+    #create statistical analysis data frame 
+    QUAC_allrich_df <- gather(allelic.richness(QUAC_garden_wild_genind)$Ar)
+    #calculate heterozygosity and create data frame 
+    QUAC_hexp <- as.data.frame(cbind(summary(seppop(QUAC_garden_wild_genind)[[1]])$Hexp, 
+                                      summary(seppop(QUAC_garden_wild_genind)[[2]])$Hexp))
+    colnames(QUAC_hexp) <- c("Garden", "Wild")
+    QUAC_hexp_df <- gather(QUAC_hexp)
+    
+    #name for category 
+    QUAC_allrich_df$cat_type <- paste0(QUAC_allrich_df[,1],"_QUAC_allrich")
+    QUAC_hexp_df$cat_type <- paste0(QUAC_hexp_df[,1],"_QUAC_hexp")
+    
+    ##separate by loci combination 
+    #gSSR genind object
+    QUAC_gSSR_genind <- QUAC_garden_wild_genind[loc = QUAC_gSSR_loci]
+    
+    #create statistical analysis data frame
+    QUAC_gSSR_allrich_df <- gather(allelic.richness(QUAC_gSSR_genind)$Ar)
+    #calculate hexp and create data frame 
+    QUAC_gSSR_hexp <- as.data.frame(cbind(summary(seppop(QUAC_gSSR_genind)[[1]])$Hexp,  
+                                          summary(seppop(QUAC_gSSR_genind)[[2]])$Hexp))
+    colnames(QUAC_gSSR_hexp) <- c("Garden", "Wild")
+    QUAC_gSSR_hexp_df <- gather(sp_gSSR_hexp)
+    
+    #create rownames with sections of names 
+    QUAC_gSSR_allrich_df$cat_type <- paste0(QUAC_gSSR_allrich_df[,1], "_QUAC_gSSR_allrich")
+    QUAC_gSSR_hexp_df$cat_type <- paste0(QUAC_gSSR_hexp_df[,1], "_QUAC_gSSR_hexp")
+    
+    ###calculate diversity stats for all scenarios 
+    ##separate by loci combination 
+    #EST SSR genind object 
+    QUAC_EST_genind <- QUAC_garden_wild_genind[loc = QUAC_EST_loci]
+    #calculate allelic richness and create data frame 
+    QUAC_EST_allrich_df <- gather(allelic.richness(QUAC_EST_genind)$Ar)
+    #calculate hexp and create data frame 
+    QUAC_EST_hexp <- as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp,
+                                        summary(seppop(sp_EST_genind)[[2]])$Hexp))
+    colnames(QUAC_EST_hexp) <- c("Garden", "Wild")
+    QUAC_EST_hexp_df <- gather(QUAC_EST_hexp)
+    
+    #create rownames with sections of names 
+    QUAC_EST_allrich_df$cat_type <- paste0(QUAC_EST_allrich_df[,1], "_EST_allrich")
+    QUAC_EST_hexp_df$cat_type <- paste0(QUAC_EST_hexp_df[,1], "_EST_hexp")
+    
+    ##combine all categories for statistical tests 
+    #all rich
+    QUAC_allrich_allLOCI_df <- rbind(QUAC_allrich_df, QUAC_gSSR_allrich_df, QUAC_EST_allrich_df)
+    #hexp 
+    QUAC_hexp_allLOCI_df <- rbind(QUAC_hexp_df, QUAC_gSSR_hexp_df, QUAC_EST_hexp_df)
+    
+  }
   
-  #name inds 
-  rownames(sp_genind_temp@tab) <- sp_df_temp[,1]
+  #next, using ZAIN rebinned, without small pops, for diversity stats 
+  if(sp == 4){
+  
+  #first create a garden/wild genind object 
+  ZAIN_garden_genind <- repool(seppop(ZAIN_genind)[1:10])
+  levels(ZAIN_garden_genind@pop) <- rep("Garden", 10)
+  
+  #create wild genind object 
+  ZAIN_wild_genind <- repool(seppop(ZAIN_genind)[c(11:19, 23:26, 28:32, 34:35)])
+  levels(ZAIN_wild_genind@pop) <- rep("Wild", 20)
+  
+  #repool to create a genind object 
+  ZAIN_garden_wild_genind <- repool(ZAIN_garden_genind, ZAIN_wild_genind)
+  
+  #calculate allelic richness and create data frame 
+  ZAIN_allrich <- gather(allelic.richness(ZAIN_garden_wild_genind)$Ar)
+  #calculate hexp and create data frame 
+  ZAIN_hexp <- as.data.frame(cbind(summary(seppop(ZAIN_garden_wild_genind)[[1]])$Hexp,
+                                     summary(seppop(ZAIN_garden_wild_genind)[[2]])$Hexp))
+  colnames(ZAIN_hexp) <- c("Garden", "Wild")
+  ZAIN_hexp <- gather(ZAIN_hexp)
+  
+  #create rownames with sections of names 
+  ZAIN_allrich$cat_type <- paste0(ZAIN_allrich[,1], "_ZAIN_allrich")
+  ZAIN_hexp$cat_type <- paste0(ZAIN_hexp[,1], "_ZAIN_hexp")
+  
+  }
   
 }
 
