@@ -11,7 +11,6 @@
 library(diveRsity)
 library(adegenet)
 library(poppr)
-library(Demerelate)
 
 #########################
 #   Load Data Files     #
