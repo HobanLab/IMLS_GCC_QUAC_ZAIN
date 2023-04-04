@@ -103,8 +103,8 @@ for(sp in 1:length(scenarios_list)){
     QUAC_hexp_df <- gather(QUAC_hexp)
     
     #name for category 
-    QUAC_allrich_df$cat_type <- paste0(QUAC_allrich_df[,1],"_QUAC_allrich")
-    QUAC_hexp_df$cat_type <- paste0(QUAC_hexp_df[,1],"_QUAC_hexp")
+    QUAC_allrich_df$cat_type <- paste0("QUAC_",QUAC_allrich_df[,1],"allrich")
+    QUAC_hexp_df$cat_type <- paste0("QUAC_",QUAC_hexp_df[,1],"hexp")
     
     ##separate by loci combination 
     #gSSR genind object
@@ -116,11 +116,11 @@ for(sp in 1:length(scenarios_list)){
     QUAC_gSSR_hexp <- as.data.frame(cbind(summary(seppop(QUAC_gSSR_genind)[[1]])$Hexp,  
                                           summary(seppop(QUAC_gSSR_genind)[[2]])$Hexp))
     colnames(QUAC_gSSR_hexp) <- c("Garden", "Wild")
-    QUAC_gSSR_hexp_df <- gather(sp_gSSR_hexp)
+    QUAC_gSSR_hexp_df <- gather(QUAC_gSSR_hexp)
     
     #create rownames with sections of names 
-    QUAC_gSSR_allrich_df$cat_type <- paste0(QUAC_gSSR_allrich_df[,1], "_QUAC_gSSR_allrich")
-    QUAC_gSSR_hexp_df$cat_type <- paste0(QUAC_gSSR_hexp_df[,1], "_QUAC_gSSR_hexp")
+    QUAC_gSSR_allrich_df$cat_type <- paste0("QUAC_",QUAC_gSSR_allrich_df[,1], "gSSRallrich")
+    QUAC_gSSR_hexp_df$cat_type <- paste0("QUAC_",QUAC_gSSR_hexp_df[,1], "gSSRhexp")
     
     ###calculate diversity stats for all scenarios 
     ##separate by loci combination 
@@ -129,14 +129,14 @@ for(sp in 1:length(scenarios_list)){
     #calculate allelic richness and create data frame 
     QUAC_EST_allrich_df <- gather(allelic.richness(QUAC_EST_genind)$Ar)
     #calculate hexp and create data frame 
-    QUAC_EST_hexp <- as.data.frame(cbind(summary(seppop(sp_EST_genind)[[1]])$Hexp,
-                                        summary(seppop(sp_EST_genind)[[2]])$Hexp))
+    QUAC_EST_hexp <- as.data.frame(cbind(summary(seppop(QUAC_EST_genind)[[1]])$Hexp,
+                                        summary(seppop(QUAC_EST_genind)[[2]])$Hexp))
     colnames(QUAC_EST_hexp) <- c("Garden", "Wild")
     QUAC_EST_hexp_df <- gather(QUAC_EST_hexp)
     
     #create rownames with sections of names 
-    QUAC_EST_allrich_df$cat_type <- paste0(QUAC_EST_allrich_df[,1], "_EST_allrich")
-    QUAC_EST_hexp_df$cat_type <- paste0(QUAC_EST_hexp_df[,1], "_EST_hexp")
+    QUAC_EST_allrich_df$cat_type <- paste0("QUAC_",QUAC_EST_allrich_df[,1], "ESTallrich")
+    QUAC_EST_hexp_df$cat_type <- paste0("QUAC_",QUAC_EST_hexp_df[,1], "ESThexp")
     
     ##combine all categories for statistical tests 
     #all rich
@@ -169,8 +169,8 @@ for(sp in 1:length(scenarios_list)){
   ZAIN_hexp <- gather(ZAIN_hexp)
   
   #create rownames with sections of names 
-  ZAIN_allrich$cat_type <- paste0(ZAIN_allrich[,1], "_ZAIN_allrich")
-  ZAIN_hexp$cat_type <- paste0(ZAIN_hexp[,1], "_ZAIN_hexp")
+  ZAIN_allrich$cat_type <- paste0("ZAIN_",ZAIN_allrich[,1],"allrich")
+  ZAIN_hexp$cat_type <- paste0("ZAIN_",ZAIN_hexp[,1], "hexp")
   
   }
   
@@ -192,25 +192,71 @@ ZAIN_allrich_df <- rbind(allrich_df_list[[7]], allrich_df_list[[8]])
 
 ZAIN_kw_test <- kruskal.test(ZAIN_allrich_df[,2]~ZAIN_allrich_df[,1])
 
-##create a boxplot of just rebinned and woK QUAC 
-#first, create a data frame with only the cases we care about 
-allrich_final_df <- rbind(QUAC_allrich_df[61:120,], ZAIN_allrich_df[23:44,])
+##create a boxplot of just rebinned and woK QUAC
+#combined allelic richness data frame 
+sp_allrich_df <- rbind(QUAC_allrich_allLOCI_df, ZAIN_allrich)
 
-allrich_final_df <- allrich_final_df %>%
-                      mutate(Treatment = gsub("^.*_","",allrich_final_df$key))
+allrich_final_df <- sp_allrich_df %>%
+                      mutate(Species = gsub("_.*","",sp_allrich_df$cat_type))
 
-#separate by species 
-allrich_final_df <- allrich_final_df %>%
-                      mutate(Species = gsub('_.*','',allrich_final_df$Pop_Type))
+colnames(allrich_final_df) <- c("Pop_Type", "Allelic_Richness", "Cat", "Species")
 
-colnames(allrich_final_df) <- c("Pop_Type", "Allelic_Richness", "Treatment")
+allrich_final_df$Cat2 <- factor(allrich_final_df$Cat,     # Reorder factor levels
+                                c("QUAC_Gardenallrich", "QUAC_Wildallrich", 
+                                  "QUAC_GardengSSRallrich", "QUAC_WildgSSRallrich",
+                                  "QUAC_GardenESTallrich", "QUAC_WildESTallrich",
+                                  "ZAIN_Gardenallrich", "ZAIN_Wildallrich"))
 
-
-ggplot(allrich_final_df, aes(x=Pop_Type, y=Allelic_Richness, fill=Treatment)) + 
+#write out the plot 
+pdf("../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_allrich.pdf", 
+    width = 10, height = 6)
+ggplot(allrich_final_df, aes(x=Cat2, y=Allelic_Richness, fill=Pop_Type)) + 
+  stat_boxplot(geom = "errorbar",
+               width = 0.15) + 
   geom_boxplot() + xlab("Population Type") + ylab("Allelic Richness") + ylim(0,20) + 
   theme_bw() + facet_wrap(~Species, scale="free") + 
-  scale_x_discrete(labels=c("Garden","Wild", "gSSR_Garden", "EST_Garden","gSSR_Wild", "EST_Wild")) + 
-  scale_fill_manual(values = c("darkseagreen1", "darkgreen"))
+  scale_x_discrete(labels=c("Garden", "Wild", 
+                            "Garden_gSSR", "Garden_EST",
+                           "Wild_gSSR ", "Wild_EST", 
+                           "Garden",
+                           "Wild")) + 
+
+  scale_fill_manual(values = c("darkseagreen1", "darkseagreen4"))
+dev.off()
+
+#hexp data frame 
+sp_hexp_df <- rbind(QUAC_hexp_allLOCI_df, ZAIN_hexp)
+
+#create the output data frame for the results boxplot 
+hexp_final_df <- sp_hexp_df %>%
+                    mutate(Species = gsub("_.*","", sp_hexp_df$cat_type))
+
+#name the columns for the data frame 
+colnames(hexp_final_df) <- c("Pop_Type", "Hexp", "Cat", "Species")
+
+#reorder data frame for the output 
+hexp_final_df$Cat2 <- factor(hexp_final_df$Cat,     # Reorder factor levels
+                              c("QUAC_Gardenhexp", "QUAC_Wildhexp",
+                                "QUAC_GardengSSRhexp", "QUAC_WildgSSRhexp",
+                                "QUAC_GardenESThexp", "QUAC_WildESThexp",
+                                "ZAIN_Gardenhexp", "ZAIN_Wildhexp"))
+
+#write out the plot 
+pdf("../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_hexp.pdf", 
+    width = 10, height = 6)
+ggplot(hexp_final_df, aes(x=Cat2, y=Hexp, fill=Pop_Type)) + 
+  stat_boxplot(geom = "errorbar",
+               width = 0.15) + 
+  geom_boxplot() + xlab("Population Type") + ylab("Expected Heterozygosity") + ylim(0,1) + 
+  theme_bw() + facet_wrap(~Species, scale="free") + 
+  scale_x_discrete(labels=c("Garden", "Wild", 
+                            "Garden_gSSR", "Garden_EST",
+                            "Wild_gSSR ", "Wild_EST", 
+                            "Garden",
+                            "Wild")) + 
+  
+  scale_fill_manual(values = c("darkseagreen1", "darkseagreen4"))
+dev.off()
 
 #write out df 
 write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN_garden_wild_df.csv")
