@@ -28,8 +28,21 @@ ZAIN_og_genind <- read.genepop("Adegenet_Files/ZAIN_og_allpop.gen", ncode = 3)
 #load in file with 2 pops - scored in 2021 (garden) and scored in 2011 (wild)
 ZAIN_og_df <- read.csv("Data_Frames/ZAIN_og_allpop_df.csv")
 
+##reorg genind object to have just garden vs. wild 
+#create garden genind object
+ZAIN_og_garden_genind <- repool(seppop(ZAIN_og_genind)[1:10])
+levels(ZAIN_og_garden_genind@pop) <- rep("Garden", 10)
+
+#create wild genind object 
+ZAIN_og_wild_genind <- repool(seppop(ZAIN_og_genind)[11:35])
+levels(ZAIN_og_wild_genind@pop) <- rep("Wild",25)
+
+#repool to create one genind object 
+ZAIN_og_garden_wild_genind <- repool(ZAIN_og_garden_genind,
+                                     ZAIN_og_wild_genind)
+
 #convert to genpop
-ZAIN_og_genpop <- genind2genpop(ZAIN_og_genind)
+ZAIN_og_genpop <- genind2genpop(ZAIN_og_garden_wild_genind)
 
 #load rebinned genepop file as a genind object
 ZAIN_rebinned_genind <- read.genepop("Adegenet_Files/Garden_Wild/ZAIN_rebinned_garden_wild.gen", ncode = 3)
@@ -41,7 +54,7 @@ ZAIN_rebinned_genpop <- genind2genpop(ZAIN_rebinned_genind)
 loci <- colnames(ZAIN_og_df)
 
 #clean list to just locus name
-loci <- unique(gsub("\\..*","",loci)[4:25])
+clean_loci <- unique(gsub("\\..*","",loci)[4:25])
 
 #######################################
 #     Initial Scoring Comparison      #
