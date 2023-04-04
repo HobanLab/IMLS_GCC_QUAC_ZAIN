@@ -45,16 +45,29 @@ ZAIN_og_garden_wild_genind <- repool(ZAIN_og_garden_genind,
 ZAIN_og_genpop <- genind2genpop(ZAIN_og_garden_wild_genind)
 
 #load rebinned genepop file as a genind object
-ZAIN_rebinned_genind <- read.genepop("Adegenet_Files/Garden_Wild/ZAIN_rebinned_garden_wild.gen", ncode = 3)
+ZAIN_rebinned_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop.gen", ncode = 3)
+
+##reorg genind object to have just garden vs. wild
+#create garden genind object 
+ZAIN_rebinned_garden_genind <- repool(seppop(ZAIN_rebinned_genind)[1:10])
+levels(ZAIN_rebinned_garden_genind@pop) <- rep("Garden",10)
+
+#create wild genind object 
+ZAIN_rebinned_wild_genind <- repool(seppop(ZAIN_rebinned_genind)[11:35])
+levels(ZAIN_rebinned_wild_genind@pop) <- rep("Wild", 25)
+
+#create repooled object 
+ZAIN_rebinned_garden_wild_genind <- repool(ZAIN_rebinned_garden_genind,
+                                           ZAIN_rebinned_wild_genind)
 
 #convert to genepop
-ZAIN_rebinned_genpop <- genind2genpop(ZAIN_rebinned_genind)
+ZAIN_rebinned_genpop <- genind2genpop(ZAIN_rebinned_garden_wild_genind)
 
 #create a list of loci 
-loci <- colnames(ZAIN_og_df)
+loci_list <- colnames(ZAIN_og_df)
 
 #clean list to just locus name
-clean_loci <- unique(gsub("\\..*","",loci)[4:25])
+clean_loci <- unique(gsub("\\..*","",loci_list)[4:25])
 
 #######################################
 #     Initial Scoring Comparison      #
@@ -68,7 +81,7 @@ setwd("../Analyses/Results/Scoring_Comparison")
 pdf("ZAIN_scoring_comparison_barplots.pdf",width=20,height=9)
 
 #loop to compare scoring between 2021 Scoring and 2011 Scoring
-for(a in loci){
+for(a in clean_loci){
   
   #create data frame of each locus
   ZAIN_scoring <- ZAIN_og_genpop[,which(grepl(a,colnames(ZAIN_og_genpop@tab)))]@tab
@@ -95,7 +108,7 @@ dev.off()
 pdf("ZAIN_scoring_comparison_barplots_post_rebinning.pdf",width=20,height=9)
 
 #loop to compare scoring between 2021 Scoring and 2011 Scoring
-for(a in loci){
+for(a in clean_loci){
   
   #create data frame of each locus 
   ZAIN_scoring <- ZAIN_rebinned_genpop[,which(grepl(a,colnames(ZAIN_rebinned_genpop@tab)))]@tab
