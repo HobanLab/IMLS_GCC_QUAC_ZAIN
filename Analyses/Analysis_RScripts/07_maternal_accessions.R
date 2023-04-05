@@ -15,7 +15,7 @@ library(tidyverse)
 setwd("../../Data_Files")
 
 #load in accession records 
-sp_accession_list <- list.files(path = "Data_Frames", pattern = "accession")
+sp_accession_list <- list.files(path = "CSV_Files", pattern = "accession")
 
 #create list for species
 sp_list <- c("QUAC", "ZAIN")
@@ -30,7 +30,7 @@ source("../Analyses/Functions/maternal_accession.R")
 for(a in 1:length(sp_accession_list)){
   
   #load in data frame with maternal accession information 
-  sp_accessions <- read.csv(paste0("Data_Frames/",sp_accession_list[[1]]))
+  sp_accessions <- read.csv(paste0("CSV_Files/",sp_accession_list[[1]]))
 
   #run maternal accession code 
   mat_df <- mat_accession(sp_accessions)

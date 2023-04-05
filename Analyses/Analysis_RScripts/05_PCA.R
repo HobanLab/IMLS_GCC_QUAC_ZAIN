@@ -1,8 +1,8 @@
-##This code is used to generate PCAs for examining clustering within 
-#different combinations of individual numbers. A note, 
-#these figures were simply for visualization and pattern recognition, the final
-#plots generated for the supplement stored with the "final manuscript figures"
-#script.
+##This code is used to generate PCA analyses for examining clustering 
+#within different combinations of individuals. 
+#A note, these figures were simply for visualization and pattern recognition, 
+#the final plots generated for the supplement stored with the 
+#"final manuscript figures" script.
 #This analysis performs PCAs with several population combinations 
 #all wild pops, wild pops with all garden individuals, 
 #and finally wild and garden populations
