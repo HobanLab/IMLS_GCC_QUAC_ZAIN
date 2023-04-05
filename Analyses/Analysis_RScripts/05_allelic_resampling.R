@@ -166,4 +166,56 @@ colnames(sp_min_sample_95) <- list_allele_cat
 #write out data frame 
 write.csv(sp_min_sample_95, "sp_min_samp_95.csv")
 
+#######################################
+#     Plotting Resampling Results     #
+#######################################
+#load resampling data frames
+QUAC_resampling_df <- read.csv("../Analyses/Results/Garden_Wild_Comparison/QUAC_woK_resampling_df0.csv")
+ZAIN_resampling_df <- read.csv("../Analyses/Results/Garden_Wild_Comparison/ZAIN_rebinned_resampling_df0.csv")    
+
+##QUAC resampling plot
+#write PDF with name
+pdf("../Analyses/Results/Garden_Wild_Comparison/QUAC_resample_plot_woK_ndrop0.pdf", width = 10, height = 8)
+
+#add points
+plot(QUAC_resampling_df[,2], col = "red", pch = 20, xlab = "Number of Individuals", 
+     ylab = "Percent Diversity Capture", xlim = c(0,length(rownames(QUAC_resampling_df))), ylim = c(0,100), cex = 1.2,
+     main = "Percent Diversity Capture (All Alleles Included)")
+points(QUAC_resampling_df[,4], col = "darkorange3", pch = 20, cex = 1.2)
+points(QUAC_resampling_df[,5], col = "coral", pch = 20, cex = 1.2)
+points(QUAC_resampling_df[,6], col = "deeppink4", pch = 20, cex = 1.2)
+
+#add line for 95% capture
+abline(h = 95, col = "darkslategray4", lty=2, lwd = 3)
+
+#add legend 
+legend('bottomright', legend = c("Global", "Common", "Low Frequency","Rare", "95% diversity capture"),
+       lwd = 2, cex = 1.2, 
+       col = c("red", "darkorange3", "coral", "deeppink4", "darkslategray4"), 
+       lty = 1)
+
+
+dev.off()
+
+##ZAIN resampling plot
+pdf("../Analyses/Results/Garden_Wild_Comparison/ZAIN_resample_plot_rebinned_ndrop0.pdf", width = 10, height = 8)
+#add points
+plot(ZAIN_resampling_df[,2], col = "red", pch = 20, xlab = "Number of Individuals", 
+     ylab = "Percent Diversity Capture", xlim = c(0,length(rownames(ZAIN_resampling_df))), ylim = c(0,100), cex = 1.2,
+     main = "Percent Diversity Capture (All Alleles Included)")
+points(ZAIN_resampling_df[,4], col = "darkorange3", pch = 20, cex = 1.2)
+points(ZAIN_resampling_df[,5], col = "coral", pch = 20, cex = 1.2)
+points(ZAIN_resampling_df[,6], col = "deeppink4", pch = 20, cex = 1.2)
+
+#add line for 95% capture
+abline(h = 95, col = "darkslategray4", lty=2, lwd = 3)
+
+#legend 
+legend('bottomright', legend = c("Global", "Common", "Low Frequency","Rare", "95% diversity capture"),
+       lwd = 2, cex = 1.2, 
+       col = c("red", "darkorange3", "coral", "deeppink4", "darkslategray4"), 
+       lty = 1)
+
+dev.off()
+
 sessionInfo()
