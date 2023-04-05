@@ -3,8 +3,8 @@
 This repo contains code for determining how well wild genetic diversity is captured <i>ex situ</i> for both <i>Quercus acerifolia</i> (abbreviated to QUAC in this repo), a rare and threatened North American oak species native to Arkansas and <i>Zamia integrifolia</i> (abbreviated to ZAIN in this repo), the only native cycad to the continental US, is also rare and threatened species. These species are similarly threatened because they have limited population numbers, a history of fragmented habitat due to intensive human land use, and are both very well-preserved in botanic gardens. QUAC and ZAIN both have >300 individuals <i>ex situ</i>, while only ~150 individuals <i>ex situ</i> are predicted to capture large portions of diversity in these species (Rosenberger et al., 2022), so we hypothesize: 
 <ul><li>That both species' wild genetic diversity should be well-represented in botanic gardens. We can test this hypothesis by determining if:</ul></li>
 <ul><ul><li>Genetic diversity in wild and garden populations does not differ significantly.</li></ul></ul>
-<ul><ul><li>At least 95% of all wild alleles, of all frequencies are represented. <i>ex situ</i></li></ul></ul>
-<ul><ul><li>Duplicates of wild alleles are represented. <i>ex situ</i></li></ul></ul>
+<ul><ul><li>At least 95% of all wild alleles, of all frequencies are represented<i>ex situ</i>.</li></ul></ul>
+<ul><ul><li>Duplicates of wild alleles are represented <i>ex situ</i>. </li></ul></ul>
 
 <ul><li>Geographic diversity of both QUAC and ZAIN is well-represented in botanic gardens, which we will determine by:</ul></li>
 <ul><ul><li>Examining if there are samples sourced from all wild populations in <i>ex situ</i> collections.</li></ul></ul>
