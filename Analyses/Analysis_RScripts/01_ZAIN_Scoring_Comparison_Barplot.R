@@ -1,8 +1,8 @@
 ###This script visualizes the differences in microsatellite scoring for ZAIN 
 ##when scoring was performed by different labs. Wild ZAIN microsatellite scoring
-#was performed by the XXXXX lab and at a different time than the scoring for
-#garden individuals, which were scored by the XXXXX in 2021. Therefore,
-#we attempted to determine if there were consistent scoring differences that 
+#was performed between the years of 2011 - 2018, whereas the scoring for
+#garden individuals was performed in the summer of 2021. 
+#Therefore,we attempted to determine if there were consistent scoring differences that 
 #were due to different times and scorers. We then rebinned scores to create 
 #consistency between the data files and created barplots to determine if 
 #rebinning analysis lead to greater consistency among individuals. 
@@ -26,7 +26,7 @@ setwd("../../Data_Files")
 ZAIN_og_genind <- read.genepop("Adegenet_Files/ZAIN_og_allpop.gen", ncode = 3)
 
 #load in file with 2 pops - scored in 2021 (garden) and scored in 2011 (wild)
-ZAIN_og_df <- read.csv("Data_Frames/ZAIN_og_allpop_df.csv")
+ZAIN_og_df <- read.csv("CSV_files/ZAIN_og_allpop_df.csv")
 
 ##reorg genind object to have just garden vs. wild 
 #create garden genind object
