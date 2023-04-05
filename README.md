@@ -2,21 +2,22 @@
 
 This repo contains code for determining how well wild genetic diversity is captured <i>ex situ</i> for both <i>Quercus acerifolia</i> (abbreviated to QUAC in this repo), a rare and threatened North American oak species native to Arkansas and <i>Zamia integrifolia</i> (abbreviated to ZAIN in this repo), the only native cycad to the continental US, is also rare and threatened species. These species are similarly threatened because they have limited population numbers, a history of fragmented habitat due to intensive human land use, and are both very well-preserved in botanic gardens. QUAC and ZAIN both have >300 individuals <i>ex situ</i>, while only ~150 individuals <i>ex situ</i> are predicted to capture large portions of diversity in these species (Rosenberger et al., 2022), so we hypothesize: 
 <ul><li>That both species' wild genetic diversity should be well-represented in botanic gardens. We can test this hypothesis by determining if:</ul></li>
-<ul><ul><li>Genetic diversity in wild and garden populations does not differ significantly</li></ul></ul>
-<ul><ul><li>At least 95% of all wild alleles are captured <i>ex situ</i></li></ul></ul>
-<ul><ul><li>Duplicates of all wild alleles are captured <i>ex situ</i></li></ul></ul>
+<ul><ul><li>Genetic diversity in wild and garden populations does not differ significantly.</li></ul></ul>
+<ul><ul><li>At least 95% of all wild alleles, of all frequencies are represented<i>ex situ</i>.</li></ul></ul>
+<ul><ul><li>Duplicates of wild alleles are represented <i>ex situ</i>. </li></ul></ul>
 
 <ul><li>Geographic diversity of both QUAC and ZAIN is well-represented in botanic gardens, which we will determine by:</ul></li>
-<ul><ul><li>Running STRUCTURE and STRUCTURE harvester on wild and garden populations to determine if all wild genetic structure is represented in botanic garden collections</li></ul></ul>
-<ul><ul><li>Performing PCA on both species to determine if gardens encompass all wild genetic structure</li></ul></ul>
-<ul><ul><li>Assigning botanic garden individuals to wild source populations using Geneclass 2</li></ul></ul>
+<ul><ul><li>Examining if there are samples sourced from all wild populations in <i>ex situ</i> collections.</li></ul></ul>
+<ul><ul><li>Running STRUCTURE and STRUCTURE harvester on wild and garden populations to determine if all wild genetic structure is represented in botanic garden collections.</li></ul></ul>
+<ul><ul><li>Performing PCA on both species to determine if gardens encompass all wild genetic structure.</li></ul></ul>
+<ul><ul><li>Assigning botanic garden individuals to wild source populations using Geneclass 2.</li></ul></ul>
 
-We also attempt to provide recommendations for improving ex situ collections by assessing if:
-<ul><li>Relatedness is higher in ex situ populations than in wild populations</ul></li>
-<ul><ul><li>If relatedness is higher ex situ, this limits the ability to use these collections for restoration as offspring will be highly inbred, seriously depleting the genetic diversity and therefore usefulness of the produced offspring.</ul></ul></li>
-<ul><li>Resampling in situ populations provides a better picture of diversity capture and we should edit sampling protocols in the future to better protect these species</ul></li>
+<ul><li>We also attempt to provide recommendations for improving ex situ collections by assessing if:</ul></li>
+<ul><ul><li>Relatedness is higher in <i>ex situ</i> populations than in wild populations.</li></ul></ul>
 
-The code in this repo details the analyses performed on nuclear microsatellite data for QUAC and ZAIN to test our above hypotheses and determine how we can improve guidelines for creating ex situ collections. 
+<ul><li>We also performed resampling analyses to determine how efficient our collections were at representing wild diversity (see Hoban et al., 2020 and Griffith et al., 2020).</ul></li>
+
+The code in this repo details the analyses performed on nuclear microsatellite data for QUAC and ZAIN to test our above hypotheses and determine how we can improve guidelines for creating <i>ex situ</i> collections. 
 
 <b><p><h1 style="color:red;font-size:20px;">Species Descriptions</b></p></h1>
 
@@ -113,6 +114,10 @@ This repo is divided into 2 main files - Analyses and Data_Files. There is also 
 Earl, D. A., & VonHoldt, B. M. (2012). STRUCTURE HARVESTER: a website and program for visualizing STRUCTURE output and implementing the Evanno method. Conservation genetics resources, 4(2), 359-361.
 
 Evanno, G., Regnaut, S., & Goudet, J. (2005). Detecting the number of clusters of individuals using the software STRUCTURE: a simulation study. Molecular ecology, 14(8), 2611-2620.
+
+Griffith, M. P., Clase, T., Toribio, P., Piñeyro, Y. E., Jimenez, F., Gratacos, X., ... & Hoban, S. (2020). Can a botanic garden metacollection better conserve wild plant diversity? A case study comparing pooled collections with an ideal sampling model. International Journal of Plant Sciences, 181(5), 485-496.
+
+Hoban, S., Callicrate, T., Clark, J., Deans, S., Dosmann, M., Fant, J., ... & Griffith, M. P. (2020). Taxonomic similarity does not predict necessary sample size for ex situ conservation: a comparison among five genera. Proceedings of the Royal Society B, 287(1926), 20200102.
 
 Peakall, R. O. D., & Smouse, P. E. (2006). GENALEX 6: genetic analysis in Excel. Population genetic software for teaching and research. Molecular ecology notes, 6(1), 288-295.
 
