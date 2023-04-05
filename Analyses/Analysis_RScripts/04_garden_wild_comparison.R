@@ -28,7 +28,7 @@ setwd("../../Data_Files")
 sp_genind_list <- list.files(path = "Adegenet_Files", pattern = "_clean.gen")
 
 #df files 
-sp_df_list <- list.files(path = "Data_Frames", pattern = "_clean_df.csv")
+sp_df_list <- list.files(path = "CSV_Files", pattern = "_clean_df.csv")
 
 #load in function to calculate allele frequency categories
 source("../Analyses/Functions/Fa_sample_funcs.R")
@@ -314,7 +314,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
       
     #load data frames 
-    sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]])) 
+    sp_df_temp <- read.csv(paste0("CSV_Files/", sp_df_list[[sp]])) 
       
     ##organize genind object
     #add individual names to each row of the tab 

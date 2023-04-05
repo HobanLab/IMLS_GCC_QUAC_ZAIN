@@ -29,9 +29,9 @@ setwd("../../Data_Files")
 sp_genind_list <- list.files(path = "Adegenet_Files/", pattern = "_clean.gen")
 
 #df files 
-sp_df_list <- list.files(path = "Data_Frames/", pattern = "_clean_df.csv")
+sp_df_list <- list.files(path = "CSV_Files/", pattern = "_clean_df.csv")
 
-#list out all the final scenarios for analyzing 
+#list out all the final scenarios
 scenario_list <- c("QUAC_wK", "QUAC_woK", 
                    "ZAIN_og_allpops", "ZAIN_rebinned_allpops", "ZAIN_sample")
 
@@ -52,7 +52,7 @@ for(sp in 1:length(scenario_list)){
   sp_genind_ls[[sp]] <- read.genepop(paste0("Adegenet_Files/", sp_genind_list[[sp]]), ncode = 3)
   
   #load data frames 
-  sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
+  sp_df_temp <- read.csv(paste0("CSV_Files/", sp_df_list[[sp]]))
   
   #organize genind object
   levels(sp_genind_ls[[sp]]@pop) <- unique(sp_df_temp[,2])
@@ -126,7 +126,7 @@ for(sp in 1:length(sp_genind_list)){
     sp_genind_temp <- read.genepop(paste0("Adegenet_Files/",sp_genind_list[[sp]]), ncode = 3)
     
     #load data frames 
-    sp_df_temp <- read.csv(paste0("Data_Frames/", sp_df_list[[sp]]))
+    sp_df_temp <- read.csv(paste0("CSV_Files/", sp_df_list[[sp]]))
   
     #organize genind 
     levels(sp_genind_temp@pop) <- unique(sp_df_temp[,2])
