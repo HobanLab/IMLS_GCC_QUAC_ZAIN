@@ -21,8 +21,8 @@ setwd("../../Data_Files")
 #now read in genepop file as a genind for adegenet 
 sp_genind <- list.files(path = "Adegenet_Files", pattern = "allpop.gen")
 
-#load relatedness data frame for relatedness analysis 
-sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv")
+#load relatedness CSV with ind and pop info
+sp_df <- list.files(path = "CSV_files", pattern = "allpop_df.csv")
 
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
@@ -39,7 +39,7 @@ for(sp in 1:length(sp_genind)){
   sp_temp_genind <- read.genepop(paste0("Adegenet_Files/",sp_genind[[sp]]), ncode = 3)
   
   #load in genetic data frame  
-  sp_temp_df <- read.csv(paste0("Data_Frames/",sp_df[[sp]]))
+  sp_temp_df <- read.csv(paste0("CSV_Files/",sp_df[[sp]]))
   
   #name rows in the genind object 
   rownames(sp_temp_genind@tab) <- sp_temp_df[,1]
@@ -77,10 +77,10 @@ for(sp in 1:length(sp_genind)){
   
   ##write out files cleaned for missing data and clones 
   #write out genalex
-  genind2genalex(sp_genind_nomd, file = paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_genalex.csv"), 
+  genind2genalex(sp_genind_nomd, file = paste0("CSV_Files/", gsub("\\..*","",sp_genind[[sp]]), "_clean_genalex.csv"), 
               overwrite = TRUE)
   #write out data frame
-  write.csv(sp_clean_df, paste0("Data_Frames/", gsub("\\..*","",sp_genind[[sp]]), "_clean_df.csv"), row.names = FALSE)
+  write.csv(sp_clean_df, paste0("CSV_Files/", gsub("\\..*","",sp_genind[[sp]]), "_clean_df.csv"), row.names = FALSE)
 
   #create an individual summary data frame 
   sp_ind_df <- cbind(summary(sp_temp_genind)[[2]], summary(sp_genind_nomd)[[2]])
