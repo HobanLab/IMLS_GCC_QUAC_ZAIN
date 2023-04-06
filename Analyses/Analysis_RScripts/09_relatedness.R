@@ -21,7 +21,7 @@ library(parallel)
 setwd("../../Data_Files")
 
 #list out data files for demerelate relatedness analysis
-sp_rel_df <- list.files(path = "Data_Frames/", pattern = "clean_df")
+sp_rel_df <- list.files(path = "CSV_Files/", pattern = "clean_df")
 
 #create list of files that have the kinship information 
 sp_spagedi_out_df <- list.files(path = "../Analyses/Results/Relatedness/", pattern = "df")
@@ -36,17 +36,18 @@ pop_numbers <- c(277, 277, 172, 172, 382, 382, 751, 751)
 #     Demerelate relatedness      #
 ###################################
 #create lists to store results in 
+rel_df_list <- list()
 rel_garden_df_list <- list()
 rel_wild_df_list <- list()
 
 #load in relatedness data files
-for(r in 1:length(rel_df)) rel_df_list[[r]] <- read.csv(rel_df[[r]]) 
+for(r in 1:length(sp_rel_df)) rel_df_list[[r]] <- read.csv(paste0("CSV_Files/",sp_rel_df[[r]])) 
 #prep data files for relatedness analysis in Demerelate - garden
 for(g in 1:length(rel_df_list)) rel_garden_df_list[[g]] <- rel_df_list[[g]][,-2] 
 #prep data files for relatedness analysis in Demerelate - wild
 for(w in 1:length(rel_df_list)) rel_wild_df_list[[w]] <- rel_df_list[[w]][rel_df_list[[w]][,3] == "Wild",-3]
 
-##run relatedness analysis using Demrelate
+##run relatedness analysis using Demerelate
 #use parallel functions
 #Calculate the number of cores
 cores <- detectCores() - 1
@@ -273,7 +274,7 @@ sessionInfo()
 setwd("../../Data_Files")
 
 #load relatedness data frame for relatedness analysis 
-sp_df <- list.files(path = "Data_Frames", pattern = "allpop_df.csv$")
+sp_df <- list.files(path = "CSV_Files", pattern = "allpop_df.csv$")
 
 #create scenario list 
 scenario_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
@@ -303,7 +304,7 @@ fullsib_loiselle_rel_fun <- function(x){
 #detected. 
 
 #load in QUAC data file 
-QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+QUAC_rel_df <- read.csv("CSV_Files/QUAC_allpop_clean_df.csv")
 
 ##run relatedness analysis on different organizations of the data file
 #list scenarios: 
@@ -435,7 +436,7 @@ write.csv(rel_popstr_table, "../Analyses/Results/Relatedness/rel_popstr_table.cs
 #identified different numbers of siblings within each pop type (garden or wild)
 
 #list clean data frames 
-sp_clean_df_list <- list.files(path = "Data_Frames", pattern = "clean_df.csv")
+sp_clean_df_list <- list.files(path = "CSV_Files", pattern = "clean_df.csv")
 
 #relatedness lists for all analyses
 sp_garden_relate_levels <- list()
@@ -456,7 +457,7 @@ for(sp in 1:length(scenario_list)){
   #this loop runs over different relatedness analyses
   for(relate in 1:length(relatedness_analyses_list)){
     #load in clean data frames to perform relatedness analysis on 
-    sp_clean_temp_df <- read.csv(paste0("Data_Frames/",sp_clean_df_list[[sp]]))
+    sp_clean_temp_df <- read.csv(paste0("CSV_Files/",sp_clean_df_list[[sp]]))
     
     ##Run relate red code 
     #Garden
@@ -504,7 +505,7 @@ write.csv(relate_ind_fullsib_df, "../Analyses/Results/Relatedness/relate_ind_ful
 
 ##making histograms of relatedness
 #load in QUAC with Kessler data frame
-QUAC_rel_df <- read.csv("Data_Frames/QUAC_allpop_clean_df.csv")
+QUAC_rel_df <- read.csv("CSV_Files/QUAC_allpop_clean_df.csv")
 
 #matrix to store mean relatedness values for each relatedness analysis
 #and p-values for comparisons
