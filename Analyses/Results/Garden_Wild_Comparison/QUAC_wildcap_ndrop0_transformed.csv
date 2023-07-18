@@ -1,0 +1,17 @@
+allele_type,copy_num,per_wild_rep
+global,one_or_more,0.9496
+glob_com,one_or_more,1
+glob_lowfr,one_or_more,0.973
+glob_rare,one_or_more,0.7917
+global,two_or_more,0.9209
+glob_com,two_or_more,1
+glob_lowfr,two_or_more,0.9595
+glob_rare,two_or_more,0.6667
+global,five_or_more,0.8058
+glob_com,five_or_more,0.9714
+glob_lowfr,five_or_more,0.8378
+glob_rare,five_or_more,0.375
+global,ten_or_more,0.6978
+glob_com,ten_or_more,0.9429
+glob_lowfr,ten_or_more,0.7027
+glob_rare,ten_or_more,0.1667

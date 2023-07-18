@@ -336,3 +336,39 @@ arrows(x0 = 1.9, y0 = QUAC_hexp_mean_df[2,1] - hexp_wild_se,
 
 abline(h = 0)
 dev.off()
+
+#########################################
+#     Allelic Representation Figure     #
+#########################################
+
+#load in data file of the allelic reps 
+allsp_wildcap <- read.csv("Garden_Wild_Comparison/QUAC_ZAIN_allelic_rep_transposed.csv")
+
+#convert to a dataframe for ggplot
+allsp_wildcap_df <- as.data.frame(allsp_wildcap)
+
+#reorder data frame for graph 
+allsp_wildcap_df$allele_type <- factor(allsp_wildcap_df$allele_type,     # Reorder factor levels
+                                       c("global", "glob_com",
+                                         "glob_lowfr", "glob_rare"))
+
+allsp_wildcap_df$copy_num <- factor(allsp_wildcap_df$copy_num,
+                                    c("one_or_more",
+                                      "two_or_more",
+                                      "five_or_more",
+                                      "ten_or_more"))
+#mutiply 
+allsp_wildcap_df$percent <- (allsp_wildcap_df$per_wild_rep)*100
+
+
+ggplot(allsp_wildcap_df, aes(fill = allele_type,
+                             x = copy_num,
+                             y = percent)) +
+  geom_bar(position="dodge",stat="identity") +
+  facet_wrap(~species, scale="free") + 
+  scale_fill_manual(values = c("red", "darkorange3","coral","deeppink")) + 
+  xlab("Allele Copies") +
+  ylab("Percent Allelic Representation") +
+  theme_bw()
+
+
