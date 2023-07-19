@@ -360,7 +360,7 @@ allsp_wildcap_df$copy_num <- factor(allsp_wildcap_df$copy_num,
 #mutiply 
 allsp_wildcap_df$percent <- (allsp_wildcap_df$per_wild_rep)*100
 
-
+pdf("C:/Users/eschumacher/Documents/GitHub/GCC_QUAC_ZAIN/Analyses/Results/Garden_Wild_Comparison/allsp_allelic_rep.pdf", width = 8, height = 6)
 ggplot(allsp_wildcap_df, aes(fill = allele_type,
                              x = copy_num,
                              y = percent)) +
@@ -370,5 +370,5 @@ ggplot(allsp_wildcap_df, aes(fill = allele_type,
   xlab("Allele Copies") +
   ylab("Percent Allelic Representation") +
   theme_bw()
-
+dev.off()
 
