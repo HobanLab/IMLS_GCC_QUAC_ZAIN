@@ -226,4 +226,4 @@ for(dup in dup_reps){
 colnames(QUAC_ind_all_con_df) <- all_cat_list
 rownames(QUAC_ind_all_con_df) <- paste0(rownames(QUAC_ind_all_con_df),
                                         " or more copies")
- 
+write.csv(QUAC_ind_all_con_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_woK_ind_rep.csv") 
