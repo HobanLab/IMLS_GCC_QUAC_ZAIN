@@ -1,13 +1,25 @@
+#####################
+#     Libraries     #
+#####################
+
 library(adegenet)
 library(sjmisc)
 
+###########################
+#     Load Data Files     #
+###########################
+setwd("../../Data_Files")
 
+#first try code on JUST QUAC without Kessler 
+QUAC_woK_genind <- read.genepop("Adegenet_Files/QUAC_woK_allpop_clean.gen",
+                                ncode = 3)
 
+#load in fa sample functions
+source("../Analyses/Functions/Fa_sample_funcs.R")
 
-
-
-loci_names <- colnames(tab(QUAC_wild_genpop))
-
+#################################################################
+#     Calculate Individual Numbers That Contain Each Allele     #
+#################################################################
 
 #rename loci in each category - global
 for(m in 1:length(QUAC_all_cat[[1]])){
@@ -50,8 +62,6 @@ all_cat_list <-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
 
 loci_names <- unique(gsub("\\..*", "", colnames(QUAC_garden_genind@tab)))
 
-#str_contains(colnames(), loci_names[[1]])
-#QUAC_garden_genind@tab[colnames(QUAC_garden_genind@tab) %in% loci_names[[1]],]
 
 QUAC_all_rep_df <- as.data.frame(seppop(QUAC_garden_wild_genind)$Garden@tab)
 
@@ -127,23 +137,35 @@ rownames(QUAC_rep_df) <- c("Individuals Ex Situ Representing Allele",
 colnames(QUAC_rep_df) <- c("Global", "Very Common", "Common",
                            "Low Frequency", "Rare")
 
-#loop for global alleles - counting heterozygotes and homozygotes
-for(g in 1:length(QUAC_all_cat[[1]])){
+QUAC_all_global_count_df <- matrix(nrow = length(QUAC_all_cat[[1]]),
+                                   ncol = 1)
+
+
   
   ##global alleles
   #homozygotes
-  QUAC_all_glob_df[g,1] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] == 2, 
-                                na.rm = TRUE)
+  #QUAC_all_glob_df[g,1] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] == 2, 
+  #                              na.rm = TRUE)
   
   #heterozygotes
-  QUAC_all_glob_df[g,2] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] == 1,
-                               na.rm = TRUE)
+  #QUAC_all_glob_df[g,2] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] == 1,
+  #                             na.rm = TRUE)
   
   #total ind
-  QUAC_all_glob_df[g,3] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] > 0,
-                              na.rm = TRUE)
+  #QUAC_all_glob_df[g,3] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[1]][g]] > 0,
+  #                            na.rm = TRUE)
+
+QUAC_all_global_count_df <- matrix(nrow = length(QUAC_all_cat[[1]]),
+                                   ncol = length(dup_reps))
+
+#loop for global alleles - counting heterozygotes and homozygotes
+for(g in 1:length(QUAC_all_cat[[1]])){
   
+  for(d in dup_reps){
   
+  QUAC_all_global_count_df[g,d+1] <- mean(length(which(QUAC_all_rep_df[,QUAC_all_cat[[1]]][g] > d)))
+
+  }
 }
 
 QUAC_rep_df[1,1] <- round(sum(QUAC_all_glob_df[,3], na.rm = TRUE)/length(QUAC_all_cat[[1]]),0)
@@ -200,19 +222,25 @@ for(lf in 1:length(QUAC_all_cat[[4]])){
 QUAC_all_rare_df <- matrix(nrow = length(QUAC_all_cat[[5]]),
                            ncol = length(dup_reps))
 
+QUAC_all_rare_count_df <- matrix(nrow = length(QUAC_all_cat[[5]]),
+                                 ncol = 1)
+
 for(r in 1:length(QUAC_all_cat[[5]])){
   
     ##rare alleles
     #homos
-    QUAC_all_rare_df[r,1] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]]][r] == 2, 
-                                     na.rm = TRUE)
+    #QUAC_all_rare_df[r,1] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]]][r] == 2, 
+    #                                 na.rm = TRUE)
     #hets
-    QUAC_all_rare_df[r,2] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]][r]] == 1, 
-                                 na.rm = TRUE)
+    #QUAC_all_rare_df[r,2] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]][r]] == 1, 
+    #                             na.rm = TRUE)
   
     #all ind 
-    QUAC_all_rare_df[r,3] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]]][r] > 0, 
-                               na.rm = TRUE)
+    #QUAC_all_rare_df[r,3] <- sum(QUAC_all_rep_df[,QUAC_all_cat[[5]]][r] > 0, 
+    #                           na.rm = TRUE)
+    
+  QUAC_all_rare_count_df[r,1] <- length(which(QUAC_all_rep_df[,QUAC_all_cat[[5]]][r] > 0))
+  
 }
 
 ##create data frames to store
@@ -232,26 +260,39 @@ for(d in dup_reps){
   
   ##store number of individuals that the alleles are represented in   
   #global
-  QUAC_num_ind_rep_df[d+1,1] <- length(QUAC_all_glob_df[,3][QUAC_all_glob_df[,3] > d])
-  
-  #very common
-  QUAC_num_ind_rep_df[d+1,2] <- length(QUAC_all_vcom_df[,3][QUAC_all_vcom_df[,3] > d])
-  
-  #common
-  QUAC_num_ind_rep_df[d+1,3] <- length(QUAC_all_com_df[,3][QUAC_all_com_df[,3] > d])
-  
-  #low frequency
-  QUAC_num_ind_rep_df[d+1,4] <- length(QUAC_all_lowfreq_df[,3][QUAC_all_lowfreq_df[,3] > d])
-  
-  #rare
-  QUAC_num_ind_rep_df[d+1,5] <- length(QUAC_all_rare_df[,3][QUAC_all_rare_df[,3] > d])
+ 
+  sum(QUAC_all_rare_df[,1][QUAC_all_rare_df[,1] > 0])/277
   
 }
 
 ##divide by the number of individuals to get the percent represented in 
 #ex situ collections 
-QUAC_all_ind_rep_per_df <- QUAC_num_ind_rep_df/277
+QUAC_all_ind_rep_per_df <- signif((QUAC_num_ind_rep_df/277)*100,3)
 
-#now export df 
+#export df matrix 
+#QUAC_all_ind_rep_per_clean_df <- paste0(round(QUAC_all_ind_rep_per_df *100,1) , %)
+
+QUAC_all_ind_rep_per_clean_df <- matrix(nrow = length(dup_reps),
+                                        ncol = length(QUAC_all_cat))
+
+#loop to clean up data frame and export 
+for(d in dup_reps){
+  for(c in 1:length(QUAC_all_cat)){
+    
+  QUAC_all_ind_rep_per_clean_df[d+1,c] <- paste0(QUAC_all_ind_rep_per_df[d+1,c], 
+                                          "%", " (", QUAC_num_ind_rep_df[d+1,c],
+                                          ")")
+  }
+}
+
+QUAC_glob_df <- matrix(nrow = length(QUAC_all_cat[[1]]),
+                       ncol = 10)
+
+for(a in dup_reps){
+  
+  QUAC_glob_df[,a+1] <- QUAC_all_glob_df[,3] > a
+  
+}
 
 
+ 
