@@ -17,57 +17,36 @@ QUAC_woK_genind <- read.genepop("Adegenet_Files/QUAC_woK_allpop_clean.gen",
 #load in fa sample functions
 source("../Analyses/Functions/Fa_sample_funcs.R")
 
+#allele categories list
+all_cat_list <-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
+                 "reg_rare","loc_com_d1","loc_com_d2","loc_rare")
+
 #################################################################
 #     Calculate Individual Numbers That Contain Each Allele     #
 #################################################################
+##convert to garden/wild genind object 
+#create garden genind
+QUAC_garden_genind <- repool(seppop(QUAC_woK_genind)[1:17])
+#rename pops
+levels(QUAC_garden_genind@pop) <- rep("Garden",17)
 
-#rename loci in each category - global
-for(m in 1:length(QUAC_all_cat[[1]])){
- 
-  QUAC_all_cat[[1]][m] <- loci_names[[m]] 
-  
-}
+#create wild genind object
+QUAC_wild_genind <- repool(seppop(QUAC_woK_genind)[18:21])
+#rename pops 
+levels(QUAC_wild_genind@pop) <- rep("Wild",4)
 
-#rename loci in each category - very common
-for(m in 1:length(QUAC_all_cat[[2]])){
-  
-  QUAC_all_cat[[2]][m] <- loci_names[[m]] 
-  
-}
+#recombine into garden/wild genind object
+QUAC_garden_wild_genind <- repool(QUAC_garden_genind, QUAC_wild_genind)
 
-#rename loci in each category - common
-for(m in 1:length(QUAC_all_cat[[3]])){
-  
-  QUAC_all_cat[[3]][m] <- loci_names[[m]] 
-  
-}
+#convert to the wild genpop object
+QUAC_wild_genpop <- genind2genpop(seppop(QUAC_garden_wild_genind)[[2]])
 
-#rename loci in each category - low frequency
-for(m in 1:length(QUAC_all_cat[[4]])){
-  
-  QUAC_all_cat[[4]][m] <- loci_names[[m]] 
-  
-}
+#create documents for comparison 
+n_ind_W <- nrow(QUAC_wild_genind@tab);  n_ind_G <- nrow(QUAC_garden_genind@tab)
 
-#rename loci in each category - low frequency
-for(m in 1:length(QUAC_all_cat[[5]])){
-  
-  QUAC_all_cat[[5]][m] <- loci_names[[m]] 
-  
-}
+#calculate how alleles are represented ex situ
+QUAC_all_rep <- colSums(seppop(QUAC_garden_wild_genind)[[1]]@tab,na.rm=T)
 
-#allele categories
-all_cat_list <-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
-                   "reg_rare","loc_com_d1","loc_com_d2","loc_rare")
-
-loci_names <- unique(gsub("\\..*", "", colnames(QUAC_garden_genind@tab)))
-
-
-QUAC_all_rep_df <- as.data.frame(seppop(QUAC_garden_wild_genind)$Garden@tab)
-
-#first, create a data frame of all of the alleles 
-#QUAC_all_rep_df %>%
-#    select(matches(loci_names[[1]]))
 
 #remove regional alleles 
 QUAC_all_cat <- QUAC_all_cat[1:5]
