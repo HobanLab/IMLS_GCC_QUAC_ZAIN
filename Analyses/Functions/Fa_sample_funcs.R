@@ -6,7 +6,7 @@ get.allele.cat <- function(UK_genpop, region_makeup, N_REGIONS, n_ind_p_pop, n_d
 
 	n_pops<-length(n_ind_p_pop)
 	#--Set up categories for GLOBAL ALLELES
-	allele_freqs<-colSums(UK_genpop@tab)/(sum(n_ind_p_pop)*2)	
+	allele_freqs<-colSums(UK_genpop@tab, na.rm = TRUE)/(sum(n_ind_p_pop)*2)	
 	min_freq<-(n_drop/(2*sum(n_ind_p_pop)))
 	glob<-as.vector(which(allele_freqs>min_freq))
 	glob_v_com<-as.vector(which(allele_freqs>0.10))
