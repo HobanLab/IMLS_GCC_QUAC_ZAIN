@@ -353,7 +353,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
       for(dup in 1:length(dup_reps)){
         
       #calculating alleles that exist by allelic category
-      sp_all_exist_df[dup, cat] <- round(sum(sp_alleles_cap[sp_allele_cat[[cat]]] > dup_reps[[dup]]))
+      sp_all_exist_df[dup, cat] <- sum(sp_wild_genpop@tab[sp_allele_cat[[cat]]] > dup_reps[[dup]])
     
       #now determine how many wild alleles were captured per category 
       sp_wild_cap_df[dup, cat] <- round(sum(sp_alleles_cap[sp_allele_cat[[cat]]] > dup_reps[[dup]])/length(sp_allele_cat[[cat]]),4)
@@ -419,12 +419,12 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     rownames(sp_allele_red_cap) <- paste0(c(1:10), " or more copies")
     colnames(sp_allele_red_cap) <- list_allele_cat
     
-    write.csv(sp_all_red_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist", n_drop_file, "_wo_smallpops.csv"))
-    write.csv(sp_wild_red_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap", n_drop_file, "_wo_smallpops.csv"))
-    write.csv(sp_allele_red_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_cap", n_drop_file, "_wo_smallpops.csv"))
-    
+    write.csv(sp_all_red_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist2", n_drop_file, "_wo_smallpops.csv"))
+    write.csv(sp_wild_red_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap2", n_drop_file, "_wo_smallpops.csv"))
+    write.csv(sp_allele_red_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_cap2", n_drop_file, "_wo_smallpops.csv"))
     
   }
+    
   ##format tables
   #alleles existing
   rownames(sp_all_exist_df) <- paste0(c(1:10), " or more copies")
@@ -438,9 +438,9 @@ for(sp in 1:length(species_list)){  #loop over every scenario
 
   
   ##write out data frames
-  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist", n_drop_file, ".csv"))
-  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap", n_drop_file, ".csv"))
-  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_cap", n_drop_file, ".csv"))
+  write.csv(sp_all_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist2", n_drop_file, ".csv"))
+  write.csv(sp_wild_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap2", n_drop_file, ".csv"))
+  write.csv(sp_allele_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_cap2", n_drop_file, ".csv"))
    
   
   
