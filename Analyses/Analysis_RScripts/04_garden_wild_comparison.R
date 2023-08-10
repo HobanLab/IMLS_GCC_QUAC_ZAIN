@@ -323,16 +323,26 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     levels(sp_genind_temp@pop) <- unique(sp_df_temp$Pop)
     
     ##organize into pops - garden
-    #separate into garden genind object 
-    sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
+    #sp_garden_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp]]])
     #rename pops to be garden only 
+    #levels(sp_garden_genind@pop) <- rep("Garden", length(levels(sp_garden_genind@pop)))
+    
+    ##reorganize genind object - not using repool
+    #separate into garden genind object 
+    n_ind_G <- sum(table(sp_genind_temp@pop)[pop_list[[sp]]])
+    sp_garden_genind <- sp_genind_temp[1:n_ind_G,]
     levels(sp_garden_genind@pop) <- rep("Garden", length(levels(sp_garden_genind@pop)))
+    
+    #separate into wild genind object 
+    n_ind_W <- sum(table(sp_genind_temp@pop)[pop_list[[sp+5]]])
+    sp_wild_genind <- sp_genind_temp[1:n_ind_W,]
+    levels(sp_wild_genind@pop) <- rep("Wild", length(levels(sp_wild_genind@pop)))
     
     ##organize into pop types 
     #separate into wild genind object 
-    sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+5]]])
+    #sp_wild_genind <- repool(seppop(sp_genind_temp)[pop_list[[sp+5]]])
     #rename 
-    levels(sp_wild_genind@pop) <- rep("Wild", length(levels(sp_wild_genind@pop)))
+    #levels(sp_wild_genind@pop) <- rep("Wild", length(levels(sp_wild_genind@pop)))
     
     #repool genind objects 
     sp_garden_wild_genind <- repool(sp_garden_genind, sp_wild_genind)
@@ -341,7 +351,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     sp_wild_genpop <- genind2genpop(seppop(sp_garden_wild_genind)[2]$Wild)
       
     #create documents for comparison 
-    n_ind_W <- nrow(sp_wild_genind@tab);  n_ind_G <- nrow(sp_garden_genind@tab); 
+    #n_ind_W <- nrow(sp_wild_genind@tab);  n_ind_G <- nrow(sp_garden_genind@tab); 
     sp_alleles_cap <- colSums(seppop(sp_garden_wild_genind)[[1]]@tab,na.rm=T)
       
     #first calculate the frequency categories of alleles in the wild individuals   	
@@ -359,7 +369,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
       sp_wild_cap_df[dup, cat] <- round(sum(sp_alleles_cap[sp_allele_cat[[cat]]] > dup_reps[[dup]])/length(sp_allele_cat[[cat]]),4)
       
       #code to store as one data frame 
-      sp_allele_cap[dup, cat] <- paste0(signif((sp_wild_cap_df[dup,cat]*100),3), "% (", signif(sp_all_exist_df[dup,cat],3), ")")
+      sp_allele_cap[dup, cat] <- paste0(signif((sp_wild_cap_df[dup,cat]*100),3), "%")
      
        }
     }
@@ -394,14 +404,14 @@ for(sp in 1:length(species_list)){  #loop over every scenario
       for(cat in 1:length(list_allele_cat)){
         for(dup in 1:length(dup_reps)){
         
-          #calculating alleles that exist by allelic category
+          #calculating alleles that exist by allelic category in the wild
           sp_all_red_exist_df[dup, cat] <- sum(sp_wild_red_genpop@tab[sp_allele_cat[[cat]]] > dup_reps[[dup]])
         
           #now determine how many wild alleles were captured per category 
           sp_wild_red_cap_df[dup, cat] <- round(sum(sp_alleles_red_cap[sp_allele_red_cat[[cat]]] > dup_reps[[dup]])/length(sp_allele_red_cat[[cat]]),4)
         
           #code to store as one data frame 
-          sp_allele_red_cap[dup, cat] <- paste0(signif((sp_wild_red_cap_df[dup,cat]*100),3), "% (", signif(sp_all_red_exist_df[dup,cat],3), ")")
+          sp_allele_red_cap[dup, cat] <- paste0(signif((sp_wild_red_cap_df[dup,cat]*100),3), "%")
         
           
       }
