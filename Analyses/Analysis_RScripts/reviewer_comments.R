@@ -28,22 +28,21 @@ dup_reps <- c(0:9)
 #################################################################
 ##convert to garden/wild genind object 
 #QUAC_garden_genind <- repool(seppop(QUAC_woK_genind)[1:17])
-#don't use repool --> this function will remove alleles 
 
 #rename pops
-levels(QUAC_garden_genind@pop) <- rep("Garden",17)
+#levels(QUAC_garden_genind@pop) <- rep("Garden",17)
 
 #create wild genind object
-QUAC_wild_genind <- repool(seppop(QUAC_woK_genind)[18:21])
+#QUAC_wild_genind <- repool(seppop(QUAC_woK_genind)[18:21])
 
 #rename pops 
-levels(QUAC_wild_genind@pop) <- rep("Wild",4)
+#levels(QUAC_wild_genind@pop) <- rep("Wild",4)
 
 #recombine into garden/wild genind object
-QUAC_garden_wild_genind <- repool(QUAC_garden_genind, QUAC_wild_genind)
+#QUAC_garden_wild_genind <- repool(QUAC_garden_genind, QUAC_wild_genind)
 
 #convert to the wild genpop object
-QUAC_wild_genpop <- genind2genpop(seppop(QUAC_garden_wild_genind)[[2]])
+#QUAC_wild_genpop <- genind2genpop(seppop(QUAC_garden_wild_genind)[[2]])
 
 #calculate how alleles are represented ex situ
 QUAC_all_rep <- colSums(seppop(QUAC_garden_wild_genind)[[1]]@tab,na.rm=T)
@@ -420,7 +419,7 @@ for(dup in dup_reps){
   for(cat in 1:length(QUAC_all_cat)){
     
     #create data frame to store results 
-    QUAC_rep_df[dup+1,cat] <- sum(num_rep_list[[cat]]>dup)/length(QUAC_all_cat[[cat]])
+    QUAC_rep_df[dup+1,cat] <- sum(num_rep_list[[cat]]>dup)/length(num_rep_list[[cat]])
     QUAC_rep_df_he[dup+1,cat] <- sum(num_rep_list_he[[cat]]>dup)/length(QUAC_all_cat[[cat]])
     QUAC_rep_df_ho[dup+1,cat] <- sum(num_rep_list_ho[[cat]]>dup)/length(QUAC_all_cat[[cat]])
     
