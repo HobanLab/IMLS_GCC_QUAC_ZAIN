@@ -395,7 +395,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
         for(dup in 1:length(dup_reps)){
         
           #calculating alleles that exist by allelic category
-          sp_all_red_exist_df[dup, cat] <- round(sum(sp_alleles_red_cap[sp_allele_red_cat[[cat]]] > dup_reps[[dup]]))
+          sp_all_red_exist_df[dup, cat] <- sum(sp_wild_red_genpop@tab[sp_allele_cat[[cat]]] > dup_reps[[dup]])
         
           #now determine how many wild alleles were captured per category 
           sp_wild_red_cap_df[dup, cat] <- round(sum(sp_alleles_red_cap[sp_allele_red_cat[[cat]]] > dup_reps[[dup]])/length(sp_allele_red_cat[[cat]]),4)
