@@ -517,3 +517,71 @@ ZAIN_rep_df <- signif(ZAIN_rep_df*100,3)
 
 write.csv(ZAIN_rep_df, "../Analyses/Results/Garden_Wild_Comparison/ZAIN_rep_df.csv")
 
+##ZAIN reduced
+ZAIN_red_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_sample_clean.gen",
+                         ncode = 3)
+
+#create garden genind
+ZAIN_red_garden_ind <- sum(table(ZAIN_red_genind@pop)[1:10])
+
+ZAIN_red_garden_genind <- ZAIN_red_genind[1:ZAIN_red_garden_ind,]
+
+#create wild genind object 
+ZAIN_red_wild_ind <- sum(table(ZAIN_red_genind@pop)[c(11:19, 23:26, 28:32, 34:35)])
+
+ZAIN_red_wild_genind <- ZAIN_red_genind[(ZAIN_red_garden_ind+1):(ZAIN_red_garden_ind+ZAIN_red_wild_ind),]
+
+#convert to the wild genpop object
+ZAIN_red_wild_genpop <- genind2genpop(ZAIN_red_wild_genind)
+
+#calculate how alleles are represented ex situ
+ZAIN_red_all_rep <- colSums(ZAIN_red_garden_genind@tab,na.rm=T)
+
+#calculate the allele categories in the wild populations
+ZAIN_red_all_cat <- get.allele.cat(ZAIN_red_wild_genpop, 1, 1, ZAIN_red_wild_ind, n_drop = 0, glob_only = TRUE)	
+
+#remove regional alleles 
+ZAIN_red_all_cat <- ZAIN_red_all_cat[1:5]
+
+##create a list to store the individual numbers 
+#list 
+ZAIN_red_num_rep_list <- list(list(), list(), list(), list(), list())
+ZAIN_red_num_rep_list_ho <- list(list(), list(), list(), list(), list())
+ZAIN_red_num_rep_list_he <- list(list(), list(), list(), list(), list())
+
+for(cat in 1:length(ZAIN_red_all_cat)){
+  
+  ZAIN_red_num_alleles_in_cat <- length(ZAIN_red_all_cat[[cat]])
+  
+  for (a in 1:ZAIN_red_num_alleles_in_cat){
+    
+    ZAIN_red_num_rep_list[[cat]][a] <- sum(ZAIN_red_garden_genind@tab[,ZAIN_red_all_cat[[cat]]][,a] > 0, na.rm=T)
+    ZAIN_red_num_rep_list_ho[[cat]][a] <- sum(ZAIN_red_garden_genind@tab[,ZAIN_red_all_cat[[cat]]][,a] == 1, na.rm=T)
+    ZAIN_red_num_rep_list_he[[cat]][a] <- sum(ZAIN_red_garden_genind@tab[,ZAIN_red_all_cat[[cat]]][,a] == 2, na.rm=T)
+    
+  }
+}
+
+#create data frame to save results  
+ZAIN_red_rep_df <- matrix(nrow = length(dup_reps),
+                      ncol = length(ZAIN_red_all_cat))
+ZAIN_red_rep_df_he <- matrix(nrow = length(dup_reps),
+                         ncol = length(ZAIN_red_all_cat))
+ZAIN_red_rep_df_ho <- matrix(nrow = length(dup_reps),
+                         ncol = length(ZAIN_red_all_cat))
+
+for(dup in dup_reps){
+  for(cat in 1:length(ZAIN_red_all_cat)){
+    
+    #create data frame to store results 
+    ZAIN_red_rep_df[dup+1,cat] <- sum(ZAIN_red_num_rep_list[[cat]]>dup)/length(ZAIN_red_all_cat[[cat]])
+    
+    
+  }
+}
+colnames(ZAIN_red_rep_df) <- all_cat_list
+rownames(ZAIN_red_rep_df) <- paste0(c(1:10)," or more copies")
+
+ZAIN_red_rep_df <- signif(ZAIN_red_rep_df*100,3)
+
+write.csv(ZAIN_red_rep_df, "../Analyses/Results/Garden_Wild_Comparison/ZAIN_red_rep_df.csv")
