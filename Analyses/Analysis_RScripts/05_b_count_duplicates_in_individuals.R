@@ -1,10 +1,5 @@
 library(adegenet)
 
-	#load in fa sample functions
-	source("../Analyses/Functions/Fa_sample_funcs.R")
-
-	#load in fa sample functions
-	source("../Analyses/Functions/Fa_sample_funcs.R")
 
  ###########################
  #     Load Data Files     #
@@ -13,14 +8,14 @@ library(adegenet)
 	#load in fa sample functions
 	source("../Analyses/Functions/Fa_sample_funcs.R")
 
-#This is the numbers that designate the populations for wild and garden, for Quercus and Zamia
+#These numbers designate the populations for wild and garden, for Quercus and Zamia
 #Used in code below to subset the genpop objects by wild and garden
-#The ZAIN has some wild populations excluded- NOTE come back to this
+#The ZAIN has some wild populations excluded- NOTE come back to this to discuss
 garden_pop_numbers<-list(1:17,1:10)
 wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
  
- 
- #We will have a loop around all species, NOTE this is so code does not diverge when doing each species separate
+
+ #We  have a loop around all species, NOTE this is so code does not diverge when doing each species separate
  
  for (sp in 1:2){
  	#Right now just doing the first two files
@@ -45,7 +40,8 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	#create wild genind object 
 	#NOTE- This is actually quite tricky because unlike garden populations, wild populations kept are scattered through the dataset for ZAIN
 	#So we have to create two vectors- a vector of "starting individuals" and "ending individuals"
-	#and use those vectors to populate a list
+	#and use those vectors to populate a list which will go from starting to ending individual of each population, all glued together
+	#then you have to unlist this list to make a vector
 	wild_ind_list<-list()
 	for (i in wild_pop_numbers[[sp]]){
 		wild_ind_list[[i]]<-(cumsum(table(sp_genind@pop))-table(sp_genind@pop)+1)[i]:cumsum(table(sp_genind@pop))[i]
@@ -60,7 +56,7 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	#calculate the allele categories in the wild populations
 	sp_all_cat <- get.allele.cat(sp_wild_genpop, 1, 1, num_wild_ind, n_drop = 0, glob_only = TRUE)	
 	
-	#remove regional alleles 
+	#subset to allele of interest e.g. exlcuding regional alleles 
 	sp_all_cat <- sp_all_cat[1:5]
 	
 	#################################
@@ -69,8 +65,8 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	
 	#create a list to store the number of individuals representing each allele 
 	#This list is length of 5, the five allele categories we are concerned with
-	#the elements of the list are vectors... the vector is length of the number of alleles in each category
-	#within each element of the vector will be the number of individuals having that allele
+	#the elements of the list are vectors... the vector is length equal to the number of alleles in each category
+	# each element of the vector will be the number of individuals having that allele
 	#for example, [[1]][1:3] might be 5,1, 10 which means five individuals, 0 individuals, and 10 individuals have those first three alleles, resepectively
 	num_indiv_rep_list <- list(vector(), vector(), vector(), vector(), vector())
 	num_indiv_rep_list_he <-  list(vector(), vector(), vector(), vector(), vector())
@@ -99,7 +95,7 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	############################################################
 	
 	#create data frame to save results  
-	#In this case the results are the precent of alleles present in greater than "dup" number of individuals
+	#In this case the results are the percent of alleles present in greater than "dup" number of individuals
 	#The he and ho stand for individuals in the heterozygous and homozygous states
 	percent_indiv_results <- matrix(nrow = length(dup_reps),
 	                      ncol = length(sp_all_cat))
