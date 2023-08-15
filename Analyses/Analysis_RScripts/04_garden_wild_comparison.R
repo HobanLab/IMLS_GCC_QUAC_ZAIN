@@ -300,6 +300,17 @@ sp_wild_red_cap_df <- matrix(nrow = (length(dup_reps)), ncol = length(list_allel
 #without ZAIN small pops - data frame to record allele capture code
 sp_allele_red_cap <-matrix(nrow = (length(dup_reps)), ncol = length(list_allele_cat))
 
+sp_ind_rep_df <- matrix(nrow = (length(dup_reps)), ncol = length(list_allele_cat))
+num_rep_list <- list(list(), list(), list(), list(),
+                     list(), list(), list(), list(),
+                     list())
+
+num_rep_red_list<- list(list(), list(), list(), list(),
+                        list(), list(), list(), list(),
+                        list())
+
+sp_ind_rep_red_df <- matrix(nrow = (length(dup_reps)), ncol = length(list_allele_cat))
+
 ##run loop to generate allelic capture table 
 #the outer loop is calculating how many copies of each allele in each category exists
 #the inner loop is calculating the percent capture of each allele in each frequency category 
@@ -369,12 +380,25 @@ for(sp in 1:length(species_list)){  #loop over every scenario
       sp_allele_cap[dup, cat] <- paste0(signif((sp_wild_cap_df[dup,cat]*100),3), "%")
         
       ##try to add the individual rep 
-      #
-      #for()
+      #save alleles existing
+      num_alleles_in_cat <- length(sp_allele_cat[[cat]])
+      
+      #save each category
+      for(a in 1:num_alleles_in_cat){
+          
+          num_rep_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_cat[[cat]]][,a] > 0, na.rm=T)
+        
+      }
+      
+      #save data frame with 
+      sp_ind_rep_df[dup,cat] <- sum(num_rep_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_list[[cat]])
+        
       }
     }
   
-  
+  #write out ind rep df 
+  write.csv(sp_ind_rep_df, paste0("../Analyses/Results/Garden_Wild_Comparison/", species_list[[sp]], "_sp_ind_rep_df", n_drop_file, ".csv"))
+    
   #add loop to calculate diversity in ZAIN without small pops 
   if(sp == 3|sp == 4|sp == 5){
     
@@ -414,9 +438,21 @@ for(sp in 1:length(species_list)){  #loop over every scenario
           #code to store as one data frame 
           sp_allele_red_cap[dup, cat] <- paste0(signif((sp_wild_red_cap_df[dup,cat]*100),3), "%")
         
+          #reduced alleles/cat
+          num_alleles_red_in_cat <- length(sp_allele_red_cat[[cat]])
+          
+          #save each category
+          for(a in 1:num_alleles_red_in_cat){
+            
+            num_rep_red_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_red_cat[[cat]]][,a] > 0, na.rm=T)
+            
+          }
+          
+          #save data frame with 
+          sp_ind_rep_red_df[dup,cat] <- sum(num_rep_red_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_red_list[[cat]])
           
       }
-    }
+      }
     
     }
     
@@ -437,6 +473,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     write.csv(sp_all_red_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist2", n_drop_file, "_wo_smallpops.csv"))
     write.csv(sp_wild_red_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap2", n_drop_file, "_wo_smallpops.csv"))
     write.csv(sp_allele_red_cap, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_cap2", n_drop_file, "_wo_smallpops.csv"))
+    write.csv(sp_ind_rep_red_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_sp_ind_rep_red_df", n_drop_file, "_wo_smallpops.csv"))
     
     
   }

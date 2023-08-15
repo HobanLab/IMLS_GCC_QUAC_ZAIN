@@ -251,42 +251,136 @@ write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN
 ###############################
 #     Clustering Analyses     #
 ###############################
-##Final PCA code for ZAIN 
-#create tab object for genind 
-ZAIN_rebinned_tab <- tab(ZAIN_garden_wild_PCA_genind, freq=TRUE, NA.method="mean")
+####Final PCA code for QUAC 
+##load in genind objects 
+QUAC_genind <- read.genepop("Adegenet_Files/QUAC_woK_allpop_clean.gen",
+                            ncode = 3)
+
+#load in data frame woK
+QUAC_df <- read.csv("CSV_Files/QUAC_woK_allpop_clean_df.csv")
+
+#reorg the datafile 
+QUAC_garden_ind <- sum(table(QUAC_genind@pop)[1:17])
+QUAC_garden_genind <- QUAC_genind[1:QUAC_garden_ind,]
+levels(QUAC_garden_genind@pop) <- rep("Garden", 17)
+
+#combine with the QUAC wild genind 
+QUAC_wild_ind <- sum(table(QUAC_genind@pop)[18:21])
+QUAC_wild_genind <- QUAC_genind[(QUAC_garden_ind+1):(QUAC_garden_ind+QUAC_wild_ind),]
+levels(QUAC_wild_genind@pop) <- c("Porter","Magazine", "Pryor", "Sugar_Loaf")
+
+#recombine data files 
+QUAC_garden_wild_genind <- repool(QUAC_garden_genind, QUAC_wild_genind)
+
+##PCA code 
+QUAC_tab <- tab(QUAC_garden_wild_genind, freq=TRUE, NA.method="mean")
 
 #run PCA
-ZAIN_rebinned_PCA <- dudi.pca(ZAIN_rebinned_tab, scale = FALSE, nf = 2, scannf = FALSE)
+QUAC_PCA <- dudi.pca(QUAC_tab, scale = FALSE, nf = 3, scannf = FALSE)
 
-#create PCA data frame 
-ZAIN_PCA_df <- as.data.frame(cbind(as.numeric(ZAIN_rebinned_PCA$li$Axis1), 
-                                   as.numeric(ZAIN_rebinned_PCA$li$Axis2)))
-#specify wild vs. garden individual
-ZAIN_PCA_df$Pop_Type <- c(rep(levels(ZAIN_garden_wild_PCA_genind@pop)[1], 
-                              as.numeric(table(ZAIN_garden_wild_PCA_genind@pop)[1])), 
-                          rep(levels(ZAIN_garden_wild_PCA_genind@pop)[2], 
-                              as.numeric(table(ZAIN_garden_wild_PCA_genind@pop)[2]))) 
+QUAC_PCA_df <- as.data.frame(cbind(as.numeric(QUAC_PCA$li$Axis1),
+                                   as.numeric(QUAC_PCA$li$Axis2)))
 
-#add variety 
-ZAIN_PCA_df$Variety <- ZAIN_pop_df$Variety
+QUAC_PCA_df$Pop <- c(QUAC_df$Garden_Wild[1:277],
+                     QUAC_df$Pop[278:441])
+colnames(QUAC_PCA_df) <- c("Axis1", "Axis2", "Pop", "Pop_Type")
 
-#name columns of the  PCA data frame 
-colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Pop_Type", "Variety")
+#create pop type column 
+QUAC_PCA_df$pop_type <- QUAC_df$Garden_Wild
+
+QUAC_PCA_df$Axis3 <- QUAC_PCA$li$Axis3
 
 #calculate % variation explained by axis 
-ZAIN_pc1 <- signif(((ZAIN_rebinned_PCA$eig[1])/sum(ZAIN_rebinned_PCA$eig))*100, 3)
-ZAIN_pc2 <- signif(((ZAIN_rebinned_PCA$eig[2])/sum(ZAIN_rebinned_PCA$eig))*100, 3)
+QUAC_pc1 <- signif(((QUAC_PCA$eig[1])/sum(QUAC_PCA$eig))*100, 3)
+QUAC_pc2 <- signif(((QUAC_PCA$eig[2])/sum(QUAC_PCA$eig))*100, 3)
+QUAC_pc3 <- signif(((QUAC_PCA$eig[3])/sum(QUAC_PCA$eig))*100, 3)
 
 ##ZAIN
-pdf("../Analyses/Results/Clustering/ZAIN_PCA.pdf", width = 10, height = 8)
-ggplot(ZAIN_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop_Type, 
+pdf("../Analyses/Results/Clustering/QUAC_woK_PCA2_3.pdf", width = 10, height = 8)
+
+ggplot(QUAC_PCA_df, aes(as.numeric(Axis2), as.numeric(Axis3), col = Pop_Type, 
+                        shape = Pop)) + 
+  geom_point(size = 4) +
+  xlab(paste0("PC2 (", QUAC_pc2, "%)")) +
+  ylab(paste0("PC3 (", QUAC_pc3, "%)")) + 
+  theme_bw() +  
+  scale_color_manual(values = c("mediumseagreen", "black")) +
+  scale_shape_manual(values = c(16,17,18,3,4))
+dev.off()
+
+
+###Final PCA code for ZAIN 
+#load genind object
+ZAIN_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop_clean.gen",
+                            ncode = 3)
+
+
+
+#load data frame 
+ZAIN_df <- read.csv("CSV_Files/ZAIN_rebinned_allpop_clean_df.csv")
+
+rownames(ZAIN_genind@tab) <- ZAIN_df$Sample.Name
+
+#load pop df 
+ZAIN_pop_df <- read.csv("CSV_Files/ZAIN_pop_df.csv")
+
+##reorg the datafile 
+#garden
+ZAIN_garden_ind <- sum(table(ZAIN_genind@pop)[1:10])
+ZAIN_garden_genind <- ZAIN_genind[1:ZAIN_garden_ind,]
+levels(ZAIN_garden_genind@pop) <- rep("Garden", 10)
+
+#wild
+ZAIN_wild_ind <- sum(table(ZAIN_genind@pop)[c(11:35)])
+ZAIN_wild_genind <- ZAIN_genind[(ZAIN_garden_ind+1):(ZAIN_garden_ind+ZAIN_wild_ind),]
+
+#combine datafile 
+ZAIN_garden_wild_genind <- repool(ZAIN_garden_genind,
+                                  ZAIN_wild_genind)
+
+#create tab object for genind 
+ZAIN_tab <- tab(ZAIN_garden_wild_genind, freq=TRUE, NA.method="mean")
+
+#run PCA
+ZAIN_PCA <- dudi.pca(ZAIN_tab, scale = FALSE, nf = 3, scannf = FALSE)
+
+#create PCA data frame 
+ZAIN_PCA_df <- as.data.frame(cbind(as.numeric(ZAIN_PCA$li$Axis1), 
+                                   as.numeric(ZAIN_PCA$li$Axis2),
+                                   as.numeric(ZAIN_PCA$li$Axis3)))
+#organize df 
+rownames(ZAIN_PCA_df) <- rownames(tab(ZAIN_garden_wild_genind))
+
+#limit df by reduced pops 
+ZAIN_red_pop_df <- ZAIN_pop_df[ZAIN_pop_df$Sample.Name %in% rownames(ZAIN_PCA_df),]
+
+
+#specify wild vs. garden individual
+ZAIN_PCA_df$Pop_Type <- ZAIN_red_pop_df$Pop_Type
+  
+#add variety 
+ZAIN_PCA_df$Variety <- ZAIN_red_pop_df$Variety
+
+#name columns of the  PCA data frame 
+colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Axis3","Pop_Type", "Variety")
+
+#calculate % variation explained by axis 
+ZAIN_pc1 <- signif(((ZAIN_PCA$eig[1])/sum(ZAIN_PCA$eig))*100, 3)
+ZAIN_pc2 <- signif(((ZAIN_PCA$eig[2])/sum(ZAIN_PCA$eig))*100, 3)
+ZAIN_pc3 <- signif(((ZAIN_PCA$eig[3])/sum(ZAIN_PCA$eig))*100, 3)
+
+##ZAIN
+pdf("../Analyses/Results/Clustering/PCA/ZAIN_PCA2_3.pdf", width = 10, height = 8)
+
+ggplot(ZAIN_PCA_df, aes(Axis1, Axis3, col = Pop_Type, 
                         shape = Variety)) + 
   geom_point(size = 4) +
-  xlab(paste0("PC1 (", ZAIN_pc1, "%)")) +
-  ylab(paste0("PC2 (", ZAIN_pc2, "%)")) + 
+  xlab(paste0("PC2 (", ZAIN_pc1, "%)")) +
+  ylab(paste0("PC3 (", ZAIN_pc3, "%)")) + 
   theme_bw() +  
   scale_color_manual(values = c("mediumseagreen", "black")) +
   scale_shape_manual(values = c(16,18,3))
+
 dev.off()
 
 ###############################################################

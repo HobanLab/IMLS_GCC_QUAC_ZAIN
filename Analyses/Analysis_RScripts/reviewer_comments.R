@@ -428,11 +428,24 @@ for(dup in dup_reps){
 
 
 #write out matrix
-QUAC_rep_df <- signif(QUAC_rep_df*100,3)
+QUAC_rep_df <- signif(QUAC_rep_df,3)
 colnames(QUAC_rep_df) <- all_cat_list
 rownames(QUAC_rep_df) <- paste0(c(1:10), " or more copies")
 
+#write out matrix 
+QUAC_rep_df_he <- signif(QUAC_rep_df_he,3)
+colnames(QUAC_rep_df_he) <- all_cat_list
+rownames(QUAC_rep_df_he) <- paste0(c(1:10), " or more copies")
+
+QUAC_rep_df_ho <- signif(QUAC_rep_df_ho,3)
+colnames(QUAC_rep_df_ho) <- all_cat_list
+rownames(QUAC_rep_df_ho) <- paste0(c(1:10), " or more copies")
+
 write.csv(QUAC_rep_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_rep_df.csv")
+write.csv(QUAC_rep_df_he, "../Analyses/Results/Garden_Wild_Comparison/QUAC_rep_df_he.csv")
+write.csv(QUAC_rep_df_ho, "../Analyses/Results/Garden_Wild_Comparison/QUAC_rep_df_ho.csv")
+
+
 
 #write out het matrix 
 QUAC_rep_df_he <- signif(QUAC_rep_df_he*100,3)
