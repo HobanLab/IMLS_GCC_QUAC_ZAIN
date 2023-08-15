@@ -36,9 +36,9 @@ list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare",
 #list of scenarios 
 species_list <- c("QUAC_wK", "QUAC_woK", "ZAIN_og", "ZAIN_rebinned")
 
-#pop list 
-pop_list <- list(c(1:17), c(1:17), c(1:10), c(1:10),
-                 c(18:22), c(18:21), c(11:35), c(11:35))
+#ZAIN reduced wild pop list 
+wild_pop_list <- list(c(18:22), c(18:21), c(11:35),
+                            c(11:19, 23:26, 28:32, 34:35))
 
 #load in function to calculate allele frequency categories
 source("../Analyses/Functions/Fa_sample_funcs.R")
@@ -50,7 +50,10 @@ source("../Analyses/Functions/resampling.R")
 #create a list to store arrays 
 sp_resampling_list <- list()
 all_mean_list <- list()
+#set up different levels of allele freqs to drop 
 ndrop_list <- c(0,2)
+#set rep number
+num_reps <- 1000
 
 #loop to compare diversity capture in wild and botanic garden populations
 for(sp in 1:length(species_list)){
@@ -66,8 +69,7 @@ for(sp in 1:length(species_list)){
   #run resampling code on all species 
   for(n in 1:length(ndrop_list)){
    
-    #set rep number
-    num_reps <- 1000
+
     #include function for take the maximum value of a column
     colMax <- function(data) sapply(data, max, na.rm = TRUE)
   
