@@ -1,12 +1,15 @@
+#####################
+#     Libraries     #
+#####################
+
 library(adegenet)
 
-
- ###########################
- #     Load Data Files     #
- ###########################
+###########################
+#     Load Data Files     #
+###########################
  
-	#load in fa sample functions
-	source("../Analyses/Functions/Fa_sample_funcs.R")
+#load in fa sample functions
+source("../Analyses/Functions/Fa_sample_funcs.R")
 
 #These numbers designate the populations for wild and garden, for Quercus and Zamia
 #Used in code below to subset the genpop objects by wild and garden
@@ -49,6 +52,8 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	sp_wild_genind <- sp_genind[unlist(wild_ind_list),]
 	#rename pops 
 	levels(sp_wild_genind@pop) <- rep("Wild",length(wild_pop_numbers[[sp]]))
+	
+	num_wild_ind <- as.numeric(table(sp_wild_genind@pop))
 	
 	#convert to the wild genpop object
 	sp_wild_genpop <- genind2genpop(sp_wild_genind)
