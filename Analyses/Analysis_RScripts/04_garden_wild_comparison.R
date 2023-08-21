@@ -363,7 +363,7 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     sp_alleles_cap <- colSums(seppop(sp_garden_wild_genind)[[1]]@tab,na.rm=T)
       
     #first calculate the frequency categories of alleles in the wild individuals   	
-    sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, n_ind_W, n_drop = ndrop, glob_only = TRUE)	
+    sp_allele_cat <- get.allele.cat(sp_wild_genpop, 1, 1, sp_wild_ind, n_drop = ndrop, glob_only = TRUE)	
     
     #exterior loop to look at alleles by frequency category
     #interior loop to alleles by "duplication" amount - how many copies of each allele 
@@ -384,14 +384,14 @@ for(sp in 1:length(species_list)){  #loop over every scenario
       num_alleles_in_cat <- length(sp_allele_cat[[cat]])
       
       #save each category
-      for(a in 1:num_alleles_in_cat){
+      #for(a in 1:num_alleles_in_cat){
           
-          num_rep_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_cat[[cat]]][,a] > 0, na.rm=T)
+      #    num_rep_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_cat[[cat]]][,a] > 0, na.rm=T)
         
-      }
+      #}
       
       #save data frame with 
-      sp_ind_rep_df[dup,cat] <- sum(num_rep_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_list[[cat]])
+      #sp_ind_rep_df[dup,cat] <- sum(num_rep_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_list[[cat]])
         
       }
     }
@@ -442,16 +442,16 @@ for(sp in 1:length(species_list)){  #loop over every scenario
           num_alleles_red_in_cat <- length(sp_allele_red_cat[[cat]])
           
           #save each category
-          for(a in 1:num_alleles_red_in_cat){
+          #for(a in 1:num_alleles_red_in_cat){
             
-            num_rep_red_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_red_cat[[cat]]][,a] > 0, na.rm=T)
+          #  num_rep_red_list[[cat]][a] <- sum(sp_garden_genind@tab[,sp_allele_red_cat[[cat]]][,a] > 0, na.rm=T)
             
-          }
+          #}
           
           #save data frame with 
-          sp_ind_rep_red_df[dup,cat] <- sum(num_rep_red_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_red_list[[cat]])
+          #sp_ind_rep_red_df[dup,cat] <- sum(num_rep_red_list[[cat]]>dup_reps[[dup]], na.rm = TRUE)/length(num_rep_red_list[[cat]])
           
-      }
+        }
       }
     
     }
@@ -465,10 +465,6 @@ for(sp in 1:length(species_list)){  #loop over every scenario
     #without ZAIN small pops - comparing wild allele representation ex situ
     rownames(sp_allele_red_cap) <- paste0(c(1:10), " or more copies")
     colnames(sp_allele_red_cap) <- list_allele_cat
-    
-    #ind per df 
-    rownames(sp_ind_per) <- paste0(c(1:10), " or more copies")
-    colnames(sp_ind_per) <- list_allele_cat
     
     write.csv(sp_all_red_exist_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_all_exist2", n_drop_file, "_wo_smallpops.csv"))
     write.csv(sp_wild_red_cap_df, paste0("../Analyses/Results/Garden_Wild_Comparison/",species_list[[sp]], "_wildcap2", n_drop_file, "_wo_smallpops.csv"))
