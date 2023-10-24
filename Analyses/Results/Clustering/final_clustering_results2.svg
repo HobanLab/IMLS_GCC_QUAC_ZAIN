@@ -274,7 +274,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2451906"
-     inkscape:cx="351.01619"
+     inkscape:cx="479.16871"
      inkscape:cy="278.77967"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -302,19 +302,29 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#0000ff;fill-rule:evenodd;stroke-width:0.264583;fill-opacity:0"
-       id="rect7619"
-       width="200"
-       height="100"
-       x="4.0375156"
-       y="11.662294" />
+    <g
+       id="g22394"
+       inkscape:export-xdpi="600"
+       inkscape:export-ydpi="600">
+      <g
+         id="g6142"
+         style="fill:#ffffff;fill-opacity:1">
+        <path
+           style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.264583"
+           id="rect6139"
+           width="200"
+           height="100"
+           x="0.63776821"
+           y="2.9504416"
+           sodipodi:type="rect" />
+      </g>
+    </g>
     <g
        id="g166145"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600"
        style="stroke-width:3.23447"
-       transform="matrix(0.14805775,0,0,-0.08034562,-3.0882688,61.027632)">
+       transform="matrix(0.14805775,0,0,-0.08034562,-3.9382056,65.064832)">
       <g
          id="g38394"
          transform="matrix(0.98402839,0,0,0.92925678,96.355324,98.455132)"
@@ -11218,22 +11228,9 @@
       </g>
     </g>
     <g
-       id="g15992"
-       inkscape:export-xdpi="600"
-       inkscape:export-ydpi="600"
-       transform="translate(75.85686,-19.336062)">
-      <rect
-         style="fill:#0000ff;fill-opacity:0.00401605;fill-rule:evenodd;stroke-width:0.264582"
-         id="rect13280"
-         width="200"
-         height="100"
-         x="-239.28355"
-         y="12.367089" />
-    </g>
-    <g
        id="g21013"
        inkscape:label="ZAIN_PCA2_3"
-       transform="matrix(0.1524453,0,0,-0.17338563,85.327774,215.95854)"
+       transform="matrix(0.1524453,0,0,-0.17338563,48.568007,268.01717)"
        style="stroke-width:2.16989">
       <g
          id="g21015"
@@ -17720,7 +17717,7 @@
     </g>
     <g
        id="g35475-3"
-       transform="matrix(0.14804143,0,0,-0.08034562,17.202674,165.69932)"
+       transform="matrix(0.14804143,0,0,-0.08034562,-19.557093,217.75795)"
        inkscape:export-xdpi="600"
        inkscape:export-ydpi="600"
        style="stroke-width:3.23465"
@@ -17828,7 +17825,7 @@
     <g
        id="g26921"
        inkscape:label="QUAC_woK_PCA2_3"
-       transform="matrix(0.13836462,0,0,-0.1725647,1.4290793,205.33433)"
+       transform="matrix(0.13836462,0,0,-0.1725647,-35.330688,257.39296)"
        style="stroke-width:2.28303"
        inkscape:export-filename="C:\Users\eschumacher\Documents\GitHub\GCC_QUAC_ZAIN\Analyses\Results\Clustering\PCA\QUAC_PC2_PC3.png"
        inkscape:export-xdpi="600"
@@ -20600,7 +20597,7 @@
     </g>
     <g
        id="g7543-3"
-       transform="matrix(0.14805775,0,0,-0.08085376,69.360053,46.346365)"
+       transform="matrix(0.14805775,0,0,-0.08085376,46.613416,95.727725)"
        style="stroke-width:3.22429">
       <g
          id="g35295-7"

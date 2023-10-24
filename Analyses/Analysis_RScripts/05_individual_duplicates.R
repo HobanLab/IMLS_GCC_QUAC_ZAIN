@@ -7,20 +7,28 @@ library(adegenet)
 ###########################
 #     Load Data Files     #
 ###########################
+setwd("../../Data_Files")
  
+#Right now just doing the first two files
+gen_inp_filenames<-c("QUAC_woK_allpop_clean.gen", "ZAIN_rebinned_allpop_clean.gen", 
+                     "ZAIN_rebinned_sample_clean.gen")
+outp_filenames<-c("QUAC_woK_indiv_rep_percents", "ZAIN_indiv_rep_percents", "ZAIN_red_indiv_rep_percents")
+
+
 #load in fa sample functions
 source("../Analyses/Functions/Fa_sample_funcs.R")
 
 #These numbers designate the populations for wild and garden, for Quercus and Zamia
 #Used in code below to subset the genpop objects by wild and garden
 #The ZAIN has some wild populations excluded- NOTE come back to this to discuss
-garden_pop_numbers<-list(1:17,1:10)
-wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
+garden_pop_numbers<-list(1:17,1:10,1:10)
+wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35),
+                       c(11:19, 23:26, 28:32, 34:35))
  
 
  #We  have a loop around all species, NOTE this is so code does not diverge when doing each species separate
  
- for (sp in 1:2){
+ for (sp in 1:3){
  	#Right now just doing the first two files
 	 gen_inp_filenames<-c("Adegenet_Files/QUAC_woK_allpop_clean.gen", "Adegenet_Files/ZAIN_rebinned_allpop_clean.gen", "Adegenet_Files/ZAIN_rebinned_sample_clean.gen")
 	 outp_filenames<-c("QUAC_woK_indiv_rep_percents", "ZAIN_indiv_rep_percents", "ZAIN_red_indiv_rep_percents")
@@ -146,3 +154,4 @@ wild_pop_numbers<-list(18:21,c(11:19, 23:26, 28:32, 34:35))
 	write.csv(percent_indiv_results_he, paste("../Analyses/Results/Garden_Wild_Comparison/percent_indiv_results",outp_filenames[sp],"_he",".csv"))
 	write.csv(percent_indiv_results_ho, paste("../Analyses/Results/Garden_Wild_Comparison/percent_indiv_results",outp_filenames[sp],"_ho",".csv"))
 }
+
