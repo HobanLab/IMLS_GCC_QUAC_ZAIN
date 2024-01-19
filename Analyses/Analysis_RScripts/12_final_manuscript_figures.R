@@ -256,6 +256,7 @@ write.csv(allrich_hexp_df, "../Analyses/Results/Garden_Wild_Comparison/QUAC_ZAIN
 QUAC_genind <- read.genepop("Adegenet_Files/QUAC_woK_allpop_clean.gen",
                             ncode = 3)
 
+
 #load in data frame woK
 QUAC_df <- read.csv("CSV_Files/QUAC_woK_allpop_clean_df.csv")
 
@@ -283,6 +284,9 @@ QUAC_PCA_df <- as.data.frame(cbind(as.numeric(QUAC_PCA$li$Axis1),
 
 QUAC_PCA_df$Pop <- c(QUAC_df$Garden_Wild[1:277],
                      QUAC_df$Pop[278:441])
+
+QUAC_PCA_df$Pop_Type <- QUAC_df$Garden_Wild
+
 colnames(QUAC_PCA_df) <- c("Axis1", "Axis2", "Pop", "Pop_Type")
 
 #create pop type column 
@@ -296,15 +300,15 @@ QUAC_pc2 <- signif(((QUAC_PCA$eig[2])/sum(QUAC_PCA$eig))*100, 3)
 QUAC_pc3 <- signif(((QUAC_PCA$eig[3])/sum(QUAC_PCA$eig))*100, 3)
 
 ##ZAIN
-pdf("../Analyses/Results/Clustering/QUAC_woK_PCA2_3.pdf", width = 10, height = 8)
+pdf("../Analyses/Results/Clustering/QUAC_woK_PCA1_2.pdf", width = 10, height = 8)
 
-ggplot(QUAC_PCA_df, aes(as.numeric(Axis2), as.numeric(Axis3), col = Pop_Type, 
+ggplot(QUAC_PCA_df, aes(as.numeric(Axis1), as.numeric(Axis2), col = Pop_Type, 
                         shape = Pop)) + 
   geom_point(size = 4) +
-  xlab(paste0("PC2 (", QUAC_pc2, "%)")) +
-  ylab(paste0("PC3 (", QUAC_pc3, "%)")) + 
+  xlab(paste0("PC1 (", QUAC_pc1, "%)")) +
+  ylab(paste0("PC2 (", QUAC_pc2, "%)")) + 
   theme_bw() +  
-  scale_color_manual(values = c("mediumseagreen", "black")) +
+  scale_color_manual(values = c("azure3", "black")) +
   scale_shape_manual(values = c(16,17,18,3,4))
 dev.off()
 
@@ -313,9 +317,6 @@ dev.off()
 #load genind object
 ZAIN_genind <- read.genepop("Adegenet_Files/ZAIN_rebinned_allpop_clean.gen",
                             ncode = 3)
-
-
-
 #load data frame 
 ZAIN_df <- read.csv("CSV_Files/ZAIN_rebinned_allpop_clean_df.csv")
 
@@ -346,8 +347,7 @@ ZAIN_PCA <- dudi.pca(ZAIN_tab, scale = FALSE, nf = 3, scannf = FALSE)
 
 #create PCA data frame 
 ZAIN_PCA_df <- as.data.frame(cbind(as.numeric(ZAIN_PCA$li$Axis1), 
-                                   as.numeric(ZAIN_PCA$li$Axis2),
-                                   as.numeric(ZAIN_PCA$li$Axis3)))
+                                   as.numeric(ZAIN_PCA$li$Axis2)))
 #organize df 
 rownames(ZAIN_PCA_df) <- rownames(tab(ZAIN_garden_wild_genind))
 
@@ -362,7 +362,7 @@ ZAIN_PCA_df$Pop_Type <- ZAIN_red_pop_df$Pop_Type
 ZAIN_PCA_df$Variety <- ZAIN_red_pop_df$Variety
 
 #name columns of the  PCA data frame 
-colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Axis3","Pop_Type", "Variety")
+colnames(ZAIN_PCA_df) <- c("Axis1","Axis2","Pop_Type", "Variety")
 
 #calculate % variation explained by axis 
 ZAIN_pc1 <- signif(((ZAIN_PCA$eig[1])/sum(ZAIN_PCA$eig))*100, 3)
@@ -370,15 +370,15 @@ ZAIN_pc2 <- signif(((ZAIN_PCA$eig[2])/sum(ZAIN_PCA$eig))*100, 3)
 ZAIN_pc3 <- signif(((ZAIN_PCA$eig[3])/sum(ZAIN_PCA$eig))*100, 3)
 
 ##ZAIN
-pdf("../Analyses/Results/Clustering/PCA/ZAIN_PCA2_3.pdf", width = 10, height = 8)
+pdf("../Analyses/Results/Clustering/PCA/ZAIN_PCA1_2.pdf", width = 10, height = 8)
 
-ggplot(ZAIN_PCA_df, aes(Axis1, Axis3, col = Pop_Type, 
+ggplot(ZAIN_PCA_df, aes(Axis1, Axis2, col = Pop_Type, 
                         shape = Variety)) + 
   geom_point(size = 4) +
-  xlab(paste0("PC2 (", ZAIN_pc1, "%)")) +
-  ylab(paste0("PC3 (", ZAIN_pc3, "%)")) + 
+  xlab(paste0("PC1 (", ZAIN_pc1, "%)")) +
+  ylab(paste0("PC2 (", ZAIN_pc2, "%)")) + 
   theme_bw() +  
-  scale_color_manual(values = c("mediumseagreen", "black")) +
+  scale_color_manual(values = c("azure3", "black")) +
   scale_shape_manual(values = c(16,18,3))
 
 dev.off()
